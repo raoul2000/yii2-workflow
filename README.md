@@ -1,5 +1,6 @@
 # yii2-workflow
 
+![Alt text](https://travis-ci.org/raoul2000/yii2-workflow.svg?branch=master "Optional title")
 
 ### Please note that yii2-workflow is under development and may change anytime without warning  
 
