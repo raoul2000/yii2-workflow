@@ -12,4 +12,5 @@ before_script:
   - mysql -e 'create database yii2_workflow_test;'
   - cd tests  
   - php ./codeception/bin/yii  migrate/up --interactive=0
+  - ../vendor/bin/codecept build
 script: ../vendor/bin/codecept run unit 
