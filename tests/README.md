@@ -16,9 +16,10 @@ cd tests
 php ./codeception/bin/yii  migrate/up --interactive=0
 ```
 
-- Start Codeception tests
+- Build and start Codeception tests
 
 ```
+../vendor/bin/codecept build
 ../vendor/bin/codecept run unit
 ```
 
