@@ -46,7 +46,9 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	/**
 	 *	The regular expression used to validate status and workflow Ids.
 	 */
-	const PATTERN_ID = '/^\w+$/';
+	//const PATTERN_ID = '/^\w+$/';
+	const PATTERN_ID = '/^[a-zA-Z]+[[:alnum:]-]*$/';
+	
 	/**
 	 * The separator used to create a status id by concatenating the workflow id and
 	 * the status local id.
@@ -123,7 +125,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * If this status was never loaded before, it is loaded now and stored for later use (lazy loading).
 	 *
 	 * If a $model is provided, it must be a BaseActiveRecord instance with a SimpleWorkflowBehavior attached. This model
-	 * is used to complete the status ID the one defined by the $id argument is not complete.
+	 * is used to complete the status ID if the one defined by the $id argument is not complete. 
 	 *
 	 * @param string $id ID of the status to get
 	 * @param ActiveBaseRecord $model
@@ -131,6 +133,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 *
 	 * @see raoul2000\workflow\source\IWorkflowSource::getStatus()
 	 * @see WorkflowPhpSource::evaluateWorkflowId()
+	 * @see WorkflowPhpSource::parseStatusId()
 	 */
 	public function getStatus($id, $model = null)
 	{
@@ -357,15 +360,15 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * containing the workflow ID and status local ID.
 	 *
 	 * If $val does not include the workflow ID part (i.e it is not in formated like "workflowID/statusID")
-	 * this method uses $model and $defaultWorkflowId to find the workflow ID.
+	 * this method uses $model and $defaultWorkflowId to get it.
 	 *
-	 * @see WorkflowPhpSource::evaluateWorkflowId()
 	 * @param string $val the status ID to parse
 	 * @param Model|null $model a model used as workflow ID provider if needed
 	 * @param string|null $defaultWorkflowId a default workflow ID value
 	 * @return string[] array containing the workflow ID in its first index, and the status Local ID
 	 * in the second
 	 * @throws WorkflowException Exception thrown if the method was not able to parse $val.
+	 * @see WorkflowPhpSource::evaluateWorkflowId()
 	 */
 	public function parseStatusId($val, $model = null, $defaultWorkflowId = null)
 	{
@@ -394,7 +397,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	}
 
 	/**
-	 * Finds what is the workflow ID to use.
+	 * Finds and returns the workflow ID to use with the model passed as argument.
 	 *
 	 * If $model is not NULL, this method returns the ID of the workflow $model is currently in,
 	 * or its default workflow ID if $model is not in a workflow.
@@ -438,7 +441,9 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		}
 	}
 	/**
-	 *  Checks if the string passed as argument can be used as a workflow ID.
+	 * Checks if the string passed as argument can be used as a workflow ID.
+	 *  
+	 * A workflow ID is a string that matches self::PATTERN_ID.
 	 *
 	 * @param string $val
 	 * @return boolean TRUE if the $val can be used as workflow id, FALSE otherwise
@@ -464,7 +469,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * This method can be use for instance, by a model that holds the definition of the workflow it is
 	 * using.<br/>
 	 * If a workflow with same id already exist in this source, it is overwritten if the last parameter
-	 * is set to TRUE. Note that in this case the overwrittent workflow is not available anymore.
+	 * is set to TRUE. Note that in this case the overwritten workflow is not available anymore.
 	 *
 	 * @see SimpleWorkflowBehavior::attach()
 	 * @param string $workflowId

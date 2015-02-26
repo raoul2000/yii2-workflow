@@ -4,7 +4,7 @@ namespace tests\unit\workflow\behavior;
 
 use Yii;
 use yii\codeception\TestCase;
-use tests\codeception\unit\models\Item_01;
+use tests\codeception\unit\models\Item01;
 use yii\base\InvalidConfigException;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
 
@@ -15,7 +15,7 @@ class InitStatusTest extends TestCase
 	protected function setup()
 	{
 		parent::setUp();
-		Item_01::deleteAll();
+		Item01::deleteAll();
 		Yii::$app->set('workflowSource',[
 			'class'=> 'raoul2000\workflow\source\php\WorkflowPhpSource',
 			'namespace' => 'tests\codeception\unit\models'
@@ -32,7 +32,7 @@ class InitStatusTest extends TestCase
     {
 		$this->specify('current status initialization is ok', function() {
 
-			$model = new Item_01();
+			$model = new Item01();
 			$model->status = 'Workflow1/A';
 			$model->attachBehavior('workflow', [
 				'class' => SimpleWorkflowBehavior::className(),
@@ -48,7 +48,7 @@ class InitStatusTest extends TestCase
     public function testInitStatusOnAttachFails()
     {
     	$this->specify('status initialisation fails when status not found', function(){
-    		$model = new Item_01();
+    		$model = new Item01();
     		$model->status = 'Workflow1/X';
     		$this->setExpectedException(
     			'raoul2000\workflow\base\WorkflowException', 'Status not found : Workflow1/X'
@@ -64,7 +64,7 @@ class InitStatusTest extends TestCase
     {
 		$this->specify('a model can be saved with status not set', function() {
 
-			$model = new Item_01();
+			$model = new Item01();
 			$model->attachBehavior('workflow', [
 				'class' => SimpleWorkflowBehavior::className(),
 				'defaultWorkflowId' => 'Workflow1'
@@ -77,14 +77,14 @@ class InitStatusTest extends TestCase
     {
     	$this->specify('status initialisation when reading model from db (after find)', function(){
 
-    		$model = new Item_01();
+    		$model = new Item01();
     		$model->detachBehavior('workflow');
     		$model->id = 1;
     		$model->name = 'name';
     		$model->status = 'Workflow1/B';
     		$model->save(false);
 
-    		$model = Item_01::findOne(1);
+    		$model = Item01::findOne(1);
 
     		$model->attachBehavior('workflow', [
     			'class' => SimpleWorkflowBehavior::className(),
@@ -98,7 +98,7 @@ class InitStatusTest extends TestCase
     {
     	$this->specify('status initialisation success when saving model', function(){
 
-    		$model = new Item_01();
+    		$model = new Item01();
     		$model->detachBehavior('workflow');
     		$model->id = 1;
     		$model->name = 'name';
@@ -109,7 +109,7 @@ class InitStatusTest extends TestCase
     			'raoul2000\workflow\base\WorkflowException', 'Status not found : Workflow1/X'
     		);
 
-    		$model = Item_01::findOne(1);
+    		$model = Item01::findOne(1);
 
     	});
     }

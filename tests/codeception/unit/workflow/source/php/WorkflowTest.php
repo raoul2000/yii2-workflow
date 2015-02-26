@@ -4,7 +4,7 @@ namespace tests\unit\workflow\source\php;
 
 use Yii;
 use yii\codeception\TestCase;
-use tests\codeception\unit\models\Item_01;
+use tests\codeception\unit\models\Item01;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
 use raoul2000\workflow\source\php\WorkflowPhpSource;
@@ -31,10 +31,13 @@ class WorkflowTest extends TestCase
 		$this->assertFalse($this->src->isValidWorkflowId('-workflowId'));
 		$this->assertFalse($this->src->isValidWorkflowId(' workflowId'));
 		$this->assertFalse($this->src->isValidWorkflowId('workflowId/'));
+		$this->assertFalse($this->src->isValidWorkflowId('1'));
+		$this->assertFalse($this->src->isValidWorkflowId('WORKFLOW_id'));
 
 		$this->assertTrue($this->src->isValidWorkflowId('workflowId'));
-		$this->assertTrue($this->src->isValidWorkflowId('workflow_Id'));
-		$this->assertTrue($this->src->isValidWorkflowId('WORKFLOW_id'));
+		$this->assertTrue($this->src->isValidWorkflowId('workflow-Id'));
+		$this->assertTrue($this->src->isValidWorkflowId('workflow01-Id02'));
+		$this->assertTrue($this->src->isValidWorkflowId('w01-2'));
 	}
 
 	public function testIsValidStatusId()
@@ -43,10 +46,11 @@ class WorkflowTest extends TestCase
 		$this->assertFalse($this->src->isValidStatusId('/id'));
 		$this->assertFalse($this->src->isValidStatusId('id/'));
 		$this->assertFalse($this->src->isValidStatusId('/'));
+		$this->assertFalse($this->src->isValidStatusId('workflow_id/status_id'));
 		$this->assertFalse($this->src->isValidStatusId('workflow id/status id'));
 
-		$this->assertTrue($this->src->isValidStatusId('workflow_id/status_id'));
 		$this->assertTrue($this->src->isValidStatusId('ID/ID'));
+		$this->assertTrue($this->src->isValidStatusId('workflow-id/status-id'));
 	}
 
 	public function testParseStatusId()

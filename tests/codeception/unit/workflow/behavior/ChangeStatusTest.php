@@ -4,10 +4,10 @@ namespace tests\unit\workflow\behavior;
 
 use Yii;
 use yii\codeception\DbTestCase;
-use tests\codeception\unit\models\Item_01;
+use tests\codeception\unit\models\Item01;
 use yii\base\InvalidConfigException;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
-use tests\codeception\unit\fixtures\ItemFixture_04;
+use tests\codeception\unit\fixtures\ItemFixture04;
 
 class ChangeStatusTest extends DbTestCase
 {
@@ -16,7 +16,7 @@ class ChangeStatusTest extends DbTestCase
 	public function fixtures()
 	{
 		return [
-			'items' => ItemFixture_04::className(),
+			'items' => ItemFixture04::className(),
 		];
 	}
 	protected function setup()
@@ -36,26 +36,26 @@ class ChangeStatusTest extends DbTestCase
     public function testChangeStatusOnSaveFailed()
     {
     	$item = $this->items('item1');
-    	$this->assertTrue($item->workflowStatus->getId() == 'Item_04Workflow/B');
+    	$this->assertTrue($item->workflowStatus->getId() == 'Item04Workflow/B');
 
     	$this->setExpectedException(
-    		'raoul2000\workflow\base\WorkflowException', 'Status not found : Item_04Workflow/Z'
+    		'raoul2000\workflow\base\WorkflowException', 'Status not found : Item04Workflow/Z'
     	);
 
-    	$item->status = 'Item_04Workflow/Z';
+    	$item->status = 'Item04Workflow/Z';
     	$item->save(false);
     }
 
     public function testChangeStatusByMethodFailed()
     {
     	$item = $this->items('item1');
-    	$this->assertTrue($item->workflowStatus->getId() == 'Item_04Workflow/B');
+    	$this->assertTrue($item->workflowStatus->getId() == 'Item04Workflow/B');
 
     	$this->setExpectedException(
-    		'raoul2000\workflow\base\WorkflowException', 'Status not found : Item_04Workflow/Z'
+    		'raoul2000\workflow\base\WorkflowException', 'Status not found : Item04Workflow/Z'
     	);
 
-		$item->sendToStatus('Item_04Workflow/Z');
+		$item->sendToStatus('Item04Workflow/Z');
     }
 
     public function testChangeStatusOnSaveSuccess()
@@ -63,11 +63,11 @@ class ChangeStatusTest extends DbTestCase
     	$item = $this->items('item1');
     	$this->specify('success saving model and perform transition',function() use ($item) {
 
-    		$item->status = 'Item_04Workflow/C';
-    		verify('current status is ok',$item->workflowStatus->getId())->equals('Item_04Workflow/B');
+    		$item->status = 'Item04Workflow/C';
+    		verify('current status is ok',$item->workflowStatus->getId())->equals('Item04Workflow/B');
     		expect('save returns true',$item->save(false))->equals(true);
-    		verify('model status attribute has not been modified',$item->status)->equals('Item_04Workflow/C');
-    		verify('model current status has not been modified',$item->getWorkflowStatus()->getId())->equals('Item_04Workflow/C');
+    		verify('model status attribute has not been modified',$item->status)->equals('Item04Workflow/C');
+    		verify('model current status has not been modified',$item->getWorkflowStatus()->getId())->equals('Item04Workflow/C');
     	});
     }
 }

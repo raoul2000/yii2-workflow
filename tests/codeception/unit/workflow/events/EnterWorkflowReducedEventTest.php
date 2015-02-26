@@ -6,7 +6,7 @@ use Yii;
 use yii\codeception\TestCase;
 use yii\base\InvalidConfigException;
 
-use tests\codeception\unit\models\Item_04;
+use tests\codeception\unit\models\Item04;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
 use raoul2000\workflow\events\WorkflowEvent;
 use raoul2000\workflow\base\WorkflowException;
@@ -29,7 +29,7 @@ class EnterWorkflowReducedEventTest extends TestCase
 			'class'=> 'raoul2000\workflow\events\ReducedEventSequence',
 		]);
 
-		$this->model = new Item_04();
+		$this->model = new Item04();
 		$this->model->attachBehavior('workflow', [
 			'class' => SimpleWorkflowBehavior::className()
 		]);
@@ -44,13 +44,13 @@ class EnterWorkflowReducedEventTest extends TestCase
     public function testOnEnterWorkflowSuccess()
     {
     	$this->model->on(
-    		WorkflowEvent::beforeEnterWorkflow('Item_04Workflow'),
+    		WorkflowEvent::beforeEnterWorkflow('Item04Workflow'),
     		function($event) {
     			$this->eventsBefore[] = $event;
     		}
     	);
     	$this->model->on(
-    		WorkflowEvent::afterEnterWorkflow('Item_04Workflow'),
+    		WorkflowEvent::afterEnterWorkflow('Item04Workflow'),
     		function($event) {
     			$this->eventsAfter[] = $event;
     		}
@@ -69,14 +69,14 @@ class EnterWorkflowReducedEventTest extends TestCase
     public function testOnEnterWorkflowError()
     {
     	$this->model->on(
-    		WorkflowEvent::beforeEnterWorkflow('Item_04Workflow'),
+    		WorkflowEvent::beforeEnterWorkflow('Item04Workflow'),
     		function($event) {
     			$this->eventsBefore[] = $event;
     			$event->isValid = false;
     		}
     	);
     	$this->model->on(
-    		WorkflowEvent::afterEnterWorkflow('Item_04Workflow'),
+    		WorkflowEvent::afterEnterWorkflow('Item04Workflow'),
     		function($event) {
     			$this->eventsAfter[] = $event;
     		}

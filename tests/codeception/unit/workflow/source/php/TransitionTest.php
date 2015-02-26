@@ -4,7 +4,7 @@ namespace tests\unit\workflow\source\php;
 
 use Yii;
 use yii\codeception\TestCase;
-use tests\codeception\unit\models\Item_01;
+use tests\codeception\unit\models\Item01;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
 use raoul2000\workflow\source\php\WorkflowPhpSource;

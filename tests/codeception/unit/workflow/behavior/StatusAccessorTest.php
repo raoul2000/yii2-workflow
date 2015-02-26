@@ -4,8 +4,8 @@ namespace tests\unit\workflow\behavior;
 use Yii;
 use yii\codeception\TestCase;
 use yii\base\InvalidConfigException;
-use tests\codeception\unit\models\Item_07;
-use tests\codeception\unit\models\StatusAccessor_07;
+use tests\codeception\unit\models\Item07;
+use tests\codeception\unit\models\StatusAccessor07;
 use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
 use raoul2000\workflow\base\WorkflowException;
@@ -28,40 +28,40 @@ class StatusAccessorTest extends TestCase
 
 
 		Yii::$app->set('status_accessor',[
-			'class'=> 'tests\codeception\unit\models\StatusAccessor_07'
+			'class'=> 'tests\codeception\unit\models\StatusAccessor07'
 		]);
 
 		$this->statusAccessor = Yii::$app->get('status_accessor');
 		$this->statusAccessor->resetCallCounters();
-		StatusAccessor_07::$instanceCount = 1;
+		StatusAccessor07::$instanceCount = 1;
 	}
 
 	public function testOnConstructSuccess()
 	{
-		$this->statusAccessor->statusToReturnOnGet = 'Item_07Workflow/B';
+		$this->statusAccessor->statusToReturnOnGet = 'Item07Workflow/B';
 
-		$item = new Item_07();
+		$item = new Item07();
 
-		verify(StatusAccessor_07::$instanceCount)->equals(1);
+		verify(StatusAccessor07::$instanceCount)->equals(1);
 
 		$this->specify('on instance creation getStatus is invoked', function() use ($item) {
 			expect('getStatus has been called ',$this->statusAccessor->callGetStatusCount)->equals(1);
-			expect('item status is Item_07Workflow/B', $item->getworkflowStatus()->getId())->equals('Item_07Workflow/B');
+			expect('item status is Item07Workflow/B', $item->getworkflowStatus()->getId())->equals('Item07Workflow/B');
 		});
 	}
 	public function testOnConstructFails()
 	{
 		$this->statusAccessor->statusToReturnOnGet = 'NOT FOUND';
 		$this->setExpectedException('raoul2000\workflow\base\WorkflowException',"Not a valid status id format: failed to get workflow id - status = 'NOT FOUND'");
-		new Item_07();
+		new Item07();
 	}
 	public function testOnEnterWorkflowByMethodSuccess()
 	{
 		$this->statusAccessor->statusToReturnOnGet = null;
 
-		$item = new Item_07();
+		$item = new Item07();
 
-		verify(StatusAccessor_07::$instanceCount)->equals(1);
+		verify(StatusAccessor07::$instanceCount)->equals(1);
 		verify(spl_object_hash($this->statusAccessor))->equals(spl_object_hash($item->getStatusAccessor()));
 
 		verify($item->getWorkflowStatus())->equals(null);
@@ -69,8 +69,8 @@ class StatusAccessorTest extends TestCase
 		// by method call (no save)
 		$item->enterWorkflow();
 
-		expect(StatusAccessor_07::$instanceCount)->equals(1);
-		expect($item->getWorkflowStatus()->getId())->equals('Item_07Workflow/A');
+		expect(StatusAccessor07::$instanceCount)->equals(1);
+		expect($item->getWorkflowStatus()->getId())->equals('Item07Workflow/A');
 		expect('setStatus has been called ',$this->statusAccessor->callSetStatusCount)->equals(1);
 
 		verify(spl_object_hash($this->statusAccessor))->equals(spl_object_hash($item->getStatusAccessor()));
@@ -80,30 +80,30 @@ class StatusAccessorTest extends TestCase
 	{
 		$this->statusAccessor->statusToReturnOnGet = null;
 
-		$item = new Item_07();
+		$item = new Item07();
 
-		verify(StatusAccessor_07::$instanceCount)->equals(1);
+		verify(StatusAccessor07::$instanceCount)->equals(1);
 		verify(spl_object_hash($this->statusAccessor))->equals(spl_object_hash($item->getStatusAccessor()));
 
 		verify($item->getWorkflowStatus())->equals(null);
 
 		// by assignation + save
-		$item->statusAlias = 'Item_07Workflow/A';
+		$item->statusAlias = 'Item07Workflow/A';
 		$saveIsOk = $item->save();
 		verify('model could be saved',$saveIsOk)->true();
-		verify('item status is now initial status',$item->getWorkflowStatus()->getId())->equals('Item_07Workflow/A');
+		verify('item status is now initial status',$item->getWorkflowStatus()->getId())->equals('Item07Workflow/A');
 		expect('setStatus has been called once',$this->statusAccessor->callSetStatusCount)->equals(1);
 		expect('commitStatus has been called ',$this->statusAccessor->callCommitStatusCount)->equals(1);
 	}
 
 	public function testOnEnterWorkflowFails()
 	{
-		$this->statusAccessor->statusToReturnOnGet = 'Item_07Workflow/B';
+		$this->statusAccessor->statusToReturnOnGet = 'Item07Workflow/B';
 
-		$item = new Item_07();
+		$item = new Item07();
 
-		verify(StatusAccessor_07::$instanceCount)->equals(1);
-		verify('item status is Item_07Workflow/B', $item->getworkflowStatus()->getId())->equals('Item_07Workflow/B');
+		verify(StatusAccessor07::$instanceCount)->equals(1);
+		verify('item status is Item07Workflow/B', $item->getworkflowStatus()->getId())->equals('Item07Workflow/B');
 		verify('getStatus has been called ',$this->statusAccessor->callGetStatusCount)->equals(1);
 
 		$this->setExpectedException('raoul2000\workflow\base\WorkflowException',"Model already in a workflow");
@@ -112,23 +112,23 @@ class StatusAccessorTest extends TestCase
 	}
 	public function testCallCommitStatusSuccess()
 	{
-		$this->statusAccessor->statusToReturnOnGet = 'Item_07Workflow/B';
+		$this->statusAccessor->statusToReturnOnGet = 'Item07Workflow/B';
 
-		$item = new Item_07();
+		$item = new Item07();
 
 		verify('getStatus has been called ',$this->statusAccessor->callGetStatusCount)->equals(1);
 
 		// change status by assignation + save
-		$item->statusAlias = 'Item_07Workflow/C';
+		$item->statusAlias = 'Item07Workflow/C';
 		verify('model can be saved', $item->save())->true();
 
 		expect('setStatus has been called ',$this->statusAccessor->callSetStatusCount)->equals(1);
 		expect('commitStatus has been called ',$this->statusAccessor->callCommitStatusCount)->equals(1);
 
 		// change status by method call
-		$item->sendToStatus('Item_07Workflow/A');
+		$item->sendToStatus('Item07Workflow/A');
 
-		verify('model status has changed', $item->getWorkflowStatus()->getId())->equals('Item_07Workflow/A');
+		verify('model status has changed', $item->getWorkflowStatus()->getId())->equals('Item07Workflow/A');
 
 		expect('setStatus has been called ',$this->statusAccessor->callSetStatusCount)->equals(2);
 		expect('commitStatus has not bee called',$this->statusAccessor->callCommitStatusCount)->equals(1);

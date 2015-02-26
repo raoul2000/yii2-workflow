@@ -4,7 +4,7 @@ namespace tests\unit\workflow\source\php;
 
 use Yii;
 use yii\codeception\TestCase;
-use tests\codeception\unit\models\Item_04;
+use tests\codeception\unit\models\Item04;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
 use raoul2000\workflow\source\php\WorkflowPhpSource;
@@ -32,7 +32,7 @@ class ClassMapTest extends TestCase
 			verify($src->getClassMapByType(WorkflowPhpSource::TYPE_STATUS))->equals(	'tests\codeception\unit\models\MyStatus'  );
 			verify($src->getClassMapByType(WorkflowPhpSource::TYPE_TRANSITION))->equals('raoul2000\workflow\base\Transition');
 
-			$status = $src->getStatus('Item_04Workflow/A');
+			$status = $src->getStatus('Item04Workflow/A');
 
 			expect(get_class($status))->equals('tests\codeception\unit\models\MyStatus');
 		});

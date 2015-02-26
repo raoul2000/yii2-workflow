@@ -6,7 +6,7 @@ use Yii;
 use yii\codeception\DbTestCase;
 use yii\base\InvalidConfigException;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
-use tests\codeception\unit\models\Item_04;
+use tests\codeception\unit\models\Item04;
 use raoul2000\workflow\base\WorkflowException;
 use raoul2000\workflow\events\WorkflowEvent;
 use raoul2000\workflow\base\Status;
@@ -33,7 +33,7 @@ class ChangeStatusReducedEventTest extends DbTestCase
 			'class'=> 'raoul2000\workflow\events\ReducedEventSequence',
 		]);
 
-		$this->model = new Item_04();
+		$this->model = new Item04();
 		$this->model->attachBehavior('workflow', [
 			'class' => SimpleWorkflowBehavior::className()
 		]);
@@ -48,13 +48,13 @@ class ChangeStatusReducedEventTest extends DbTestCase
     public function testChangeStatusEventOnSaveSuccess()
     {
     	$this->model->on(
-    		WorkflowEvent::beforeChangeStatus('Item_04Workflow/A', 'Item_04Workflow/B'),
+    		WorkflowEvent::beforeChangeStatus('Item04Workflow/A', 'Item04Workflow/B'),
     		function($event) {
     			$this->eventsBefore[] = $event;
     		}
     	);
     	$this->model->on(
-    		WorkflowEvent::afterChangeStatus('Item_04Workflow/A', 'Item_04Workflow/B'),
+    		WorkflowEvent::afterChangeStatus('Item04Workflow/A', 'Item04Workflow/B'),
     		function($event) {
     			$this->eventsAfter[] = $event;
     		}
@@ -64,10 +64,10 @@ class ChangeStatusReducedEventTest extends DbTestCase
     	verify('current status is set',$this->model->hasWorkflowStatus())->true();
     	verify('event handler handlers have been called', count($this->eventsBefore) == 0 &&   count($this->eventsAfter) == 0)->true();
 
-    	$this->model->status = 'Item_04Workflow/B';
+    	$this->model->status = 'Item04Workflow/B';
     	verify('save succeeds',$this->model->save())->true();
 
-    	expect('model has changed to status B',$this->model->getWorkflowStatus()->getId())->equals('Item_04Workflow/B');
+    	expect('model has changed to status B',$this->model->getWorkflowStatus()->getId())->equals('Item04Workflow/B');
     	expect('beforeChangeStatus handler has been called',count($this->eventsBefore))->equals(1);
     	expect('afterChangeStatus handler has been called',count($this->eventsAfter))->equals(1);
     }
@@ -75,14 +75,14 @@ class ChangeStatusReducedEventTest extends DbTestCase
     public function testChangeStatusEventOnSaveFails()
     {
     	$this->model->on(
-    		WorkflowEvent::beforeChangeStatus('Item_04Workflow/A', 'Item_04Workflow/B'),
+    		WorkflowEvent::beforeChangeStatus('Item04Workflow/A', 'Item04Workflow/B'),
     		function($event) {
     			$this->eventsBefore[] = $event;
     			$event->isValid = false;
     		}
     	);
     	$this->model->on(
-    		WorkflowEvent::afterChangeStatus('Item_04Workflow/A', 'Item_04Workflow/B'),
+    		WorkflowEvent::afterChangeStatus('Item04Workflow/A', 'Item04Workflow/B'),
     		function($event) {
     			$this->eventsAfter[] = $event;
     		}
@@ -91,10 +91,10 @@ class ChangeStatusReducedEventTest extends DbTestCase
     	verify('current status is set',$this->model->hasWorkflowStatus())->true();
     	verify('event handlers have never been called', count($this->eventsBefore) == 0 &&   count($this->eventsAfter) == 0)->true();
 
-    	$this->model->status = 'Item_04Workflow/B';
+    	$this->model->status = 'Item04Workflow/B';
     	verify('save fails',$this->model->save())->false();
 
-    	expect('model has not changed status',$this->model->getWorkflowStatus()->getId())->equals('Item_04Workflow/A');
+    	expect('model has not changed status',$this->model->getWorkflowStatus()->getId())->equals('Item04Workflow/A');
     	expect('beforeChangeStatus handler has been called',count($this->eventsBefore))->equals(1);
     	expect('afterChangeStatus handler has not been called',count($this->eventsAfter))->equals(0);
     }
