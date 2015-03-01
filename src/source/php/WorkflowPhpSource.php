@@ -46,15 +46,19 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	/**
 	 *	The regular expression used to validate status and workflow Ids.
 	 */
-	//const PATTERN_ID = '/^\w+$/';
 	const PATTERN_ID = '/^[a-zA-Z]+[[:alnum:]-]*$/';
-	
 	/**
 	 * The separator used to create a status id by concatenating the workflow id and
-	 * the status local id.
+	 * the status local id (e.g. post/draft).
 	 */
 	const SEPARATOR_STATUS_NAME = '/';
+	/**
+	 * Name of the array key for status list definition
+	 */
 	const KEY_NODES = 'status';
+	/**
+	 * Name of the key for transition list definition
+	 */
 	const KEY_EDGES = 'transition';
 	/**
 	 * @var string namespace where workflow definition class are located
@@ -76,9 +80,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * @var Transition[] list of out-going Transition instances indexed by the start status id
 	 */
 	private $_t = [];
+	
 
 	/**
-	 * Built-in types names
+	 * Built-in types names used for class map configuration.
 	 */
 	const TYPE_STATUS = 'status';
 	const TYPE_TRANSITION = 'transition';
@@ -87,6 +92,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	/**
 	 * The class map is used to allow the use of alternate classes to implement built-in types. This way
 	 * you can provide your own implementation for status, transition or workflow.
+	 * The class map can be configured when this component is created but can't be modified afterwards.
 	 *
 	 * @var array
 	 */
@@ -125,10 +131,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * If this status was never loaded before, it is loaded now and stored for later use (lazy loading).
 	 *
 	 * If a $model is provided, it must be a BaseActiveRecord instance with a SimpleWorkflowBehavior attached. This model
-	 * is used to complete the status ID if the one defined by the $id argument is not complete. 
+	 * is used to complete the status ID if the one defined by the $id argument is not complete (e.g. 'draft' instead of 'post/draft').
 	 *
 	 * @param string $id ID of the status to get
-	 * @param ActiveBaseRecord $model
+	 * @param ActiveBaseRecord $model model instance used to resolve the status ID
 	 * @return Status the status instance
 	 *
 	 * @see raoul2000\workflow\source\IWorkflowSource::getStatus()
@@ -172,6 +178,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		return $this->_s[$id];
 	}
 	/**
+	 * Returns all out going transitions leaving the status whose id is passed as argument.
+	 * This method also create instances for the initial status and all statuses that can be
+	 * reached from it.
+	 * 
 	 * @see raoul2000\workflow\source\IWorkflowSource::getTransitions()
 	 */
 	public function getTransitions($statusId, $model = null)
@@ -198,10 +208,21 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 
 			$transitions = [];
 			if ( $trDef != null) {
-				if ( ! is_array($trDef)) {
-					throw new WorkflowException('transition definition is not an array for status id = '.$statusId);
+				if ( is_string($trDef)) {
+					$trDef = array_map('trim', explode(',', $trDef));
+				} else if(!is_array($trDef)) {
+					throw new WorkflowException('transition definition is not an array or a comma separated list for status id = '.$statusId);
 				}
-				foreach (array_keys($trDef) as $endStId) {
+				foreach ($trDef as $key => $value) {
+					if(\ctype_digit("$key") && \is_string($value)) {
+						$endStId = $value;
+					} elseif( \is_array($value)) {
+						$endStId = $key;
+						$trCfg = $value;
+					} else {
+						throw new WorkflowException("Invalid transitions definition : use [ 'targetStatus', ...]  ");
+					}
+					
 					$ids = $this->parseStatusId($endStId, $model, $wId);
 					$endId =  implode(self::SEPARATOR_STATUS_NAME, $ids);
 					$end = $this->getStatus($endId);
@@ -209,11 +230,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 					if ( $end == null ) {
 						throw new WorkflowException('end status not found : start(id='.$statusId.') end(id='.$endStId.')');
 					} else {
-						$transitions[] = Yii::createObject([
-							'class' => $this->getClassMapByType(self::TYPE_TRANSITION),
-							'start' => $start,
-							'end'   => $end
-						]);
+						$trCfg['class'] = $this->getClassMapByType(self::TYPE_TRANSITION);
+						$trCfg['start'] = $start;
+						$trCfg['end'  ] = $end;
+						$transitions[] = Yii::createObject($trCfg);
 					}
 				}
 			}
