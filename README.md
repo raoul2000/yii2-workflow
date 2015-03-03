@@ -1,6 +1,8 @@
 # yii2-workflow
 
-![Alt text](https://travis-ci.org/raoul2000/yii2-workflow.svg?branch=master "Optional title")
+![Alt text](https://travis-ci.org/raoul2000/yii2-workflow.svg?branch=master "Optional title") 
+[![Latest Stable Version](https://poser.pugx.org/raoul2000/yii2-workflow/v/dev.svg)](https://packagist.org/packages/raoul2000/yii2-workflow)
+[![Total Downloads](https://poser.pugx.org/raoul2000/yii2-workflow/downloads.svg)](https://packagist.org/packages/raoul2000/yii2-workflow) 
 
 ### Please note that yii2-workflow is under development and may change anytime without warning  
 
