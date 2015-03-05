@@ -39,7 +39,8 @@ class ChangeStatusTest extends DbTestCase
     	$this->assertTrue($item->workflowStatus->getId() == 'Item04Workflow/B');
 
     	$this->setExpectedException(
-    		'raoul2000\workflow\base\WorkflowException', 'Status not found : Item04Workflow/Z'
+    		'raoul2000\workflow\base\WorkflowException', 
+    		'No status found with id Item04Workflow/Z'
     	);
 
     	$item->status = 'Item04Workflow/Z';
@@ -52,7 +53,8 @@ class ChangeStatusTest extends DbTestCase
     	$this->assertTrue($item->workflowStatus->getId() == 'Item04Workflow/B');
 
     	$this->setExpectedException(
-    		'raoul2000\workflow\base\WorkflowException', 'Status not found : Item04Workflow/Z'
+    		'raoul2000\workflow\base\WorkflowException', 
+    		'No status found with id Item04Workflow/Z'
     	);
 
 		$item->sendToStatus('Item04Workflow/Z');

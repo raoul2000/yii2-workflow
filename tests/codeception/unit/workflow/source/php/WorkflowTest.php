@@ -60,19 +60,13 @@ class WorkflowTest extends TestCase
 		$this->assertEquals('Id', $lid);
 		$this->assertTrue(count($this->src->parseStatusId('Wid/Id')) == 2);
 	}
-	public function testAddWorkflowDefinition()
+	/**
+	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
+	 * @expectedExceptionMessageRegExp #No status definition found#
+	 */	
+	public function testAddInvalidWorkflowDefinition()
 	{
 		$this->src->addWorkflowDefinition('wid', ['initialStatusId' => 'A']);
-		$wdef = $this->src->getWorkflowDefinition('wid');
-
-		$this->assertTrue(is_array($wdef));
-		$this->assertEquals(1, count($wdef));
-		$this->assertEquals('A',$wdef['initialStatusId']);
-
-		$this->specify('an exception is thrown when trying to get a not_found workflow definition',function () {
-			$this->src->getWorkflowDefinition('not_found');
-		},['throws' => 'raoul2000\workflow\base\WorkflowException']);
-
 	}
 	public function testGetClassname()
 	{
@@ -103,56 +97,28 @@ class WorkflowTest extends TestCase
     	$this->specify('empty provider fails to load transition from non-existant workflow class', function ()  {
     		$this->src->getTransitions('w/s');
     	},['throws' => 'raoul2000\workflow\base\WorkflowException']);
-
-//     	$this->specify('workflow id inconsistency : provided workflow id differs from configured one', function ()
-//     	{
-//     		$this->src->addWorkflowDefinition('wid', [
-//     			'id' => 'otherId',
-//     			'initialStatusId' => 'A'
-//     		]);
-//     		$this->src->getWorkflow('wid');
-//     	},['throws' => 'raoul2000\workflow\base\WorkflowException']);
     }
 
     public function testLoadMinimalWorkflowSuccess()
     {
     	$src = new WorkflowPhpSource();
     	$src->addWorkflowDefinition('wid', [
-    		'initialStatusId' => 'A'
+    		'initialStatusId' => 'A',
+    		'status' => ['A']
     	]);
-
-		$this->_testLoadMinimalWorkflowSuccess($src);
-
-		$src->addWorkflowDefinition('wid', [
-			'id' => 'wid',
-			'initialStatusId' => 'A'
-		]);
-		$this->_testLoadMinimalWorkflowSuccess($src);
-
-
-		$src->addWorkflowDefinition('wid', [
-			'initialStatusId' => 'A',
-			'status' => null
-		]);
-		$this->_testLoadMinimalWorkflowSuccess($src);
-    }
-
-    private function _testLoadMinimalWorkflowSuccess($src)
-    {
+    	
     	$this->specify('can load workflow', function () use ($src) {
     		$w = $src->getWorkflow('wid');
     		verify('a Workflow instance is returned', get_class($w) )->equals('raoul2000\workflow\base\Workflow');
     		verify('workflow id is consistent', $w->getId())->equals('wid');
     	});
-
-    	$this->specify('fail to load not defined status', function () use ($src) {
-    		verify('null is returned',$src->getStatus('wid/A'))->equals(null);
-    	});
     }
+
     public function testWorkflowCached()
     {
     	$this->src->addWorkflowDefinition('wid', [
-    		'initialStatusId' => 'A'
+    		'initialStatusId' => 'A',
+    		'status' => ['A']
     	]);
 
     	$this->specify('workflow are loaded once',function() {

@@ -43,13 +43,14 @@ class LoadWorkflowTest extends TestCase
 				'C' => [
 					'label' => 'node C',
 					'transition' => ['A','D']
-				]
+				],'D'
 			]
 		]);
     	
     	verify($src->getStatus('wid/A'))->notNull();
     	verify($src->getStatus('wid/B'))->notNull();
     	verify($src->getStatus('wid/C'))->notNull();
+    	verify($src->getStatus('wid/D'))->notNull();
     	
     	verify(count($src->getTransitions('wid/A')))->equals(2);
     }

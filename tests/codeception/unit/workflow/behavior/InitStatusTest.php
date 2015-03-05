@@ -51,7 +51,8 @@ class InitStatusTest extends TestCase
     		$model = new Item01();
     		$model->status = 'Workflow1/X';
     		$this->setExpectedException(
-    			'raoul2000\workflow\base\WorkflowException', 'Status not found : Workflow1/X'
+    			'raoul2000\workflow\base\WorkflowException', 
+    			'No status found with id Workflow1/X'
     		);
     		$model->attachBehavior('workflow', [
     			'class' => SimpleWorkflowBehavior::className(),
@@ -94,6 +95,7 @@ class InitStatusTest extends TestCase
     		verify('current model status is "B"',$model->getWorkflowStatus()->getId())->equals('Workflow1/B');
     	});
     }
+    
     public function testInitStatusAfterFindFails()
     {
     	$this->specify('status initialisation success when saving model', function(){
@@ -106,7 +108,8 @@ class InitStatusTest extends TestCase
     		$model->save(false);
 
     		$this->setExpectedException(
-    			'raoul2000\workflow\base\WorkflowException', 'Status not found : Workflow1/X'
+    			'raoul2000\workflow\base\WorkflowException', 
+    			'No status found with id Workflow1/X'
     		);
 
     		$model = Item01::findOne(1);

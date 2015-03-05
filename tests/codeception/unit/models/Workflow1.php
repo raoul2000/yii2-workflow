@@ -23,7 +23,8 @@ class Workflow1 implements IWorkflowDefinitionProvider
 				'C' => [
 					'label' => 'node C',
 					'transition' => ['A','D']
-				]
+				],
+				'D'
 			]
 		];
 	}
