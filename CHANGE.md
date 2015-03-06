@@ -1,3 +1,7 @@
+#version 0.0.4
+- add tests for raoul2000\workflow\source\php\DefaultArrayParser
+- minor fix in DefaultArrayParser
+
 #version 0.0.3
 - externalize array parser to normalize workflow php array definition
 

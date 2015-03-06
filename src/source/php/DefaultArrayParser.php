@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Object;
 use yii\helpers\ArrayHelper;
 use raoul2000\workflow\base\WorkflowValidationException;
+use yii\helpers\VarDumper;
 
 class DefaultArrayParser extends Object implements IArrayParser {
 	
@@ -41,6 +42,9 @@ class DefaultArrayParser extends Object implements IArrayParser {
 		}
 		$normalized['initialStatusId'] = $initialStatusId;
 	
+		if (! \is_array($definition[WorkflowPhpSource::KEY_NODES])) {
+			throw new WorkflowValidationException('Invalid Status definition : array expected');
+		}
 		$startStatusIdIndex = [];
 		$endStatusIdIndex = [];
 	
@@ -61,7 +65,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 				}
 			} elseif ( is_string($value)) {
 				/**
-				 * 'status' => ['A']
+				 * 'status' => 'A'
 				 */
 				$startStatusId = $value;
 				$startStatusDef = $startStatusId;
@@ -134,13 +138,13 @@ class DefaultArrayParser extends Object implements IArrayParser {
 										$transDef = $tvalue;
 									} elseif ( \is_string($tvalue)){
 										/**
-										 * 'transition' => [ 'A' ]
+										 * 'transition' =>  'A' 
 										 */
 										$endStatusId = $tvalue;
 										$transDef = null;
 									} else {
 										throw new WorkflowValidationException("Wrong transition definition for status $startStatusId : key = "
-												. VarDumper::dumpAsString($tkey). " value = ". VarDumper::dumpAsString($tkey));
+												. VarDumper::dumpAsString($tkey). " value = ". VarDumper::dumpAsString($tvalue));
 									}
 										
 									$pieces = $source->parseStatusId($endStatusId,null,$wId);
@@ -179,6 +183,15 @@ class DefaultArrayParser extends Object implements IArrayParser {
 			}
 		}
 	
+		// copy remaining workflow properties
+		foreach($definition as $propName => $propValue) {
+			if( is_string($propName)) {
+				if( $propName != 'initialStatusId' && $propName != WorkflowPhpSource::KEY_NODES) {
+					$normalized[$propName] = $propValue;
+				}
+			}
+		}
+		
 		if ( $this->validate === true) {
 			if ( ! \in_array($initialStatusId, $startStatusIdIndex)) {
 				throw new WorkflowValidationException("Initial status not defined : $initialStatusId");
