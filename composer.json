@@ -20,7 +20,7 @@
 		"codeception/codeception" : "2.0.9",
 		"codeception/specify" : "*",
 		"codeception/verify" : "*",
-		"yiisoft/yii2-codeception" : "2.0.2"
+		"yiisoft/yii2-codeception" : "*"
 	},
 	"config" : {
 		"process-timeout" : 1800
