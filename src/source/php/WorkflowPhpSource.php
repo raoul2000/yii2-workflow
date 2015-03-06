@@ -44,9 +44,27 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 */	
 	const KEY_METADATA = 'metadata';
 	/**
+	 * Name of the parser class to use by default
+	 */
+	const DEFAULT_PARSER_CLASS = '\raoul2000\workflow\source\php\DefaultArrayParser';
+	/**
+	 * Name of the default parser component to use with the behavior. This value can be overwritten
+	 * by the 'parser' configuration setting.
+	 * Example : 
+	 * 'workflowSource' => [
+	 * 		'class' => 'raoul2000\workflow\source\php\WorkflowPhpSource',
+	 * 		'parser' => 'myparser'
+	 * ]
+	 */	
+	const DEFAULT_PARSER_NAME = 'workflowArrayParser';
+	/**
 	 * @var string namespace where workflow definition class are located
 	 */
 	public $namespace = 'app\models';
+	/**
+	 * @var Object reference to the parser to use with this WorkflowPhpSource
+	 */
+	private $_parser;
 	/**
 	 * @var array list of all workflow definition indexed by workflow id
 	 */
@@ -107,6 +125,22 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 				throw new InvalidConfigException("Invalid property type : 'classMap' must be a non-empty array");
 			}
 		}
+		
+		// create the parser component or get it by name from Yii::$app
+		
+		$parserName = isset($config['parser']) ? $config['parser'] : 'workflowArrayParser';
+		if ( $parserName == null ) {
+			$this->_parser = null;
+		} elseif ( is_string($parserName)) {
+			if (  ! Yii::$app->has($parserName)) {
+				Yii::$app->set($parserName, ['class'=> self::DEFAULT_PARSER_CLASS]);
+			}
+			$this->_parser = Yii::$app->get($parserName);
+			unset($config['parser']);
+		} else {
+			throw new InvalidConfigException("Invalid property type : 'parser' must be a a string or NULL");
+		}		
+
 		parent::__construct($config);
 	}
 	/**
@@ -222,7 +256,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * Returns the Workflow instance whose id is passed as argument.
 	 *
 	 * @see \raoul2000\workflow\WorkflowSource::getWorkflow()
-	 * @return Workflow|null The workflow instance or NULL if no workflow could be found
+	 * @return raoul2000\workflow\base\Workflow|null The workflow instance or NULL if no workflow could be found
 	 */
 	public function getWorkflow($id)
 	{
@@ -250,12 +284,13 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 
 	/**
 	 * Loads definition for the workflow whose id is passed as argument.
+	 * 
 	 * The workflow Id passed as argument is used to create the class name of the object
 	 * that holds the workflow definition.
 	 *
 	 * @param string $id
 	 * @param object $model
-	 * @throws WorkflowException the definition could not be loaded
+	 * @throws raoul2000\workflow\base\WorkflowException the definition could not be loaded
 	 */
 	public function getWorkflowDefinition($id)
 	{
@@ -271,8 +306,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 				throw new WorkflowException('failed to load workflow definition : '.$e->getMessage());
 			}
 			if ( $this->isWorkflowProvider($wfProvider)) {
-				$this->_workflowDef[$id] = $this->validate($id, $wfProvider->getDefinition());
-				
+				$this->_workflowDef[$id] = $this->parse($id, $wfProvider->getDefinition());
 			} else {
 				throw new WorkflowException('Invalid workflow provider class : '.$wfClassname);
 			}
@@ -357,7 +391,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 			throw new WorkflowException('Not a valid status id : a non-empty string is expected  - status = '.VarDumper::dumpAsString($val));
 		}
 
-		$tokens = explode(self::SEPARATOR_STATUS_NAME, $val);
+		$tokens = array_map('trim', explode(self::SEPARATOR_STATUS_NAME, $val));
 		$tokenCount = count($tokens);
 		if ( $tokenCount == 1) {
 			$tokens[1] = $tokens[0];
@@ -468,190 +502,34 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		if ( $overwrite == false && isset($this->_workflowDef[$workflowId])) {
 			return false;
 		} else {
-			$this->_workflowDef[$workflowId] = $this->validate($workflowId, $definition);
+			$this->_workflowDef[$workflowId] = $this->parse($workflowId, $definition);
 			unset($this->_w[$workflowId]);
 			return true;
 		}
 	}
 	/**
-	 * Loads a workflow defined as a PHP Array.
+	 * Returns the parser used by this source or NULL if no parser is used. In this case, it is assumed
+	 * that all workflow definitions provided to this source as PHP array, are in the normalized form.
 	 * 
-	 * @param string $wId
-	 * @param array $definition
-	 * @throws WorkflowValidationException
+	 * @return \raoul2000\workflow\source\php\IArrayParser 
 	 */
-	public function validate($wId, $definition) {
-		
-		$normalized = [];
-		if ( ! isset($definition['initialStatusId'])) {
-			throw new WorkflowValidationException('Missing "initialStatusId"');
+	public function getWorkflowParser()
+	{
+		return $this->_parser;
+	}
+	/**
+	 * Convert the $definition array in its normalized form used internally by this source.
+	 * 
+	 * @param string $workflowId
+	 * @param array $definition
+	 * @return array the workflow in its normalized format
+	 */
+	public function parse($workflowId, $definition) 
+	{
+		if( $this->getWorkflowParser() != null) {
+			return $this->getWorkflowParser()->parse($workflowId, $definition, $this);
+		} else {
+			return $definition;
 		}
-		
-		$pieces = $this->parseStatusId( $definition['initialStatusId'],null,$wId);
-		$initialStatusId = \implode(self::SEPARATOR_STATUS_NAME, $pieces);
-		
-		if ( ! isset($definition[self::KEY_NODES])) {
-			throw new WorkflowValidationException("No status definition found");
-		}
-		$normalized['initialStatusId'] = $initialStatusId;
-		
-		$startStatusIdIndex = [];
-		$endStatusIdIndex = [];
-		
-		foreach($definition[self::KEY_NODES] as $key => $value) {
-			$startStatusId = null;
-			$startStatusDef = null;
-			if ( is_string($key) ) {
-				/**
-				 * 'status' => ['A' => ???]
-				 */				
-				$startStatusId = $key;
-				if( $value == null) {
-					$startStatusDef = $startStatusId;	// 'status' => ['A' => null]
-				}elseif (  \is_array($value)) {
-					$startStatusDef = $value;			// 'status' => ['A' => [ ...] ]
-				}else {
-					throw new WorkflowValidationException("Wrong definition for status $startStatusId : array expected");
-				}
-			} elseif ( is_string($value)) {
-				/**
-				 * 'status' => ['A']
-				 */
-				$startStatusId = $value;
-				$startStatusDef = $startStatusId;
-			} else {
-				throw new WorkflowValidationException("Wrong status definition : key = " . VarDumper::dumpAsString($key). " value = ". VarDumper::dumpAsString($value));
-			}
-						
-			$pieces = $this->parseStatusId($startStatusId,null,$wId);
-			$startStatusId = $startStatusIdIndex[] = \implode(self::SEPARATOR_STATUS_NAME, $pieces);	
-			
-			if ( is_array($startStatusDef) ) {
-				
-				if( count($startStatusDef) == 0) {
-					/**
-					 * empty status config array
-					 * 
-					 * 'A' => []
-					 */		
-					$normalized[self::KEY_NODES][$startStatusId] = null;
-				} else {
-					foreach ($startStatusDef as $startStatusKey => $startStatusValue) {
-						if ( $startStatusKey == self::KEY_METADATA ) 
-						{
-							/**
-							 * validate metadata
-							 * 
-							 * 'A' => [
-							 * 		'metadata' => [ 'key' => 'value']
-							 * ]
-							 */
-							
-							if ( \is_array($startStatusDef[self::KEY_METADATA])) {
-								if (! ArrayHelper::isAssociative($startStatusDef[self::KEY_METADATA])) {
-									throw new WorkflowValidationException("Invalid metadata definition for status $startStatusId : associative array expected");
-								}
-							} else {
-								throw new WorkflowValidationException("Invalid metadata definition for status $startStatusId : array expected");
-							}
-							$normalized[self::KEY_NODES][$startStatusId][self::KEY_METADATA] = $startStatusDef[self::KEY_METADATA];
-						} 
-						elseif ( $startStatusKey == 'transition') 
-						{				
-							$transitionDefinition = $startStatusDef['transition'];
-							if ( \is_string($transitionDefinition)) {
-								/**
-								 *  'A' => [
-								 *   	'transition' => 'A, B, WID/C'
-								 *   ]
-								 */							
-								$ids = array_map('trim', explode(',', $transitionDefinition));
-								foreach ($ids as $id) {
-									$pieces = $this->parseStatusId($id,null,$wId);
-									$canEndStId = \implode(self::SEPARATOR_STATUS_NAME, $pieces);
-									$endStatusIdIndex[] = $canEndStId;
-									$normalized[self::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
-								}
-							} elseif ( \is_array($transitionDefinition)) {
-								/**
-								 *  'transition' => [ ...]
-								 */							
-								foreach( $transitionDefinition as $tkey => $tvalue) {
-									if ( \is_string($tkey)) {
-										/**
-										 * 'transition' => [ 'A' => [] ]
-										 */									
-										$endStatusId = $tkey;
-										if ( ! \is_array($tvalue)) {
-											throw new WorkflowValidationException("Wrong definition for between $startStatusId and $endStatusId : array expected");
-										}		
-										$transDef = $tvalue;
-									} elseif ( \is_string($tvalue)){
-										/**
-										 * 'transition' => [ 'A' ]
-										 */									
-										$endStatusId = $tvalue;
-										$transDef = null;
-									} else {
-										throw new WorkflowValidationException("Wrong transition definition for status $startStatusId : key = " 
-											. VarDumper::dumpAsString($tkey). " value = ". VarDumper::dumpAsString($tkey));
-									}
-									
-									$pieces = $this->parseStatusId($endStatusId,null,$wId);
-									$canEndStId = \implode(self::SEPARATOR_STATUS_NAME, $pieces);	
-									$endStatusIdIndex[] = $canEndStId;
-									
-									if ( $transDef != null) {
-										$normalized[self::KEY_NODES][$startStatusId]['transition'][$canEndStId] = $transDef;
-									}else {
-										$normalized[self::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
-									}
-								}
-							} else {
-								throw new WorkflowValidationException("Invalid transition definition format for status $startStatusId : string or array expected");
-							}
-						} 
-						elseif ( \is_string($startStatusKey)) {
-							$normalized[self::KEY_NODES][$startStatusId][$startStatusKey] = $startStatusValue;
-						} 
-					}
-				}
-			} else { //$startStatusDef is not array
-				/**
-				 * Node IDS must be canonical and array keys
-				 * 'status' => [
-				 * 		'A'
-				 * ]
-				 *  turned into
-				 *  
-				 * 'status' => [
-				 * 		'WID/A' => null
-				 * ]
-
-				 */
-				$normalized[self::KEY_NODES][$startStatusId] = null;
-			}
-		}
-		
-		if ( ! \in_array($initialStatusId, $startStatusIdIndex)) {
-			throw new WorkflowValidationException("Initial status not defined : $initialStatusId");
-		}
-		
-		// detect not defined statuses 
-		
-		$missingStatusIdSuspects = \array_diff($endStatusIdIndex, $startStatusIdIndex);
-		if ( count($missingStatusIdSuspects) != 0) {
-			$missingStatusId = [];
-			foreach ($missingStatusIdSuspects as $id) {
-				list($thisWid, $thisSid) = $this->parseStatusId($id,null,$wId);
-				if ($thisWid == $wId) {
-					$missingStatusId[] = $id; // refering to the same workflow, this Id is not defined
-				}
-			}
-			if ( count($missingStatusId) != 0) {
-				throw new WorkflowValidationException("One or more end status are not defined : ".VarDumper::dumpAsString($missingStatusId));
-			}
-		}
-		return $normalized;
 	}
 }

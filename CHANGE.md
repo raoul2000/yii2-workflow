@@ -1,3 +1,6 @@
+#version 0.0.3
+- externalize array parser to normalize workflow php array definition
+
 #version 0.0.2
 - change regex for status and workflow ID pattern: now `/^[a-zA-Z]+[[:alnum:]-]*$/`
 - Improve WorkflowPhpSource parsing of a workflow defined as a PHP array.
