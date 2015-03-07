@@ -142,7 +142,13 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 
 	/**
-	 * (non-PHPdoc)
+	 * At initialization time, following actions are taken :
+	 * - perform validation
+	 * - get a reference to the workflow source component. If it doesn't exist, it is created.
+	 * - get a reference to the event model component or create it if needed
+	 * - get a reference to the status converter component
+	 * - get a reference to the status accessor component
+	 *  
 	 * @see \yii\base\Object::init()
 	 */
 	public function init()
@@ -399,6 +405,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * this method returns the event sequence that will occur in the workflow or an empty array if no event is found.<br/>
 	 * A "event sequence" is an array containing an ordered set of WorkflowEvents instances.
 	 * Possible events sequences are :
+	 * 
 	 * <ul>
 	 *	<li>[enterWorkflow, enterStatus] : when the current Workflow status is null and $status contains the id of an initial status</li>
 	 *	<li>[leaveStatus,leaveWorkflow] : when the current Workflow status is not null, and $status is null</li>
@@ -498,34 +505,34 @@ class SimpleWorkflowBehavior extends Behavior
 	 * When $validate is true, the model is validated for each scenario and for each possible transition.
 	 * When $beforeEvents is true, all "before" events are fired and if a handler is attached it is executed.
 	 *
-	 * Each entry of the returned array hasthe following structure :
+	 * Each entry of the returned array has the following structure :
 	 *
 	 * <pre>
 	 *
-		[
-		    targetStatusId => [
-		        'status' => the status instance
-		    ],
-			// if $validate is true
-			'validation' => [
-				0 => [
-					'scenario' => scenario name
-					'success' => true (validation success) | false (validation failure) | null (no validation for this scenario)
-				],
-				1 => [ ... ]
-			],
-			// if $beforeEvent is TRUE
-			'event' => [
-				0 => [
-					'name' => event name
-					'success' => true (event handler success) | false (event handler failed : the event has been invalidated) | null (no event handler)
-				]
-				1 => [...]
-			],
-			// if $validate is true or if $beforeEvent is TRUE
-			'isValid' => true (being given the verifications that were done, the target status can be reached)
-						| false (being given the verifications that were done, the target status cannot be reached)
-		]
+	 *	[
+	 *	    targetStatusId => [
+	 *	        'status' => the status instance
+	 *	    ],
+	 *		// if $validate is true
+	 *		'validation' => [
+	 *			0 => [
+	 *				'scenario' => scenario name
+	 *				'success' => true (validation success) | false (validation failure) | null (no validation for this scenario)
+	 *			],
+	 *			1 => [ ... ]
+	 *		],
+	 *		// if $beforeEvent is TRUE
+	 *		'event' => [
+	 *			0 => [
+	 *				'name' => event name
+	 *				'success' => true (event handler success) | false (event handler failed : the event has been invalidated) | null (no event handler)
+	 *			]
+	 *			1 => [...]
+	 *		],
+	 *		// if $validate is true or if $beforeEvent is TRUE
+	 *		'isValid' => true (being given the verifications that were done, the target status can be reached)
+	 *					| false (being given the verifications that were done, the target status cannot be reached)
+	 *	]
 	 *
 	 * </pre>
 	 *
