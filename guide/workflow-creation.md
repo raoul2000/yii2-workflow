@@ -6,7 +6,23 @@ to learn how to create this array and thus define the craziest workflow ever !! 
 
 ## Identifiers
 
-TBD
+Identifiers used for both statuses and workflows are strings that must start with a letter followed by 
+alpha numerical characters. If you need a delimiter, you can use the minus (-) characters.
+
+Example :
+
+- valid Ids : 'post', 'draft', 'PostWorkflow', 'My-workflow', 'published'
+- invalid Ids : 'my workflow', 'draft mode', '01workflow', 'post_workflow'
+
+#### Absolute Status Ids
+
+An absolute status Id is a composite value that includes the id of the workflow that owns the status. The characters slash (/) is then
+used to separate both ids.
+
+For example, if we have a status with "draft" that belong to the workflow 'post', the absolute status Id is 'post/draft'.
+
+Most of the time, you will not use absolute status id, but note that internally they are required by the WorkflowPhpSource component.
+
 
 ## Workflow Provider
 
@@ -46,11 +62,77 @@ The PHP array defining a workflow is an associative array that must contains 2 k
 ]
 ```
 
-## Status Definition
+## Status List Definition
 
-TBD
+The status  list definition is an associative array where keys are status Ids and values are status definitions. 
+If a status doesn't need any particular definition, it can be defined directly as a string value.
 
-The status definition is an associative array that may contain 2 keys :
+In the example below, both 'draft' and 'pusblised' have a specific definition, but 'archived' doesn't.
 
-- *transition* :
-- *label* : 
+```php
+[ 
+	'initialStatusId' => 'draft',
+	'status' => [
+		'draft'     => [ // single status definition ]
+		'published' => [ // single status definition ]
+		'archived'
+	]
+]
+```
+
+## Single Status Definition
+
+A Single Status Definition is an associative array that may contains 2 specific keys : **transition** and **label**
+
+- *transition* : `array|string` list of ids for all statuses that can be reached
+- *label* : `string` user friendly name. If not set, the label is automatically created from the status Id. 
+
+```php
+[ 
+	'initialStatusId' => 'draft',
+	'status' => [
+		'draft'     => [
+			'label'      => 'Draft State'
+			'transition' => // transitions definition
+		]
+	]
+]
+```
+
+## Transition Definition
+
+A Transition Definition is an array or a string defining the list of status that can be reached from the current status.
+In the example below, we are defining a workflow with following transitions:
+
+- draft -> published
+- published -> draft
+- published -> archived 
+
+As you can see, there is no transition that leaves the status 'archived'. Once an item reaches this status it will never
+move to another status again: 'archived' is called a **final status**.
+
+```php
+[ 
+	'initialStatusId' => 'draft',
+	'status' => [
+		'draft'     => [
+			'label'      => 'Draft State'
+			'transition' => 'published'
+		],
+		'published' => [
+			'transition' => ['draft','published']
+		],
+		'archived'
+	]
+]
+```
+
+Alternatively you can also use a comma separated list of status Id to define a transition. For example, transitions for the 'published' status above , 
+could also be written this way : 
+
+```php
+'published' => [
+	'transition' => 'draft, published'
+]
+```
+
