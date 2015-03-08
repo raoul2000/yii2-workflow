@@ -136,3 +136,23 @@ could also be written this way :
 ]
 ```
 
+## Metadata
+
+Ok, we are now able to create workflows ! We can define statuses and transitions between them. As you you can see, the minimum attributes for a status is
+its *id* and optionally we can set a *label*, but that's all. Well, that not a lot. What if I need to add more properties to my statuses ? Like for instance
+is could be nice to associate a color with each status, and display this color to the user. The solution is *metadata*.
+
+The *metadata* allows you to add almost any attribute not only to statuses, but also to workflow and transition. Let's see that on an example where we are
+going to add a *color* and an *icon* metadata to the *published* status. 
+
+```php
+'published' => [
+	'metadata' => [
+		'color' => 'green',
+		'icon'  => 'glyphicon glyphicon-pencil'
+	]
+]
+```
+
+Later on we will be able to retrieve these value of course, and use them the way we want.
+  
