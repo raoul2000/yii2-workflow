@@ -1,3 +1,17 @@
+#version 0.0.5
+- add MinimalArrayParser for workflow definition PHP arrays provided as for instance : 
+
+```php
+[
+	'draft'     => ['ready', 'delivered'],
+	'ready'     => ['draft', 'delivered'],
+	'delivered' => ['payed', 'archived'],
+	'payed'     => ['archived'],
+	'archived'  => []
+]
+```
+The *initialStatusId* is the first status defined (here *draft*)
+
 #version 0.0.4
 - add tests for raoul2000\workflow\source\php\DefaultArrayParser
 - minor fix in DefaultArrayParser

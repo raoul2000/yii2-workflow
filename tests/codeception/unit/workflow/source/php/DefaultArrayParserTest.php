@@ -195,6 +195,22 @@ class DefaultArrayParserTest extends TestCase
 	}
 	/**
 	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
+	 * @expectedExceptionMessageRegExp #Initial status not defined : WID/C#
+	 */
+	public function testParseValidationFailedInitStatusExternal()
+	{	
+		Yii::$app->parser->parse('WID',[
+			'initialStatusId' => 'EXT/C',
+				'status' => [
+				'A' => [
+					'transition' => 'B'
+				],
+				'B'
+			]
+		],$this->src);
+	}	
+	/**
+	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
 	 * @expectedExceptionMessageRegExp /One or more end status are not defined :.*?/
 	 */
 	public function testParseValidationFailedMissingStatus()

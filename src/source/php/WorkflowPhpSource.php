@@ -213,10 +213,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 			$transitions = [];
 			if ( $trDef != null) {
 				
-				foreach ($trDef as $key => $value) {
-					$endStId = $key;
-					$trCfg = $value;
-					
+				foreach ($trDef as $endStId => $trCfg) {					
 					$ids = $this->parseStatusId($endStId, $model, $wId);
 					$endId =  implode(self::SEPARATOR_STATUS_NAME, $ids);
 					$end = $this->getStatus($endId);

@@ -34,8 +34,11 @@ class DefaultArrayParser extends Object implements IArrayParser {
 			throw new WorkflowValidationException('Missing "initialStatusId"');
 		}
 	
-		$pieces = $source->parseStatusId( $definition['initialStatusId'],null,$wId);
-		$initialStatusId = \implode(WorkflowPhpSource::SEPARATOR_STATUS_NAME, $pieces);
+		list($workflowId, $statusId) = $source->parseStatusId( $definition['initialStatusId'],null,$wId);
+		$initialStatusId = $workflowId . WorkflowPhpSource::SEPARATOR_STATUS_NAME .$statusId;
+		if( $workflowId != $wId) {
+			throw new WorkflowValidationException('Initial status must belong to workflow : '.$initialStatusId);
+		}
 	
 		if ( ! isset($definition[WorkflowPhpSource::KEY_NODES])) {
 			throw new WorkflowValidationException("No status definition found");
@@ -73,8 +76,11 @@ class DefaultArrayParser extends Object implements IArrayParser {
 				throw new WorkflowValidationException("Wrong status definition : key = " . VarDumper::dumpAsString($key). " value = ". VarDumper::dumpAsString($value));
 			}
 	
-			$pieces = $source->parseStatusId($startStatusId,null,$wId);
-			$startStatusId = $startStatusIdIndex[] = \implode(WorkflowPhpSource::SEPARATOR_STATUS_NAME, $pieces);
+			list($workflowId, $statusId) = $source->parseStatusId($startStatusId,null,$wId);
+			$startStatusId = $startStatusIdIndex[] = $workflowId . WorkflowPhpSource::SEPARATOR_STATUS_NAME . $statusId;
+			if( $workflowId != $wId) {
+				throw new WorkflowValidationException('Status must belong to workflow : '.$startStatusId);
+			}
 				
 			if ( is_array($startStatusDef) ) {
 	
