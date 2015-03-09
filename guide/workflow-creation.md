@@ -155,4 +155,43 @@ going to add a *color* and an *icon* metadata to the *published* status.
 ```
 
 Later on we will be able to retrieve these value of course, and use them the way we want.
+
+## Example
+
+As an example we will use our Post workflow desinged earlier to manage our publishing plateform web app. 
+
+<img src="post-workflow-2.png" alt="post workflow"/>
+
+Below is the definition of this workflow ready to be used by the *SimpleWorkflow* behavior. 
+
+```php
+namespace app\models;
+
+class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider 
+{
+	public function getDefinition() {
+		return [ 
+			'initialStatusId' => 'draft',
+			'status' => [
+				'draft' => [
+					'transition' => ['correction']
+				],
+				'correction' => [
+					'transition' => ['draft','ready']
+				],
+				'ready' => [
+					'transition' => ['draft', 'correction', 'published']
+				],
+				'published' => [
+					'transition' => ['ready', 'archived']
+				],
+				'archived' => [
+					'transition' => ['ready']
+				]
+			]
+		];
+	}
+}
+```
+
   
