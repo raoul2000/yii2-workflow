@@ -22,6 +22,10 @@ class DefaultArrayParserTest extends TestCase
 			'class' => DefaultArrayParser::className(),
 		]);		
 	}
+	
+	/**
+	 * 
+	 */
 	public function testCreateInstance()
 	{
 		Yii::$app->set('parserA',[
@@ -192,12 +196,13 @@ class DefaultArrayParserTest extends TestCase
 				'B'
 			]
 		],$this->src);
-	}
+	}	
+	
 	/**
 	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
-	 * @expectedExceptionMessageRegExp #Initial status not defined : WID/C#
+	 * @expectedExceptionMessageRegExp #Initial status must belong to workflow : EXT/C#
 	 */
-	public function testParseValidationFailedInitStatusExternal()
+	public function testParseValidationFailedExternalInitStatus()
 	{	
 		Yii::$app->parser->parse('WID',[
 			'initialStatusId' => 'EXT/C',
@@ -208,7 +213,42 @@ class DefaultArrayParserTest extends TestCase
 				'B'
 			]
 		],$this->src);
-	}	
+	}		
+	
+	/**
+	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
+	 * @expectedExceptionMessageRegExp #Status must belong to workflow : EXT/B#
+	 */
+	public function testParseValidationFailedExternalStatus1()
+	{	
+		Yii::$app->parser->parse('WID',[
+			'initialStatusId' => 'A',
+				'status' => [
+				'A' => [
+					'transition' => 'B'
+				],
+				'EXT/B'
+			]
+		],$this->src);
+	}		
+	
+	/**
+	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
+	 * @expectedExceptionMessageRegExp #Status must belong to workflow : EXT/A#
+	 */
+	public function testParseValidationFailedExternalStatus2()
+	{	
+		Yii::$app->parser->parse('WID',[
+			'initialStatusId' => 'A',
+				'status' => [
+				'EXT/A' => [
+					'transition' => 'B'
+				],
+				'B'
+			]
+		],$this->src);
+	}
+	
 	/**
 	 * @expectedException raoul2000\workflow\base\WorkflowValidationException
 	 * @expectedExceptionMessageRegExp /One or more end status are not defined :.*?/
