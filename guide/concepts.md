@@ -4,7 +4,7 @@ Before being able to create a workflow there are some simple key conecpts that y
 
 ## Identifiers
 
-The *SimpleWorkflow* behavior refers to workflow items using Ids. 
+The *SimpleWorkflow* behavior refers to workflow and statuses using Ids. 
 
  
 ## Initial Status
