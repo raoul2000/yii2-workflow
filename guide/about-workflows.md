@@ -50,6 +50,7 @@ To handle this very simple workflow, there is not much to do as the user has com
 status can be reached from any other status and in this case, *there is no need** for a dedicated extension that would 
 handle workflow logic.
 
+## Use case²: a multi-user publishing system
 Let's imagine something a little bit more complex.
 
 > Our basic blog is now becoming a multi-user publishing system, where each user is assigned tasks : some are redactors (reporter), 
@@ -72,7 +73,7 @@ will abritrarly state following rules :
 2. the chief editor is responsible for publishing/unpublishing posts
 3. the chief editor is responsible for sending a post to archive
 
-That will be enough for this example but of course there could (and probably should) be more rules.
+That will be enough for this example but of course we could (and probably should) add more business rules.
 Now, based on what we have just define, here is the Post workflow : 
 
 <img src="post-workflow-2.png" alt="workflow 2"/>
@@ -81,16 +82,15 @@ The first version of the Post worfklow was very simple, and as each status could
 the developper to make any tests when a Post changed status. With this last version above, that's another story ! Some logic must 
 be implemented in order to prevent *Archived* post to become *Draft*, or *Published* posts to be sent to *Correction*. 
 
-That is when the SimpleWorkflow  behavior is useful!. 
+That is when the *SimpleWorkflow*  behavior is useful!
 
 ## <a name="references"></a>References
 
-Now that you know a little be more about the simpleWorkflow extension, it is obvious that its purpose is not to provide a 
-workflow driven model that would replace MVC. It should only be considered as a set of tools that facilitate workflow managment 
-for simple applications. 
+The SimpleWorkflow behavior, is not dedicated to provide a complete workflow driven model that would replace MVC or any other pattern. 
+It should only be considered as a set of tools that facilitate workflow managment for simple applications. 
 
 If you want to know more about the subject, and discover what a complete workflow engine looks like, here is a list of 
-intresting links (my inspiration).
+intresting links.
 
 - [An activity based Workflow Engine for PHP](http://www.tonymarston.net/php-mysql/workflow.html)
 - [Workflow Patterns home page](http://www.workflowpatterns.com/)
