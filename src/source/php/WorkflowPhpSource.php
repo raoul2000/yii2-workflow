@@ -529,4 +529,74 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 			return $definition;
 		}
 	}
+	
+	/**
+	 * Validate the workflow definition passed as argument.
+	 * The workflow definition array format is the one rused internally by this class, and that should
+	 * have been provided by a parser. 
+	 * 
+	 * @param string $wId Id of the workflow to validate
+	 * @param array $definition workflow definition
+	 * @return array list of validation report
+	 */
+	public function validateWorkflowDefinition($wId,$definition)
+	{
+		$errors = [];
+		$stat = [];
+		$startStatusIds = array_keys($definition[self::KEY_NODES]);
+		$stat['statusCount'] = count($startStatusIds);
+		if( ! in_array($definition['initialStatusId'], $startStatusIds) ) {
+			$errors['missingInitialStatus'] = [
+				'message' => 'Initial status not defined',
+				'status' => $definition['initialStatusId']
+			];
+		}
+		$endStatusIds = [];
+		$finalStatusIds = [];
+		$stat['transitionCount'] = 0;
+		foreach( $startStatusIds as $statusId) {
+			if( $definition[self::KEY_NODES][$statusId][self::KEY_EDGES] != null) {
+				$stat['transitionCount'] += count($definition[self::KEY_NODES][$statusId][self::KEY_EDGES]);
+				$endStatusIds = array_merge($endStatusIds, array_keys($definition[self::KEY_NODES][$statusId][self::KEY_EDGES]));
+			} else {
+				$finalStatusIds[] = $statusId;
+			}
+		}
+		$stat['endStatusCount'] = count($endStatusIds);
+		$stat['finalStatus'] = $finalStatusIds;
+		
+		$missingStatusIdSuspects = \array_diff($endStatusIds, $startStatusIds);
+		if ( count($missingStatusIdSuspects) != 0) {
+			$missingStatusId = [];
+			foreach ($missingStatusIdSuspects as $id) {
+				list($thisWid, $thisSid) = $this->parseStatusId($id,null,$wId);
+				if ($thisWid == $wId) {
+					$missingStatusId[] = $id; // refering to the same workflow, this Id is not defined
+				}
+			}
+			if ( count($missingStatusId) != 0) {
+				$errors['missingStatus'] = [
+					'message' => 'One or more end status are not defined',
+					'status' => $missingStatusId
+				];
+			}
+		}	
+
+		$orphanStatusIds = \array_diff($startStatusIds, $endStatusIds);
+		if( \in_array($definition['initialStatusId'], $orphanStatusIds)) {
+			// initial status Id is not unreachable
+			$orphanStatusIds = \array_diff($orphanStatusIds, [ $definition['initialStatusId'] ]);
+		}
+		if( count($orphanStatusIds) != 0) {
+			$errors['unreachableStatus'] = [
+				'message' => 'One or more statuses are unreachable',
+				'status' => $orphanStatusIds
+			];			
+		}
+		
+		return [ 
+			'errors' => $errors,
+			'stat' => $stat
+		];
+	}
 }

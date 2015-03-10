@@ -23,6 +23,16 @@ use yii\helpers\VarDumper;
  * 	'payed'     => ['archived'],
  *	'archived'  => []
  * ]
+ * 
+ * You can also use a comma separated list of status for the end status list instead of an array.
+ * For example : 
+ * [
+ *	'draft'     => 'ready, delivered',
+ *	'ready'     => 'draft, delivered',
+ *	'delivered' => 'payed, archived',
+ * 	'payed'     => 'archived',
+ *	'archived'  => []
+ * ]
  */
 class MinimalArrayParser extends Object implements IArrayParser {
 	
@@ -45,6 +55,9 @@ class MinimalArrayParser extends Object implements IArrayParser {
 	 */
 	public function parse($wId, $definition, $source) {
 
+		if( empty($wId)) {
+			throw new WorkflowValidationException("Missing argument : workflow Id");
+		}
 		if( ! \is_array($definition)) {
 			throw new WorkflowValidationException("Workflow definition must be provided as an array");
 		}
@@ -73,15 +86,17 @@ class MinimalArrayParser extends Object implements IArrayParser {
 			if( \is_string($targetStatusList)) {
 				$ids = array_map('trim', explode(',', $targetStatusList));
 				$endStatusIds = $this->normalizeStatusIds($ids, $wId, $source);
-				
 			}elseif( \is_array($targetStatusList)) {
 				if( ArrayHelper::isAssociative($targetStatusList,false) ){
 					throw new WorkflowValidationException("Associative array not supported (status : $absoluteStatusId)");
 				}
 				$endStatusIds = $this->normalizeStatusIds($targetStatusList, $wId, $source);
+			}elseif( $targetStatusList === null ) {
+				$endStatusIds = [];
 			}else {
 				throw new WorkflowValidationException('End status list must be an array for status  : '.$absoluteStatusId);
 			}
+			
 			if( count($endStatusIds)) {
 				$normalized[WorkflowPhpSource::KEY_NODES][$absoluteStatusId] = ['transition' => array_fill_keys($endStatusIds,[])];
 				$endStatusIdIndex = \array_merge($endStatusIdIndex, $endStatusIds);
@@ -90,8 +105,6 @@ class MinimalArrayParser extends Object implements IArrayParser {
 			}
 		}
 
-		
-		
 		if ( $this->validate === true) {
 			if ( ! \in_array($initialStatusId, $startStatusIdIndex)) {
 				throw new WorkflowValidationException("Initial status not defined : $initialStatusId");
