@@ -178,19 +178,35 @@ class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvide
 			'initialStatusId' => 'draft',
 			'status' => [
 				'draft' => [
+					'label'      => 'Draft Document',
 					'transition' => ['correction']
+					'metadata'   => [
+						'color' => 'yellow'
+					]
 				],
 				'correction' => [
-					'transition' => ['draft','ready']
+					'transition' => ['draft','ready'],
+					'metadata'   => [
+						'color' => 'grey'
+					]
 				],
 				'ready' => [
-					'transition' => ['draft', 'correction', 'published']
+					'transition' => ['draft', 'correction', 'published'],
+					'metadata'   => [
+						'color' => 'blue'
+					]
 				],
 				'published' => [
-					'transition' => ['ready', 'archived']
+					'transition' => ['ready', 'archived'],
+					'metadata'   => [
+						'color' => 'green'
+					]					
 				],
 				'archived' => [
-					'transition' => ['ready']
+					'transition' => ['ready'],
+					'metadata'   => [
+						'color' => 'black'
+					]						
 				]
 			]
 		];

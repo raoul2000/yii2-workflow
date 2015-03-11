@@ -51,6 +51,7 @@ status can be reached from any other status and in this case, *there is no need*
 handle workflow logic.
 
 ## Use case²: a multi-user publishing system
+
 Let's imagine something a little bit more complex.
 
 > Our basic blog is now becoming a multi-user publishing system, where each user is assigned tasks : some are redactors (reporter), 
@@ -83,6 +84,51 @@ the developper to make any tests when a Post changed status. With this last vers
 be implemented in order to prevent *Archived* post to become *Draft*, or *Published* posts to be sent to *Correction*. 
 
 That is when the *SimpleWorkflow*  behavior is useful!
+
+### Workflow Definition
+
+So we have a nice workflow, let's see how the *SimpleWorkflowBehavior* can help in managing our Post models life-cycle inside this workflow.
+First we must create a definition for our workflow. 
+
+A Workflow can be defined as a PHP class that contains the method `getDefinition()`. This method returns as PHP array which is the 
+workflow definition.
+
+The class is named **PostWorkflow** which is by convention the name of a workflow associated with the *Post* model. It is located in
+`@app/models`, the default location where workflow definitions are stored. Note that these conventions and default settings 
+can of course be overloaded with values provided by the developer at initialisation (this will be discussed later).
+
+```php
+namespace app\models;
+
+class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider 
+{
+	public function getDefinition() {
+		return [ 
+			'initialStatusId' => 'draft',
+			'status' => [
+				'draft' => [
+					'transition' => ['correction']
+				],
+				'correction' => [
+					'transition' => ['draft','ready']
+				],
+				'ready' => [
+					'transition' => ['draft', 'correction', 'published']
+				],
+				'published' => [
+					'transition' => ['ready', 'archived']
+				],
+				'archived' => [
+					'transition' => ['ready']
+				]
+			]
+		];
+	}
+}
+``` 
+
+A more condensed format is also supported, but for this example we will use this one as it allows more customization.
+
 
 ## <a name="references"></a>References
 
