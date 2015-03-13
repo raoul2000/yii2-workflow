@@ -129,6 +129,68 @@ class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvide
 
 A more condensed format is also supported, but for this example we will use this one as it allows more customization.
 
+## Attaching the behavior
+
+To be able to manage our Post model inside the workflow, we must take care about following points :
+- *check that our model inherits from* ActiveRecord : the *SimpleWorkflowBehavior* can only be attached to ActiveRecord objets.
+- add an attribute that will be used to store the current status of a post. We will use attribute 'status' with type VARCHAR(40) for
+our example.
+
+*Post.php in @app/models*
+```php
+<?php
+
+namespace app\models;
+/**
+ * @property integer $id
+ * @property string $title
+ * @property string $body
+ * @property string $status column used to store the status of the post
+ */
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+    	return [
+			\raoul2000\workflow\base\SimpleWorkflowBehavior::className()
+    	];
+    }
+    // ...
+```
+
+## Status Assignement
+
+The first operation you'll probably need to perform is assigning a status to your model. The natural way to do this is by simply
+assigning a value to the *status* attribute.
+
+```php
+$post = new Post();
+$post->status = 'draft';
+```
+
+When you assign a value to the 'status' attribute, no verification is done against the workflow and the SimpleWorkflowBehavior is
+not event invoked in any way. **The status validation occurs only when the status assignement is saved** : at this time only the
+post object is considered as really sent to a specific status.
+
+For example, let's consider the following code : 
+
+```php
+$post = new Post();
+$post->status = 'published';
+$post->save();
+```
+
+An exception will be throw when `save()` is called. That is when the *SimpleWorkflowBehavior* test if the transitions is possible
+bewteen the original status and the final one. In our case, there was no original status as the post was created with *new*. The final
+status has been set to 'published' and so, we are dealing with the following transition : 
+
+	null -> 'published'
+	
+This transition happens only when a model enters into a workflow. If you remember well, the *PostWorkflow* definition above contained
+a key called *initialStatusId*. This key is used to define the status Id that must be used by any model when entering a workflow.
+
+
+
 
 ## <a name="references"></a>References
 
