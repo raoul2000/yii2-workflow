@@ -100,7 +100,7 @@ can of course be overloaded with values provided by the developer at initialisat
 ```php
 namespace app\models;
 
-class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider 
+class PostWorkflow implements \raoul2000\workflow\base\IWorkflowDefinitionProvider 
 {
 	public function getDefinition() {
 		return [ 
@@ -158,7 +158,9 @@ class Post extends \yii\db\ActiveRecord
     // ...
 ```
 
-## Status Assignement
+## Status : Common Operations
+ 
+### Assignement and Initial Status
 
 The first operation you'll probably need to perform is assigning a status to your model. The natural way to do this is by simply
 assigning a value to the *status* attribute.
@@ -168,11 +170,13 @@ $post = new Post();
 $post->status = 'draft';
 ```
 
-When you assign a value to the 'status' attribute, no verification is done against the workflow and the SimpleWorkflowBehavior is
+When you assign a value to the 'status' attribute, no verification is done against the workflow and the *SimpleWorkflowBehavior* is
 not event invoked in any way. **The status validation occurs only when the status assignement is saved** : at this time only the
 post object is considered as really sent to a specific status.
 
-For example, let's consider the following code : 
+The status validation consists in verifying that the model can perform the transition between its current status and the assigned status.
+
+Let's consider the following code : 
 
 ```php
 $post = new Post();
@@ -180,16 +184,178 @@ $post->status = 'published';
 $post->save();
 ```
 
-An exception will be throw when `save()` is called. That is when the *SimpleWorkflowBehavior* test if the transitions is possible
-bewteen the original status and the final one. In our case, there was no original status as the post was created with *new*. The final
-status has been set to 'published' and so, we are dealing with the following transition : 
+When we run this code, we get an Exception !
+
+	Workflow Exception – raoul2000\workflow\base\WorkflowException
+	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected)
+	
+Could it be more clear ? Ok, maybe it could. Let's see in detail what just happened. 
+
+The *SimpleWorkflowBehavior* enters in action when the Post is saved. At this point it tests if the transitions is possible
+bewteen the original status and the final one. In our case, there was no original status (the object has just been created) and the final
+status has been set to 'published'. So, from the *SimpleWorkflowBehavior* point of view, we are dealing with the following transition : 
 
 	null -> 'published'
 	
-This transition happens only when a model enters into a workflow. If you remember well, the *PostWorkflow* definition above contained
-a key called *initialStatusId*. This key is used to define the status Id that must be used by any model when entering a workflow.
+This transition is particular as it happens **only when a model enters into a workflow**. If you remember well, the *PostWorkflow* definition 
+above contained a key called *initialStatusId*. This key is used to define the status Id that must be used by any model when entering a workflow. 
+Obviously we didn't comply with this rule as we tried to enter through the 'published' status and that's why we get a self explanatory
+exception advising us to use *PostWorkflow/draft* instead.
+
+Let's follow this wise advice :
+ 
+```php
+$post = new Post();
+$post->status = 'draft';
+$post->save();
+echo 'the status is : ' . $post->status;
+```
+
+Now our post is saved correctly and the output is. 
+
+```
+the status is : PostWorkflow/draft 
+```
+
+Hey wait ! what's that ? we set the *status* to 'draft', saved to post and now the value of our status attribute is *PostWorkflow/draft*. All
+right, don't panic, this is just the way the *SimpleWorkflowBehavior* normalized the status id, from its short form (*draft*)
+to its absolute form (*PostWorkflow/draft*). We will describe this later in a chapter dedicated to the *WorkflowSource* component.
+For the moment just remember that these 2 forms of writting a status are equivalent.
 
 
+### sendToStatus
+
+Another way of assigning a status to our Post model is by using the method *sendToStatus()* provided by the *SimpleWorkflowBehavrior*. 
+When you use *sendToStatus()* it is not required to save the model for the *SimpleWorkflowBehavrior* to enter in action. A call to
+*sendToStatus()* will perform following tasks :
+
+- retrieve the current status value
+- find a transition between the current status and the one passed as argument
+- if such a transition exists, ensure that it can be used, that it is valid
+- on success, apply the transition and update the *status* attribute owned by the Post model 
+
+**_sendToStatus()_ actually performs the transition : the model leaves it current status and goes to the new one.** It is equivalent
+to status attribute assignement and model being saved.
+
+In the example below, the output is the same as before, without having to invoke *save()*.
+
+```php
+$post = new Post();
+$post->sendToStatus('draft');
+echo 'the status is : ' . $post->status;
+$post->save();
+```
+
+And of course if we try to break the initial status rule again, we will also get the same exception as before.
+
+```php
+$post = new Post();
+$post->sendToStatus('published');	// exception is thrown here !
+```
+
+
+
+### Summary
+
+The *SimpleWorkflowBehavior* maintains internally the *real* value of the current status. To actually change the status of a model 
+you have two options :
+
+- assign a value to the 'status' attribute and save (or update) it
+- call  *sendToStatus()* with the end status as argument
+
+
+## Getting the Status
+
+If status assignement can be done by assigning a value to the *status* attribute, getting the status value of a model should not involve
+accessing this attribute directly but use the method *getWorkflowStatus()* instead. However in certain circumstances, reading the 
+status attribute value is acceptable but then it is your responsability to ensure that both values are synchronized.
+
+### getWorkflowStatus() vs attribute
+
+When you call *getWorkflowStatus()* on a model attached to the *SimpleWorkflowBehavior*, you will retrieve the instance of the current 
+status your model is currently in. The type of the object returned in this case is *\raoul2000\workflow\base\Status*. If your model is
+not in a workflow, *getWorkflowStatus()* returns NULL.
+
+
+```php
+// first save a post in status 'draft' 
+$post = new Post();
+$post->sendToStatus('draft');
+$post->save();
+
+// now read this post and output its status label
+$post2 = Post::findOne($post->id);
+echo '(1) the status is : ' . $post2->getWorkflowStatus()->getId();
+echo '(2) the status is : ' . $post2->status;
+```
+
+The output is :
+
+	(1) the status is : PostWorkflow/draft 
+	(2) the status is : PostWorkflow/draft 
+	
+Seeing at this result, it is not obvious why we should use the *getWorkflowStatus()* method instead of direct attribute access to get
+the status of a model. Ok but remember that the status attribute may not contain the actual value of the model's status, until this model is 
+saved (or updated). 
+
+Let's see that on an example. In the code below, 2 functions are modifying and returning a newly created Post object. The problem
+is they are both accessing the status attribute assuming it contains the actual Status value of the post. 
+
+```php
+function foo($post) {
+	// do some fancy stuff here ...
+	if( $post->status == null) {
+		$post->status = 'draft';
+	}
+	return $post;
+}
+
+function bar($post) {
+	// do even more some fancy stuff here ...
+	if( $post->status == 'draft'){
+		$post->status = 'correction';
+	}
+	return $post;
+}
+
+$post = foo(new Post());
+$post = bar($post);
+$post->save();	// keep the faith
+```
+
+Can you guess what happens when *save()* is called ?  Well, that's when the *SimpleWorkflowBehavior* enter into action, but that's too late.. 
+The value of the status attribute is 'correction' and the *real* status value stored internally by the behavior is NULL. The post 
+object is trying to enter into a workflow through the 'correction' status and we know this is not permitted : bang ! Same exception again ! 
+
+	Workflow Exception – raoul2000\workflow\base\WorkflowException
+	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected) 
+
+This small example tries to illustrate the danger of using the status attribute to know the actual status of the object. Very much care should 
+be taken when doing this and remember that **the value of the status attribute does not always reflect the actual Status of a model**.
+
+Below is a safe version of the previous example. All access are done through the *SimpleWorkflowBehavior* behavior. 
+
+```php
+function foo($post) {
+	// test if $post is currently in a workflow
+	if( ! $post->hasWorkflowStatus() ) {
+		$post->sendToStatus('draft');
+	}
+	return $post;
+}
+
+function bar($post) {
+	// note that we use the absolute form of the status Id
+	if( $post->getWorkflowStatus()->getId() == 'PostWorkflow/draft'){
+		$post->sendToStatus('correction');
+	}
+	return $post;
+}
+
+$post = foo(new Post());
+$post = bar($post);
+$post->save();
+```
 
 
 ## <a name="references"></a>References
