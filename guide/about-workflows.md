@@ -40,7 +40,7 @@ a graphical representation to this description, we'll end up with our first (and
 
 <img src="images/post-workflow.png" alt="the workflow for Post"/>
 
-Out workflow definition is:
+Our workflow definition is:
 
 - 3 statuses : draft, published, archived
 - 6 possible transitions
@@ -446,6 +446,43 @@ $this->on(
 ```
 
 The *sendMail()* method will be invoked each time a post model enter into the status 'correction', and no matters where it comes from. 
+
+Ok, next requirement ! .. yes, we have some business rules to implement in our super great multi-user publishing system ! (I hope you didn't 
+forgot it). One of our rule was :
+
+> the chief editor is responsible for publishing/unpublishing posts
+
+In our workflow, the only way for a post to reach the 'published' status is coming from status 'ready'. The rule above can be turned into 
+something more "workflow oriented" like "*a post can be sent to status 'published' only by a chief editor*". Using the appropriate workflow
+event we can easely implement this rule.
+
+
+```php
+use raoul2000\workflow\events\WorkflowEvent;
+
+class Post extends \yii\db\ActiveRecord
+{
+	public function init()
+	{
+		$this->on(
+			WorkflowEvent::beforeEnterStatus('Post2Workflow/published'),
+			function ($event) {
+				// test that current user has the 'chief.editor' role
+				$event->isValid = false;
+			}
+		);
+			
+		$this->on(
+			WorkflowEvent::afterChangeStatus('PostWorkflow/draft', 'PostWorkflow/correction'), 
+			[$this, 'sendMail']
+		);
+	}	
+	// .....
+```
+
+
+
+
 
 There's more than that and events in *SimpleWorkflowBehavior* is a vas subject that is covered in detailed in [another chapter](events.md). 
    
