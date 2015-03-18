@@ -335,7 +335,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * Finallly it fires the "after" events, or if we are in a save operation, store them for as pending events that are fired
 	 * on the *afterSave" event.
 	 * Note that if an event handler attached to a "before" event sets the event instance as invalid, all remaining handlers
-	 * are ingored and the method returns immediatly.
+	 * are ingored and the method returns immediately.
 	 *
 	 * @param unknown $status
 	 * @param boolean $onSave
@@ -362,8 +362,8 @@ class SimpleWorkflowBehavior extends Behavior
 			if ( $onSave ) {
 				$this->_pendingEvents = $events['after'];
 			} else {
-				foreach ($events['after'] as $eventBefore) {
-					$this->owner->trigger($eventBefore->name, $eventBefore);
+				foreach ($events['after'] as $eventAfter) {
+					$this->owner->trigger($eventAfter->name, $eventAfter);
 				}
 			}
 		}
