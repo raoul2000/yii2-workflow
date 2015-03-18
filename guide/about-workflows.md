@@ -38,7 +38,7 @@ At last an *archived* post can be *published* or become *draft*.
 What we have just described here are allowed transitions between different statuses of the Post, and if we try to give 
 a graphical representation to this description, we'll end up with our first (and very simple) workflow. 
 
-<img src="post-workflow.png" alt="the workflow for Post"/>
+<img src="images/post-workflow.png" alt="the workflow for Post"/>
 
 Out workflow definition is:
 
@@ -77,7 +77,7 @@ will abritrarly state following rules :
 That will be enough for this example but of course we could (and probably should) add more business rules.
 Now, based on what we have just define, here is the Post workflow : 
 
-<img src="post-workflow-2.png" alt="workflow 2"/>
+<img src="images/post-workflow-2.png" alt="workflow 2"/>
 
 The first version of the Post worfklow was very simple, and as each status could reach any other status, there was no need for 
 the developper to make any tests when a Post changed status. With this last version above, that's another story ! Some logic must 
@@ -134,7 +134,7 @@ A more condensed format is also supported, but for this example we will use this
 To be able to manage our Post model inside the workflow, we must take care about following points :
 - *check that our model inherits from* ActiveRecord : the *SimpleWorkflowBehavior* can only be attached to ActiveRecord objets.
 - add an attribute that will be used to store the current status of a post. We will use attribute 'status' with type VARCHAR(40) for
-our example.
+our example, but it can be any attribute.
 
 *Post.php in @app/models*
 ```php
@@ -158,7 +158,7 @@ class Post extends \yii\db\ActiveRecord
     // ...
 ```
 
-## Status : Common Operations
+## Basic Status Usage 
  
 ### Assignement and Initial Status
 
@@ -167,7 +167,7 @@ assigning a value to the *status* attribute.
 
 ```php
 $post = new Post();
-$post->status = 'draft';
+$post->status = 'published';
 ```
 
 When you assign a value to the 'status' attribute, no verification is done against the workflow and the *SimpleWorkflowBehavior* is
@@ -243,7 +243,6 @@ In the example below, the output is the same as before, without having to invoke
 $post = new Post();
 $post->sendToStatus('draft');
 echo 'the status is : ' . $post->status;
-$post->save();
 ```
 
 And of course if we try to break the initial status rule again, we will also get the same exception as before.
@@ -324,8 +323,9 @@ $post->save();	// keep the faith
 ```
 
 Can you guess what happens when *save()* is called ?  Well, that's when the *SimpleWorkflowBehavior* enter into action, but that's too late.. 
-The value of the status attribute is 'correction' and the *real* status value stored internally by the behavior is NULL. The post 
-object is trying to enter into a workflow through the 'correction' status and we know this is not permitted : bang ! Same exception again ! 
+The value of the status attribute is 'correction' and the *real* status value stored internally by the behavior is NULL. From the 
+*SimpleWorkflowBehavior* point of view, this post object is trying to enter into a workflow through the 'correction' status 
+and we know this is not permitted : bang ! Same exception again ! 
 
 	Workflow Exception – raoul2000\workflow\base\WorkflowException
 	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected) 
@@ -356,6 +356,103 @@ $post = foo(new Post());
 $post = bar($post);
 $post->save();
 ```
+
+That being said, if you know what you are doing you can of course use the 'status' attribute directly to perform some operations. In this
+case remember that when the 'status' value is set by the *SimpleWorkflowBehavior* the absolute form of status id is used.
+ 
+## Workflow Tasks
+
+Being able to garantee that the model status will only use authorized transition is nice, but the *SimpleWorkflowBehavior*  
+provides a way to add some logic to worfklows.
+
+Let's imagine that we want to improve our Publhsing System with this new business rule : 
+
+>We have noticed that people in charge of correction are not so reactive, which increases the publication delay. 
+They say it's because they never know when a new post is ready to be corrected and so, we decide to improve our Blog by sending an email 
+to all correctors, as soon as a new post is requesting correction.
+ 
+This can be achieved very easely by adding a **task** to our workflow, on the transition that goes from the *draft* status
+to the *correction* status. In the (incomplete) workflow representation below, this task is symbolized by a little green 
+square attached to the transition.
+
+<img src="images/sw-3.png"/> 
+
+Let's see how to implement this *sendMail()* task we need to improve our Publishing System :
+
+*@app/models/Post.php*
+
+```php
+use raoul2000\workflow\events\WorkflowEvent;
+
+class Post extends \yii\db\ActiveRecord
+{
+	public function init()
+	{
+		$this->on(
+			WorkflowEvent::afterChangeStatus('PostWorkflow/draft', 'PostWorkflow/correction'), 
+			[$this, 'sendMail']
+		);
+	}	
+	
+	public function sendMail($event) 
+	{
+		MailingService::sendMailToCorrector(
+			'A Post is ready for correction',
+			'The post [' . $event->sender->owner->title . '] is ready to be corrected.'
+		);		
+	}
+```
+
+If you know a little bit about *Events* in Yii2, you may have recognized what happens on the *init()* method of our Post model : we 
+have attached an event handler to the event returned by the call to *WorkflowEvent::afterChangeStatus('PostWorkflow/draft', 'PostWorkflow/correction')*
+which is nothing more than a helper method that creates the actual event name for you.
+
+If you're not familiar with the concept of Event in Yii2, you can have a look to 
+the [Yii2 definitive Guide](http://www.yiiframework.com/doc-2.0/guide-concept-events.html).
+
+### The Event Model
+
+The *SimpleWorkflowBehavior* is built around Yii2 events. Most of the time when something intresting happens in a workflow, an event is fired, and that's
+your job to decide what to do : catch it and use it or let it go, let it free, [let it be](https://youtu.be/ajCYQL8ouqw).
+
+There are workflow events for almost everything :
+
+- when a model enters in a workflow
+- when a model leaves a workflow
+- when a model enters in a status
+- when a model leaves a status
+
+For even more control, each event from the above list is splitted its *before* and *after* subtype. When working with events, it is important to
+understand when each one is fired so to choose the appropriate one to perform a task. In the previous example we have
+declared an *event handler* in charge of sending a mail to the corrector people, when the post changes from status 'draft' to 'correction'. That's already
+something, but it doesn't completely satisfies our requirement which was :
+ 
+> [...] sending an email to all correctors, as soon as a new post is requesting correction.
+
+If we take a look to our workflow, we can see that there are 2 ways to reach the status 'correction' : one coming from 'draft' the 
+other coming from from 'ready'... and this one is not taken into account by the current event handler installed the the Post model.
+ 
+We could of course handle both transitions, but what if tomorrow, a new transition to 'correction' is added ? To be sure to still notify correctors, the
+proper solution would be to handle the 'enter to status' event. 
+
+
+The event registration now becomes : 
+
+```php
+$this->on(
+	WorkflowEvent::afterEnterStatus('PostWorkflow/correction'),
+	[$this, 'sendMail']
+);
+```
+
+The *sendMail()* method will be invoked each time a post model enter into the status 'correction', and no matters where it comes from. 
+
+There's more than that and events in *SimpleWorkflowBehavior* is a vas subject that is covered in detailed in [another chapter](events.md). 
+   
+
+ 
+
+
 
 
 ## <a name="references"></a>References

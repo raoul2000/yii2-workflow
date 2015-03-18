@@ -164,7 +164,7 @@ Later on we will be able to retrieve these value of course, and use them the way
 
 As an example we will use our Post workflow desinged earlier to manage our publishing plateform web app. 
 
-<img src="post-workflow-2.png" alt="post workflow"/>
+<img src="images/post-workflow-2.png" alt="post workflow"/>
 
 Below is the definition of this workflow ready to be used by the *SimpleWorkflow* behavior. 
 
