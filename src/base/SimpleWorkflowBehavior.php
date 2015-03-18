@@ -513,7 +513,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 *	    targetStatusId => [
 	 *	        'status' => the status instance
 	 *	    ],
-	 *		// if $validate is true
+	 *		// the 'validation' key is present only if $validate is true
 	 *		'validation' => [
 	 *			0 => [
 	 *				'scenario' => scenario name
@@ -521,7 +521,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 *			],
 	 *			1 => [ ... ]
 	 *		],
-	 *		// if $beforeEvent is TRUE
+	 *		// the 'event' key is present only if $beforeEvent is TRUE
 	 *		'event' => [
 	 *			0 => [
 	 *				'name' => event name
@@ -530,7 +530,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 *			1 => [...]
 	 *		],
 	 *		// if $validate is true or if $beforeEvent is TRUE
-	 *		'isValid' => true (being given the verifications that were done, the target status can be reached)
+	 *		'isValid' => true   (being given the verifications that were done, the target status can be reached)
 	 *					| false (being given the verifications that were done, the target status cannot be reached)
 	 *	]
 	 *
@@ -696,11 +696,49 @@ class SimpleWorkflowBehavior extends Behavior
 	{
 		return $this->getWorkflowStatus() !== null;
 	}
+	
+	/**
+	 * This helper method test if the current status is equal to the status passed as argument.
+	 * TRUE is returned when :
+	 * 
+	 * - $status is empty and the owner model has no current status
+	 * - $status is not empty and refers to the same statusas the current one 
+	 * 
+	 * All other condition return FALSE.
+	 * Example : 
+	 * <pre>
+	 * 		$post->statusEquals('draft');
+	 * 		$post->statusEquals($otherPost->getWorkflowStatus());
+	 * </pre>
+	 * 
+	 * @param Status|string $status the status to test
+	 * @return boolean
+	 */
+	public function statusEquals($status=null)
+	{
+		if( ! empty($status)) {
+			try {
+				$oStatus = $this->ensureStatusInstance($status);
+			}catch(Exception $e) {
+				return false;
+			}
+		} else {
+			$status = $oStatus = null;
+		}
+		
+		if ( $oStatus == null) {
+			return ! $this->hasWorkflowStatus();
+		} elseif( $this->hasWorkflowStatus()) {
+			return $this->getWorkflowStatus()->getId() == $oStatus->getId();
+		} else {
+			return false;
+		}
+	}
 	/**
 	 * Returns a Status instance for the value passed as argument.
 	 *
 	 * If $mixed is a Status instance, it is returned without change, otherwise $mixed is considered as a
-	 * status id that is used to retrieve a status instance.
+	 * status id that is used to retrieve the corresponding status instance.
 	 *
 	 * @param mixed $mixed status id or status instance
 	 * @param boolean $strict when TRUE and exception is thrown if no status instance can be returned.
