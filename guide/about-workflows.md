@@ -453,8 +453,8 @@ forgot it). One of our rule was :
 > the chief editor is responsible for publishing/unpublishing posts
 
 In our workflow, the only way for a post to reach the 'published' status is coming from status 'ready'. The rule above can be turned into 
-something more "workflow oriented" like "*a post can be sent to status 'published' only by a chief editor*". Using the appropriate workflow
-event we can easely implement this rule.
+something more "workflow oriented" like "*a post can be sent to status 'published' only by a chief editor*". Using the appropriate workflow event and
+[Yii2 RBAC](http://www.yiiframework.com/doc-2.0/guide-security-authorization.html) feature we can easely implement this rule in the Post model.
 
 
 ```php
@@ -465,30 +465,46 @@ class Post extends \yii\db\ActiveRecord
 	public function init()
 	{
 		$this->on(
-			WorkflowEvent::beforeEnterStatus('Post2Workflow/published'),
+			WorkflowEvent::beforeEnterStatus('PostWorkflow/published'),
 			function ($event) {
-				// test that current user has the 'chief.editor' role
-				$event->isValid = false;
+				$event->isValid = \Yii::$app->user->can('chief.editor');
 			}
-		);
-			
-		$this->on(
-			WorkflowEvent::afterChangeStatus('PostWorkflow/draft', 'PostWorkflow/correction'), 
-			[$this, 'sendMail']
 		);
 	}	
 	// .....
 ```
 
+Assuming we have created the 'chief.editor' permission, this event handler only checks if it has been assigned to the current user. If that's
+not the case, the $event object is set as invalid and when this happens in a *before* event, it interrupts immediately the process of transition
+validation : the model will not be able to reach the end status ( here 'published').
 
-
+Yes, you understood well (I hope) : invalidating a *before* event will block the transition. Events like *beforeEnterStatus*, *beforeEnterWorkflow*,
+*beforeLeaveStatus* etc .. are concerned but if you do the same thing on *afterChangeStatus* for example, nothing will happen, that's too late .. sorry.
 
 
 There's more than that and events in *SimpleWorkflowBehavior* is a vas subject that is covered in detailed in [another chapter](events.md). 
    
 
- 
+## Workflow Driven Model Validation
 
+ When dealing with complex workflows where model validation rules are strongly related to statuses and user interaction is required, 
+ attributes validation can quickly become a nightmare to handle
+
+Again, let's see that on an example.
+
+> In our publishing System, a Post has various attributes : category, tags, priority, etc... These attributes are not set at the Post creation 
+but at different moment of its lif-cycle in the workflow. For instance, we decide that the author must give a category to the Post, 
+the correction team is in charge of adding tags, and at last the chief editor is responsible for setting a priority to the Post. 
+
+In terms of validation rules for the Post model, this new requirement can be defined by 3 statements :
+
+- When the Post is sent from *draft* to *correction* status, is must have a **category**
+- When the Post is sent from *correction* to *ready* status, is must have **tags**
+- When the Post is sent from *ready* to *published* status, is must have a **priority**
+
+Theses validation could of course be implemented using the event model we saw in the previous chapter : in the appropriate event handled we would test
+the appropriate attribut. Okn but why reinventing the wheelwhen Yii2 provides a 
+great [Model Validation](http://www.yiiframework.com/doc-2.0/guide-input-validation.html) feature ? Why not use it ? 
 
 
 

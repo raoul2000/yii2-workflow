@@ -18,11 +18,11 @@ describes the first state of the post.
 
 ## Transition
 
-A transition is a *directed* link between two statuses : the *start* status and the *end* status (I also use the words
-'source' and 'target' status).
+A transition is a *directed* link between two statuses : the *start* status and the *end* status (the words
+'source' and 'target' are also used).
 
-For example, if we define a transition between the status 'draft' and 'published', a post with status 'draft' is able to
-reach status 'published', but not the opposite.
+For example, if we define a transition between the status 'draft' and 'published', a post with status 'draft' (th start status) is able to
+reach status 'published' (the end status), but not the opposite.
 
   
 
