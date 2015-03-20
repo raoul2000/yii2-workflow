@@ -499,12 +499,63 @@ the correction team is in charge of adding tags, and at last the chief editor is
 In terms of validation rules for the Post model, this new requirement can be defined by 3 statements :
 
 - When the Post is sent from *draft* to *correction* status, is must have a **category**
-- When the Post is sent from *correction* to *ready* status, is must have **tags**
+- When the Post enter into status *ready*, it must have **tags**
 - When the Post is sent from *ready* to *published* status, is must have a **priority**
 
 Theses validation could of course be implemented using the event model we saw in the previous chapter : in the appropriate event handled we would test
-the appropriate attribut. Okn but why reinventing the wheelwhen Yii2 provides a 
+the appropriate attribut. Ok but why reinventing the wheelwhen Yii2 provides a 
 great [Model Validation](http://www.yiiframework.com/doc-2.0/guide-input-validation.html) feature ? Why not use it ? 
+
+*SimpleWorkflow* doesn't only provide a behavior, it also came with a custom validator that will help you in verifying that on a specific transition
+our model attributes are correct. In the example below, we will check the first rule  : in the *draft* to *correction* transition, the attribute
+*category* is required.
+
+```php
+use raoul2000\workflow\validation\WorkflowValidator;
+
+class Post extends \yii\db\ActiveRecord
+{
+    public function rules()
+    {
+        return [
+        	[['status'], WorkflowValidator::className()],
+        	['name','required',
+        		'on' => 'from {Post3Workflow/draft} to {Post3Workflow/correction}'],        	
+        ];
+    }	
+```
+
+In order to enable workflow driven attribute validation, it is required to use the `raoul2000\workflow\validation\WorkflowValidator` validator. 
+When you validate the *status* attribute, the *WorkflowValidator* creates a scenario name based on the transition that is about to occur. Remember
+that the pending transition is the one that goes from the **actual** status of the model (maintained internally by the *SimpleWorkflowBehavior*) and
+the **future** status (assigned to the 'status' attribute). Once the scenario name is created, the *WorkflowValidator* applies all validation rules
+that matches the scenario.
+
+In the following example, our post instance is first sent to status *draft* using the `sendToStatus()` method, and then to 'correction' using `save()`
+which by default initiates the model validation.
+
+```php
+$post = new Post();
+$post->sendToStatus('draft');
+$post->status = 'correction';
+if( ! $post->save() ) {		// pending transition is draft -> correction
+	echo $post->getFirstError('name');
+}	
+```
+
+The output : 
+
+	Name cannot be blank.
+ 
+
+Based on scenario names which are meaningfull in a workflow context, we can define validation rules for any attribute model, just like you would do
+with any other scenario.
+current workflow status (maintained internally
+by the *SimpleWorkflowBehavior*), and the value of the 'status' attribute. 
+
+### Transition Scenario
+
+
 
 
 

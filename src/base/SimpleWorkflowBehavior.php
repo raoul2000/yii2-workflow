@@ -316,8 +316,6 @@ class SimpleWorkflowBehavior extends Behavior
 	 *
 	 * @param Status|string $endStatus the destination status to reach. If NULL, then the owner model
 	 * is going to leave its current workflow.
-	 * @param boolean $fireEvents when TRUE (default) all events are immediatly fired otherwise they are fired
-	 * on afterSave event.
 	 * @return bool TRUE if the transition could be performed, FALSE otherwise
 	 */
 	public function sendToStatus($status)
