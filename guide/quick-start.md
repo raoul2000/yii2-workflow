@@ -21,13 +21,13 @@ to the require section of your `composer.json` file.
 ## Create A Workflow
 
 A workflow is defined as a PHP class that implements the raoul2000\workflow\base\IWorkflowDefinitionProvider interface. This interface
-defines the *getDefinition()* method that must return an array representing the workflow. 
+include the *getDefinition()* method that must return an array representing the workflow. 
 
 Let's define a very *simple workflow* that will be used to manage posts in a basic blog system.
 
 <img src="images/workflow1.png"/>
 
-Here is the PHP class that implements the definition for ou workflow :
+Here is the PHP class that implements the definition for our workflow :
 
 *PostWorkflow.php in @app/models*
 ```php
@@ -54,12 +54,14 @@ class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvide
 	}
 }
 ```
+
 ## Link to the Model
 
 Now let's have a look to our Post model. To be able to save the status of a post, we must use a dedicated column of type STRING. 
-In this example, the column is named *status*.
+In this example, the column is named `status`.
 
-The last step is then to associate the workflow definition with posts models. To do so we must declare the *SimpleWorkflowBehavior* behavior in the Post model class.
+The last step is to associate the workflow definition with posts models. To do so we must declare the *SimpleWorkflowBehavior* behavior 
+in the Post model class.
 
  
 ```php

@@ -66,8 +66,8 @@ new organisation. First of all, let's list possible post statuses :
 - **published** : the post is online, available to readers
 - **archived** : the post is not directly available to readers, but can be accessed through the archive section of the site
 
-That is not enough. Now we must define possible transitions between these statuses. These transitions strongly depend on how 
-the work is going to be organized, how users of our publishing system will interact with each other. For this example we 
+That is not enough. Now we must define possible transitions between these statuses. These transitions strongly **depend on how 
+the work is going to be organized**, how users of our publishing system will interact with each other. For this example we 
 will abritrarly state following rules : 
 
 1. A Post must always be corrected before publication
@@ -75,27 +75,31 @@ will abritrarly state following rules :
 3. the chief editor is responsible for sending a post to archive
 
 That will be enough for this example but of course we could (and probably should) add more business rules.
-Now, based on what we have just define, here is the Post workflow : 
+Now, based on what we have just define, here is a possible Post workflow : 
 
 <img src="images/post-workflow-2.png" alt="workflow 2"/>
 
 The first version of the Post worfklow was very simple, and as each status could reach any other status, there was no need for 
-the developper to make any tests when a Post changed status. With this last version above, that's another story ! Some logic must 
+the developper to make any tests when a Post changed status. With this new version, that's another story ! Some logic must 
 be implemented in order to prevent *Archived* post to become *Draft*, or *Published* posts to be sent to *Correction* by a redactor. 
 
-That is when *SimpleWorkflow* is useful!
+That is when *SimpleWorkflow* can be useful!
 
 ### Workflow Definition
 
 So we have a nice workflow, let's see how the *SimpleWorkflow* can help in managing our Post models life-cycle inside this workflow.
 First we must create a definition for our workflow. 
 
-A Workflow can be defined as a PHP class that contains the method `getDefinition()`. This method returns the workflof definition as 
+A Workflow can be defined as a PHP class that contains the method `getDefinition()`. This method returns the workflow definition as 
 PHP array.
 
 The class is named **PostWorkflow** which is by convention the name of a workflow associated with the *Post* model. It is located in
 `@app/models`, the default location where workflow definitions are stored. Note that these conventions and default settings 
 can of course be overloaded with values provided by the developer at initialisation (this will be discussed later).
+
+Let's see how our workflow definition looks like : 
+
+*@app/models/PostWorkflow.php*
 
 ```php
 namespace app\models;
@@ -127,7 +131,10 @@ class PostWorkflow implements \raoul2000\workflow\base\IWorkflowDefinitionProvid
 }
 ``` 
 
-A more condensed format is also supported, but for this example we will use this one as it allows more customization.
+It's quite straightforward to understand isn't it ?  
+
+Note that a more condensed array format is also supported, but for this example we will use this one as it allows more customization.
+
 
 ## Attaching the behavior
 
@@ -500,7 +507,7 @@ the correction team is in charge of adding tags, and at last the chief editor is
 
 In terms of validation rules for the Post model, this new requirement can be defined by 3 statements :
 
-- When the Post is sent from *draft* to *correction* status, is must have a **category**
+- When the Post is sent from *draft* to *correction* status, it must have a **category**
 - When the Post enter into status *ready*, it must have **tags**
 - When the Post is sent from *ready* to *published* status, is must have a **priority**
 
@@ -508,7 +515,7 @@ Theses validation could of course be implemented using the event model we saw in
 the appropriate attribut. Ok but why reinventing the wheel when Yii2 provides a 
 great [Model Validation](http://www.yiiframework.com/doc-2.0/guide-input-validation.html) feature ? Why not use it ? 
 
-*SimpleWorkflow* doesn't only provide a behavior, it also came with a custom validator that will help you in verifying that on a specific transition
+*SimpleWorkflow* doesn't only provide a behavior, it also came with a custom validator that will help us in verifying that on a specific transition
 our model attributes are correct. In the example below, we will check the first rule  : in the *draft* to *correction* transition, the attribute
 *category* is required.
 
@@ -538,7 +545,7 @@ which by default initiates the model validation.
 
 ```php
 $post = new Post();
-$post->sendToStatus('draft');
+$post->sendToStatus('draft'); // = success : the current status is 'draft'
 $post->status = 'correction';
 if( ! $post->save() ) {		// pending transition is draft -> correction
 	echo $post->getFirstError('name');
@@ -551,10 +558,48 @@ The output :
  
 Based on scenario names which are meaningfull in a workflow context, we can define validation rules for any attribute model, just like you would do
 with any other scenario.
-current workflow status (maintained internally
-by the *SimpleWorkflowBehavior*), and the value of the 'status' attribute. 
 
-### Transition Scenario
+
+### Workflow Scenario
+
+In the previous example we have used the *require* built-in validator on the `name` attribute, only for the scenario  
+*from {Post3Workflow/draft} to {Post3Workflow/correction}*. This scenario is created automatically at validation time by the *WorkflowValidator*
+depending on the pending transition. In order to provide maximum flexibility there are several scenario like this one which that are created 
+the same way by the *WorkflowValidator*.
+
+- *from {start} to {end}* 
+- *leave status {status}* 
+- *enter status {status}*
+- *enter status {status}*
+- *enter workflow {workflow id}*
+- *leave workflow {workflow id}*
+
+As you can see *SimpleWorkflow* allows to validate model attributes at different moment of the model life-cycle within a workflow. You could
+for instance validate that the attribute `tags` is not empty when the post model *enter status {Post3Workflow/ready}*, or decide to
+check that, as soon as the post *enter workflow {Post3Workflow}*.
+
+The helper class *WorkflowScenario* can help you with scenario names, and if you favorite IDE includes a nice auto-completion feature
+writting scenario name may become a real pleasure (more or less).
+
+Let's rewrite our validation rules using *WorkflowScenario* :
+
+```php
+use raoul2000\workflow\validation\WorkflowValidator;
+
+class Post extends \yii\db\ActiveRecord
+{
+    public function rules()
+    {
+        return [
+        	[['status'], WorkflowValidator::className()],
+        	['title','required',
+        		'on' => WorkflowScenario::changeStatus('Post3Workflow/correction', 'Post3Workflow/ready') ],    
+        	['tags','required',
+        		'on' => WorkflowScenario::enterStatus('Post3Workflow/ready') ],          	
+        ];
+    }	
+```
+
 
 
 
