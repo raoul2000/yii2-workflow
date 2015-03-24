@@ -73,8 +73,8 @@ any other Yii2 component.
 $config = [
     // ....
     'components' => [
-    	// the default event sequence component is configured as ReducedEventSequence
-    	// and not anymore BasicEventSequence
+    	// the default event sequence component is configured as a ReducedEventSequence
+    	// and not a BasicEventSequence anymore 
         'eventSequence' => [
           'class' => '\raoul2000\workflow\events\ReducedEventSequence',
         ]
@@ -119,7 +119,6 @@ class Post extends \yii\db\ActiveRecord
 Any other model with a *SimpleWorkflowBehavior* will keep using the default Event sequence (BasicEventSequence) but the Post model
 will use a specific one (ReducedEventSequence).
 
-
 Usage of events is enabled by default but can be disabled by setting the *eventSequence* configuration parameter to NULL. In this case 
 as you may expect, no event is fired.
 
@@ -139,4 +138,79 @@ class Post extends \yii\db\ActiveRecord
 ```
 
 ## Event Handler
-A event handler can be used to implement specific process on any of these events.  
+
+A event handler is used to implement specific process on any of the events in the event sequence. Installing an event handler is
+a standard operation described in the [Yii2 Definitive Guide](http://www.yiiframework.com/doc-2.0/guide-concept-events.html#attaching-event-handlers). 
+
+In the example below, we are attaching an handler for the event that is fired when a Post instance goes from the status *draft* to the
+status *correction*. 
+
+```php
+use raoul2000\workflow\events\WorkflowEvent;
+
+class Post extends \yii\db\ActiveRecord
+{
+	public function init()
+	{
+		$this->on(
+			'afterChangeStatusFrom{PostWorkflow/draft}to{PostWorkflow/correction}', 
+			[$this, 'sendMail']
+		);
+	}	
+	
+	public function sendMail($event) 
+	{
+		MailingService::sendMailToCorrector(
+			'A Post is ready for correction',
+			'The post [' . $event->sender->owner->title . '] is ready to be corrected.'
+		);		
+	}
+```
+
+## before vs after
+
+Each event fired by the *SimpleWorkflowBehavior* can be of 2 types : **before** or **after**. The difference between these type is 
+that a handler attached to a *before* event is able to block the transition in progress by *invalidating* the event. This is not possible
+for a handler attached to a "after* event.
+
+In the example below, an event handler is attached to be invoked each time *before* a Post instance enters into the status 'W1/A'. 
+This handler checks that the user who is performing the action has the appropriate permission and if not it *invalidates* the event : the
+Post instance will not be able to reach the status 'W1/A', the transition is blocked.
+
+```php
+use raoul2000\workflow\events\WorkflowEvent;
+
+class Post extends \yii\db\ActiveRecord
+{
+	public function init()
+	{
+		$this->on(
+			'beforeEnterStatus{W1/A}',
+			function ($event) {
+				// if the user doesn't have the current authorization, the transition to 'W1/A' is blocked
+				$event->isValid = \Yii::$app->user->can('do.action');
+			}
+		);
+	}	
+	// .....
+``` 
+
+Event handlers attached to *before* events allow you to authorize or forbid a transition based on the result of a custom code execution.
+
+## Event Name Helper
+
+The class *\raoul2000\workflow\events\WorkflowEvent* includes a set of static method that you can use to easely create workflow event names.
+They even more useful if your favorite IDE supports auto-completion ! The example below is equivalent to the previous one except that
+the event name is created at runtime by a call to `WorkflowEvent::beforeEnterStatus('W1/A')`.
+
+```php
+$this->on(
+	// use the event helper to generate the event name 
+	WorkflowEvent::beforeEnterStatus('W1/A'),
+	function ($event) {
+		// ...
+	}
+);
+``` 
+ 
+
