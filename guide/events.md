@@ -8,8 +8,8 @@ fired.
 
 ## Event Sequence
 
-The default event sequence used by the *SimpleWorkflow* behavior is the *BasicEventSequence*. Below is a list of events
-fired by this sequence :
+The default event sequence used by the *SimpleWorkflow* behavior is the *BasicEventSequence* available in the namespace 
+`\raoul2000\workflow\events`. Below is a list of events fired by this sequence :
 
 <table width="100%">
 	<tr>
@@ -52,12 +52,14 @@ fired by this sequence :
 	</tr>	
 </table> 
 
-Two other event sequences are also available in the namespace `raoul2000\workflow\events` :
+Two other event sequences are also available in the same namespace :
+
 - ReducedEventSequence
 - ExtendedEventSequence
 
 Of course you can create your own event sequence if the ones provided don't meet your needs. To do so, simply create a class that 
 implements the `raoul2000\workflow\events\IEventSequence` interface.
+
 
 
 ## Configuration
@@ -81,10 +83,10 @@ $config = [
    // ...
 ```        
 
-The *SimpleWorkflowBehavior* will then use the *eventSequence* component created by configuration. 
+The *SimpleWorkflowBehavior* will then use the configured *eventSequence* component. 
 
-You may also want to use a reduced event sequence for one particular workflow, and the basic event sequence with another one. 
-This can be easely achieved by configuring the name of the event sequence component that a *SimpleWorkflowBehavior* should use.
+You may also want to use a reduced event sequence for one particular workflow, and the basic event sequence with another ones. 
+This can be easely achieved by configuring the ID of the event sequence component that a *SimpleWorkflowBehavior* should use.
 
 In the example below we are first configuring a new component with the ID *myReducedEventSequence* and with type *ReducedEventSequence*.
 
@@ -98,7 +100,7 @@ $config = [
    // ...
 ```  
 
-Now let's tell to the behavior of the Post model that is must use the event sequence component configured above 
+Now let's tell to the behavior of the Post model that it must use the *myReducedEventSequence* event sequence component configured above 
 instead of the default one.
 
 ```php
@@ -116,11 +118,11 @@ class Post extends \yii\db\ActiveRecord
 }
 ```
 
-Any other model with a *SimpleWorkflowBehavior* will keep using the default Event sequence (BasicEventSequence) but the Post model
-will use a specific one (ReducedEventSequence).
+Any other model with a *SimpleWorkflowBehavior* will keep using the default Event sequence (*BasicEventSequence*) but the Post model
+will use a specific one (*ReducedEventSequence*).
 
-Usage of events is enabled by default but can be disabled by setting the *eventSequence* configuration parameter to NULL. In this case 
-as you may expect, no event is fired.
+*SimpleWorkflow* events are enabled by default but can be disabled by setting the *eventSequence* configuration parameter to NULL when
+attaching the behavior to the model. In this case as you may expect, no event is fired for this model.
 
 ```php
 <?php
@@ -131,7 +133,7 @@ class Post extends \yii\db\ActiveRecord
     {
     	return [
 			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-			'eventSequence' => null	// disable all SimpleWorkflow events
+			'eventSequence' => null	// disable all SimpleWorkflow Events for Post instances
     	];
     }
 }
@@ -169,11 +171,12 @@ class Post extends \yii\db\ActiveRecord
 
 ## before vs after
 
-Each event fired by the *SimpleWorkflowBehavior* can be of 2 types : **before** or **after**. The difference between these type is 
+Each event fired by the *SimpleWorkflowBehavior* can be of 2 types : **before** or **after**. The difference between these types is 
 that a handler attached to a *before* event is able to block the transition in progress by *invalidating* the event. This is not possible
-for a handler attached to a "after* event.
+for a handler attached to a "after* event. Using this feature it becomes possible to block a transition based on the result of a complex
+processing.
 
-In the example below, an event handler is attached to be invoked each time *before* a Post instance enters into the status 'W1/A'. 
+In the example below, an event handler is attached to be invoked *before* a Post instance enters into the status 'W1/A'. 
 This handler checks that the user who is performing the action has the appropriate permission and if not it *invalidates* the event : the
 Post instance will not be able to reach the status 'W1/A', the transition is blocked.
 
@@ -200,7 +203,7 @@ Event handlers attached to *before* events allow you to authorize or forbid a tr
 ## Event Name Helper
 
 The class *\raoul2000\workflow\events\WorkflowEvent* includes a set of static method that you can use to easely create workflow event names.
-They even more useful if your favorite IDE supports auto-completion ! The example below is equivalent to the previous one except that
+It's even more useful if your favorite IDE supports auto-completion ! The example below is equivalent to the previous one except that
 the event name is created at runtime by a call to `WorkflowEvent::beforeEnterStatus('W1/A')`.
 
 ```php
