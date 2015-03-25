@@ -64,9 +64,14 @@ implements the `raoul2000\workflow\events\IEventSequence` interface.
 
 ## Configuration
 
-When the *SimpleWorkflowBehavior* is attached to a model, it tries to get a reference to the **Event Sequence Component** to use. By default
+When the *SimpleWorkflowBehavior* is initialized, it tries to get a reference to the **Event Sequence Component** to use. By default
 this component is assumed to have the id *eventSequence*. If no such component is available, *it will create one* using the *BasicEventSequence* 
 class and register it in the Yii2 application so to make it available to other *SimpleWorkflowBehavior*.
+
+To summarize :
+ 
+- **eventSequence** : default Id of the event sequence component used by the *SimpleWorkflowBehavior*
+- **BasicEventSequence** : default event sequence type 
 
 If for instance you want to use the *ReducedEventSequence* instead of the default one, you must configure it like you would do for 
 any other Yii2 component.
@@ -215,5 +220,7 @@ $this->on(
 	}
 );
 ``` 
- 
+
+## Creating An Event Sequence
+
 
