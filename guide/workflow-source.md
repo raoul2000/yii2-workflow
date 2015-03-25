@@ -4,7 +4,7 @@ The *Workflow Source* is a Yii2 component dedicated to read the persistent repre
 representation in terms of PHP objects.
 
 The main Workflow Source component included in the *SimpleWorkflow* package is `raoul2000\workflow\source\php\WorkflowPhpSource`. It is designed
-to process workflow definition provided as regular PHP Arrays. In this chapter we will use this component to describe general features.  
+to process workflow definition provided as regular PHP Arrays.  
 
 
 ## Workflow Objects
@@ -23,7 +23,7 @@ objects.
 
 When the *SimpleWorkflowBehavior* is initialized, it tries to get a reference to the **Workflow Source Component** to use. By default
 this component is assumed to have the id *workflowSource*. If no such component is available, *it will create one* using the *WorkflowPhpSource* 
-class and register it in the Yii2 application so to make it available to other *SimpleWorkflowBehavior*.
+class, and register it in the Yii2 application so to make it available to other *SimpleWorkflowBehavior*.
 
 To summarize :
  
@@ -42,6 +42,7 @@ $config = [
         ]
    // ...
 ``` 
+With this configuration, all *SimpleWorkflowBehavior* are going to use your *SuperCoolWorkflowSource* to get Status, Transition and Workflow objects.
 
 Another option is to mix Workflow Source Components and for instance use the default one with all models except for your Post model. To achieve this,
 simply configure your custom Workflow Source Component under a custom Id.
@@ -50,7 +51,7 @@ simply configure your custom Workflow Source Component under a custom Id.
 $config = [
     // ....
     'components' => [
-    	// This is my custom Workflow Source Component
+    	// This is my custom Workflow Source Component with a custom id
         'mySuperSource' => [
           'class' => '\my\own\component\SuperCoolWorkflowSource',
         ]
@@ -78,6 +79,6 @@ class Post extends \yii\db\ActiveRecord
 
 ## Implementing Your Own Workflow source
 
-You can implement your own Workflow Source Component by implementing the `\raoul2000\workflow\source\IWorkflowSource` interface.
+You can create your own Workflow Source Component by implementing the `\raoul2000\workflow\source\IWorkflowSource` interface.
  
 

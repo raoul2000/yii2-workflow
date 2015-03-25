@@ -1,12 +1,13 @@
-# Workflow Creation
+# Workflow Creation : PHP Source
 
-In the first release, a workflow is defined as an associative PHP array that is returned by a class that
-implements the *raoul2000\workflow\base\IWorkflowDefinitionProvider* interface. In this chapter we are going 
-to learn how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really.
+The way a workflow is defined depends on the [Workflow Source](workflow-source.md) component we will be using. By default
+the *SimpleWorkflowBehavior* is using an instance of the class `WorkflowPhpSource` defined in the namespace `raoul2000\workflow\source\php`.
+This component is able to read a workflow definition out of an associative PHP array. In this chapter we are going to learn 
+how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really....
 
 ## Identifiers
 
-Identifiers used for both statuses and workflows are `strings` that must start with a letter followed by 
+Identifiers used for both statuses and workflows are case sensitive `strings` that must start with a letter followed by 
 alpha numerical characters. If you need a delimiter, you can use the minus (-) characters.
 
 Example :
@@ -15,28 +16,28 @@ Example :
 - invalid Ids : 'my workflow', 'draft mode', '01workflow', 'post_workflow'
 
 Note that status Ids are not aimed to be displayed to the user. For this prupose, we'll see below that you can define
-a *label* property. 
+a *label* property accessible through the `getLabel()` method implemented by the Status class.
 
 #### Absolute Status Ids
 
-An absolute status Id is a composite value that includes the id of the workflow that owns the status. The characters slash (/) is then
+An absolute status Id is a composite value that includes the id of the workflow that owns the status. The characters slash (/) is 
 used to separate both ids.
 
-For example, if we have a status with "draft" that belong to the workflow 'post', the absolute status Id is 'post/draft'.
+For example, if we have a status with "draft" that belong to the workflow 'PostWorkflow', the absolute status Id is 'PostWorkflow/draft'.
 
-Most of the time, you will not use absolute status id, but note that internally they are required by the *WorkflowPhpSource* component.
+Most of the time, you will not use absolute status id, but it's good to know that internally they are required by 
+the *WorkflowPhpSource* component.
 
 
 ## Workflow Provider
 
-A *Workflow provider* is a class that implements the *IWorkflowDefinitionProvider* interface 
-which defines a single method : `getDefinition()`. This method must return the description of our workflow as a PHP array.
+The *WorkflowPhpSource* component reads workflow definition from *Workflow provider* objects. This type of object t implements 
+the *IWorkflowDefinitionProvider* interface which defines a single method : `getDefinition()`. 
+This method must return the actual description of our workflow as a PHP array.
 
 *PostWorkflow.php in @app/models*
 ```php
-
 namespace app\models;
-
 class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider 
 {
 	public function getDefinition() {
