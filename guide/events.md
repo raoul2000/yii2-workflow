@@ -47,7 +47,8 @@ The default event sequence used by the *SimpleWorkflow* behavior is the *BasicEv
 				<li><b>beforeLeaveStatus{W1/B}</b> where W1/B is the last status Id of the model before it leaves the workflow</li>
 				<li><b>beforeLeaveWorkflow{W1}</b></li>
 				<li><b>afterLeaveStatus{W1/B}</b> where W1/B is the last status Id of the model before it leaves the workflow</li>
-				<li><b>afterLeaveWorkflow{W1}</b></li></ul>
+				<li><b>afterLeaveWorkflow{W1}</b></li>
+			</ul>
 		</td>
 	</tr>	
 </table> 
@@ -58,8 +59,7 @@ Two other event sequences are also available in the same namespace :
 - ExtendedEventSequence
 
 Of course you can create your own event sequence if the ones provided don't meet your needs. To do so, simply create a class that 
-implements the `raoul2000\workflow\events\IEventSequence` interface.
-
+implements the `raoul2000\workflow\events\IEventSequence` interface (see below).
 
 
 ## Configuration
@@ -223,4 +223,41 @@ $this->on(
 
 ## Creating An Event Sequence
 
+To define your own event sequence you must create a class that implements the `\raoul2000\workflow\events\IEventSequence` interface. 
+There are three methods declared in this interface, each one being invoked at runtime, when a specific event occurs in the workflow :
 
+- *createEnterWorkflowSequence* : invoked when a model enters into a workflow
+- *createLeaveWorkflowSequence* : invoked when a model leaves a workflow
+- *createChangeStatusSequence* : invoked when a model changes status
+
+Each method must return an array representing the corresponding sequence of events, grouped in 2 possibles types : *before* and 
+*after* events. These types are used as keys in the returned array, and values is an array of `WorkflowEvent` objects representing
+the sequence of events.
+
+For instance :
+
+```php
+	public function createEnterWorkflowSequence($initalStatus, $sender)
+	{
+		return [
+			'before' => [
+				new WorkflowEvent(WorkflowEvent::beforeEnterWorkflow($initalStatus->getWorkflowId()),
+					['end' => $initalStatus,'sender'=> $sender]
+				),
+				new WorkflowEvent(WorkflowEvent::beforeEnterStatus($initalStatus->getId()),
+					['end' => $initalStatus,'sender'=> $sender]
+				)
+			],
+			'after' => [
+				new WorkflowEvent(WorkflowEvent::afterEnterWorkflow($initalStatus->getWorkflowId()),
+					['end' => $initalStatus,'sender' => $sender]
+				),
+				new WorkflowEvent(WorkflowEvent::afterEnterStatus($initalStatus->getId()),
+					['end' => $initalStatus,'sender' => $sender]
+				)
+			]
+		];
+	}
+```
+
+  
