@@ -127,14 +127,16 @@ which is strictly forbiden by the workflow. Will it be successful in this risky 
 $post = new Post();
 $post->sendToStatus('draft');
 $post->sendToStatus('deleted');
-$post->sendToStatus('publish');
+$post->sendToStatus('publish');	// danger zone !
 ```
 
-Game Over ! There is no transition between *deleted* and *publish*, and that's what *SimpleWorkflow* tries to explain to our
+Game Over ! There is no transition between *deleted* and *publish*, and that's why *SimpleWorkflow* tries to explain to our
 fearless post object.
 
+	Workflow Exception – raoul2000\workflow\base\WorkflowException
 	No transition found between status PostWorkflow/deleted and PostWorkflow/publish
 	
+Yes, that's severe, but there was many ways to avoid this exception like for instance by first validating that the transition was possible. 
 
 ## What's Next ?
 
