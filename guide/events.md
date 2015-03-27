@@ -205,6 +205,37 @@ class Post extends \yii\db\ActiveRecord
 
 Event handlers attached to *before* events allow you to authorize or forbid a transition based on the result of a custom code execution.
 
+## Getting The Event Sequence
+
+Once *SimpleWorkflowBehavior* is attached to model, it injects several method that you can use directly from a model instance (this is
+[standard Yii2 feature](http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html#using-behaviors)). Among these methods, 
+`getEventSequence()` is particularly useful when working with events. This method returns
+an array describing all the events that will be fired if the model is sent to the status passed as argument. This array has 2 keys : 
+*before* and *after*. The value of each key is an array of `raoul2000\workflow\events\WorkflowEvent` objects representing the event
+that will be fired before and after the transition.
+
+Let's see that on the example below where we assume that the `$post` instance in currently in status *ready*. This snippet
+is displaying the ordered list of event that will be fired when `$post` is sent to status *published*.
+
+```php
+// $post is assumed to be in status 'ready'
+foreach ($post->getEventSequence('published') as $type => $events) {
+	foreach($events as $event) {
+		echo 'type = '.$type. ' event name = '.$event->name.'<br/>';
+	}
+}
+```
+
+The transition we are working on is from *ready* to *published*. The event sequence used is the default one and here is
+the output which matches the *BasicEventSequence* specifications. 
+
+	type = before event name = beforeLeaveStatus{PostWorkflow/ready}
+	type = before event name = beforeChangeStatusFrom{PostWorkflow/ready}to{PostWorkflow/published}
+	type = before event name = beforeEnterStatus{PostWorkflow/published}
+	type = after event name = afterLeaveStatus{PostWorkflow/ready}
+	type = after event name = afterChangeStatusFrom{PostWorkflow/ready}to{PostWorkflow/published}
+	type = after event name = afterEnterStatus{PostWorkflow/published}
+
 ## Event Name Helper
 
 The class *\raoul2000\workflow\events\WorkflowEvent* includes a set of static method that you can use to easely create workflow event names.
@@ -234,7 +265,7 @@ Each method must return an array representing the corresponding sequence of even
 *after* events. These types are used as keys in the returned array, and values is an array of `WorkflowEvent` objects representing
 the sequence of events.
 
-For instance :
+For example :
 
 ```php
 	public function createEnterWorkflowSequence($initalStatus, $sender)
