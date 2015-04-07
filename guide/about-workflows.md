@@ -11,7 +11,7 @@ representation of actual work.
 > (*[read more on Wikipedia](http://en.wikipedia.org/wiki/Workflow)*)
 
 Workflows (also called Petri net) is a vast subject and the aim of this document is not to go deeply in the theorical fields. 
-As described in the next chapter, the **SimpleWorkflow** behavior only implements a simple subset of it.  if you are intrested in 
+As described in the next chapter, the **SimpleWorkflow** behavior only implements a simple subset of it.  if you are interested in 
 better understanding theorical basis on the subject, you'll find some [references](#references) at the end of this page. 
 
 
@@ -58,7 +58,7 @@ Let's imagine something a little bit more complex.
 some make corrections and layout work (they know CSS), and there is of course a chief editors who is responsible for publication.
 
 If we want to be able to handle posts in our new publishing system, we must think of a more elaborated workflow that will fit this 
-new organisation. First of all, let's list possible post statuses : 
+new organization. First of all, let's list possible post statuses : 
 
 - **draft** : a post is always created as draft. This is the *initial status* of all posts
 - **correction** : the post is being corrected and layout improvements may also be added
@@ -80,7 +80,7 @@ Now, based on what we have just define, here is a possible Post workflow :
 <img src="images/post-workflow-2.png" alt="workflow 2"/>
 
 The first version of the Post worfklow was very simple, and as each status could reach any other status, there was no need for 
-the developper to make any tests when a Post changed status. With this new version, that's another story ! Some logic must 
+the developer to make any tests when a Post changed status. With this new version, that's another story ! Some logic must 
 be implemented in order to prevent *Archived* post to become *Draft*, or *Published* posts to be sent to *Correction* by a redactor. 
 
 That is when *SimpleWorkflow* can be useful!
@@ -139,7 +139,7 @@ Note that a more condensed array format is also supported, but for this example 
 ## Attaching the behavior
 
 To be able to manage our Post model inside the workflow, we must take care about following points :
-- *check that our model inherits from* ActiveRecord : the *SimpleWorkflowBehavior* can only be attached to ActiveRecord objets.
+- *check that our model inherits from* ActiveRecord : the *SimpleWorkflowBehavior* can only be attached to ActiveRecord objects.
 - add an attribute that will be used to store the current status of a post. We will use attribute `status` with type VARCHAR(40) for
 our example, but it can be any attribute.
 
@@ -202,7 +202,7 @@ When we run this code, we get an Exception !
 Could it be more clear ? Ok, maybe it could. Let's see in detail what just happened. 
 
 The *SimpleWorkflowBehavior* enters in action when the Post is saved. At this point it tests if the transitions is possible
-bewteen the current status and the final one. In our case, there was no original status (the object has just been created) and the final
+between the current status and the final one. In our case, there was no original status (the object has just been created) and the final
 status has been set to 'published'. So, from the *SimpleWorkflowBehavior* point of view, we are dealing with the following transition : 
 
 	null -> 'published'
@@ -230,7 +230,7 @@ the status is : PostWorkflow/draft
 Hey wait ! what's that ? we set the `status` attribute to 'draft', saved the post and now the value of our `status` attribute is *PostWorkflow/draft*. All
 right, don't panic, this is just the way the *SimpleWorkflowBehavior* normalized the status id, from its short form (*draft*)
 to its absolute form (*PostWorkflow/draft*). We will describe this later in a chapter dedicated to the *WorkflowSource* component.
-For the moment just remember that these 2 forms of writting a status are equivalent.
+For the moment just remember that these 2 forms of writing a status are equivalent.
 
 
 ### sendToStatus
@@ -245,7 +245,7 @@ When you use *sendToStatus()* it is not required to save the model for the *Simp
 - on success, apply the transition and update the `status` attribute owned by the Post model 
 
 **_sendToStatus()_ actually performs the transition : the model leaves it current status and goes to the new one.** It is equivalent
-to `status` attribute assignement and model being saved.
+to `status` attribute assignment and model being saved.
 
 In the example below, the output is the same as before, without having to invoke *save()*.
 
@@ -269,16 +269,16 @@ The *SimpleWorkflowBehavior* maintains internally the *real* value of the curren
 To actually change the status of a model you have two options :
 
 - assign a value to the `status` attribute and save (or update) it : the value assigned to the `status` attribute
-is considered as the end status of pending transition that will be commited when the `status` attribute is saved
+is considered as the end status of pending transition that will be committed when the `status` attribute is saved
 - call  *sendToStatus('endStatus')* with the end status as argument : the transition between the *real* status and the one passed as argument
-is commited by the *sendToStatus* method.
+is committed by the *sendToStatus* method.
 
 
 ## Getting the Status
 
-If status assignement can be done by assigning a value to the `status` attribute, getting the status value of a model should not involve
+If status assignment can be done by assigning a value to the `status` attribute, getting the status value of a model should not involve
 accessing this attribute directly but use the method *getWorkflowStatus()* instead. However in certain circumstances, reading the 
-status attribute value is acceptable but then it is your responsability to ensure that both values are synchronized.
+status attribute value is acceptable but then it is your responsibility to ensure that both values are synchronized.
 
 ### getWorkflowStatus() vs attribute
 

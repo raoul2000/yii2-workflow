@@ -205,6 +205,26 @@ class Post extends \yii\db\ActiveRecord
 
 Event handlers attached to *before* events allow you to authorize or forbid a transition based on the result of a custom code execution.
 
+
+### Status Constraint
+
+If you have been using the previous version of *SimpleWorkflow* (only compatible with Yii 1.x) you may be familiar with so called
+*Status Constraint*. *Status Constraint* used to be a piece of PHP code associated with a status and evaluated as a logical 
+expression **before a model enters into this status** : if the evaluation succeeds, the model can enter the status 
+otherwise the transition is blocked and the model remains in its current status ([read mode](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=doc#constraint)).
+
+TBD
+
+### Workflow Tasks
+
+Just like *Status Constraint* (see above), *Workflow Task* is a feature available with the previous version of *SimpleWorkflow*.
+To summarize, a workflow task is a piece of PHP code attached to a transition and executed when the transition 
+is performed by the model ( [read mode](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=doc#tasks)).
+
+Such feature must now be implemented as an event handler attached to an *after* event.
+
+TBD
+
 ## Getting The Event Sequence
 
 Once *SimpleWorkflowBehavior* is attached to model, it injects several method that you can use directly from a model instance (this is
