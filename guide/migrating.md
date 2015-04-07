@@ -10,7 +10,7 @@ types, each one having its own behavior.
 
 ## Principles
 
-Not that much to say here as there is no change in the way the *SimpleWorkflowBehavior* detects status changes. On one side an 
+Not that much to say here, as there is no change in the way the *SimpleWorkflowBehavior* detects status changes. On one side an 
 Active Record attribute which can be viewed as the future status. On the other side, the actual status managed internally by the behavior.
 
 ## Definition

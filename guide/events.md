@@ -208,22 +208,28 @@ Event handlers attached to *before* events allow you to authorize or forbid a tr
 
 ### Status Constraint
 
-If you have been using the previous version of *SimpleWorkflow* (only compatible with Yii 1.x) you may be familiar with so called
-*Status Constraint*. *Status Constraint* used to be a piece of PHP code associated with a status and evaluated as a logical 
+If you have been using the previous version of *SimpleWorkflow* (only compatible with Yii 1.x) you may be familiar with *Status Constraint*. 
+A *Status Constraint* is a piece of PHP code associated with a status and evaluated as a logical 
 expression **before a model enters into this status** : if the evaluation succeeds, the model can enter the status 
-otherwise the transition is blocked and the model remains in its current status ([read mode](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=doc#constraint)).
+otherwise the transition is blocked and the model remains in its current status ([read more](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=doc#constraint)).
 
-TBD
+*Status Constraint* are **not declared anymore as PHP code inside the workflow definition** like in version 1.x but as event handlers
+attached to the *before* event type, just like in the previous example where in fact, we have defined a constraint on the status *W1/A*. 
+
+Remember that an event handler attached to a *before* event type is able to block the transition by invalidating the event object, and that's
+exactly what a *Status Constraint* does !
 
 ### Workflow Tasks
 
-Just like *Status Constraint* (see above), *Workflow Task* is a feature available with the previous version of *SimpleWorkflow*.
+Just like *Status Constraint* above, *Workflow Task* is a feature available with the previous version of *SimpleWorkflow*.
 To summarize, a workflow task is a piece of PHP code attached to a transition and executed when the transition 
-is performed by the model ( [read mode](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=doc#tasks)).
+is performed by the model ( [read more](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=doc#tasks)).
 
-Such feature must now be implemented as an event handler attached to an *after* event.
+Such feature must now be implemented as an event handler attached to an *after* event and not anymore as PHP code defined in the workflow
+definition (like it used to be in version 1.x). In a [previous chapter](#event-handler) we have already created a workflow task by 
+attaching a handler to the event *afterChangeStatusFrom{PostWorkflow/draft}to{PostWorkflow/correction}* : a mail is sent when the model
+goes from `draft` to `correction`. 
 
-TBD
 
 ## Getting The Event Sequence
 
@@ -255,6 +261,9 @@ the output which matches the *BasicEventSequence* specifications.
 	type = after event name = afterLeaveStatus{PostWorkflow/ready}
 	type = after event name = afterChangeStatusFrom{PostWorkflow/ready}to{PostWorkflow/published}
 	type = after event name = afterEnterStatus{PostWorkflow/published}
+	
+Remember that events will be fired in this exact order until the last event or until the event is invalidated by a handler attached
+to the *before* events.
 
 ## Event Name Helper
 
@@ -274,6 +283,10 @@ $this->on(
 
 ## Creating An Event Sequence
 
+We already know that *SimpleWorkflow* includes 3 event sequences, from the most simple to the most *verbose* one (the default is the
+`BasicEventSequence`). However, you may want to create your own event sequence if for instance you want to optimize the amount of events
+fired and actually handled by your implementation.
+
 To define your own event sequence you must create a class that implements the `\raoul2000\workflow\events\IEventSequence` interface. 
 There are three methods declared in this interface, each one being invoked at runtime, when a specific event occurs in the workflow :
 
@@ -288,27 +301,27 @@ the sequence of events.
 For example :
 
 ```php
-	public function createEnterWorkflowSequence($initalStatus, $sender)
-	{
-		return [
-			'before' => [
-				new WorkflowEvent(WorkflowEvent::beforeEnterWorkflow($initalStatus->getWorkflowId()),
-					['end' => $initalStatus,'sender'=> $sender]
-				),
-				new WorkflowEvent(WorkflowEvent::beforeEnterStatus($initalStatus->getId()),
-					['end' => $initalStatus,'sender'=> $sender]
-				)
-			],
-			'after' => [
-				new WorkflowEvent(WorkflowEvent::afterEnterWorkflow($initalStatus->getWorkflowId()),
-					['end' => $initalStatus,'sender' => $sender]
-				),
-				new WorkflowEvent(WorkflowEvent::afterEnterStatus($initalStatus->getId()),
-					['end' => $initalStatus,'sender' => $sender]
-				)
-			]
-		];
-	}
+public function createEnterWorkflowSequence($initalStatus, $sender)
+{
+	return [
+		'before' => [
+			new WorkflowEvent(WorkflowEvent::beforeEnterWorkflow($initalStatus->getWorkflowId()),
+				['end' => $initalStatus,'sender'=> $sender]
+			),
+			new WorkflowEvent(WorkflowEvent::beforeEnterStatus($initalStatus->getId()),
+				['end' => $initalStatus,'sender'=> $sender]
+			)
+		],
+		'after' => [
+			new WorkflowEvent(WorkflowEvent::afterEnterWorkflow($initalStatus->getWorkflowId()),
+				['end' => $initalStatus,'sender' => $sender]
+			),
+			new WorkflowEvent(WorkflowEvent::afterEnterStatus($initalStatus->getId()),
+				['end' => $initalStatus,'sender' => $sender]
+			)
+		]
+	];
+}
 ```
 
   
