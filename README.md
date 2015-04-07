@@ -113,15 +113,15 @@ This will print the following message :
 
 	post status is : Draft
 	 
-If you do the same thing but instead of draftn set the status to *publish* and try to save it, the following exception is thrown :
+If you do the same thing but instead of *draft* set the status to *publish* and try to save it, the following exception is thrown :
 
 	Not an initial status : PostWorkflow/publish ("PostWorkflow/draft" expected)
 
 That's because in your workflow definition the **initial status** is  set to *draft* and not *publish*.
 
 Ok, one more example for the fun ! This time we are not going to perform the transition when the Post is saved (like we did in the previous
-example), but immediately by invoking the `sendToStatus` method. Our Post is going try to reach status *publish* passing through *deleted* 
-which is strictly forbiden by the workflow. Will it be successful in this risky attempt of breaking workflow rules ?   
+example), but immediately by invoking the `sendToStatus` method. Our Post is going to try to reach status *publish* passing through *deleted* 
+which is strictly forbidden by the workflow. Will it be successful in this risky attempt of breaking workflow rules ?   
 
 ```php
 $post = new Post();
@@ -130,7 +130,7 @@ $post->sendToStatus('deleted');
 $post->sendToStatus('publish');	// danger zone !
 ```
 
-Game Over ! There is no transition between *deleted* and *publish*, and that's why *SimpleWorkflow* tries to explain to our
+Game Over ! There is no transition between *deleted* and *publish*, and that's what *SimpleWorkflow* tries to explain to our
 fearless post object.
 
 	Workflow Exception – raoul2000\workflow\base\WorkflowException
