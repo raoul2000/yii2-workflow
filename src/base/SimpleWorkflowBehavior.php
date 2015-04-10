@@ -93,6 +93,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * Set this attribute to NULL if you are not going to use any Workflow Event.
 	 */
 	public $eventSequence = 'eventSequence';
+	public $autoInsert = false;
 	/**
 	 * @var string Read only property that contains the id of the default workflow to use with
 	 * this behavior.
@@ -231,11 +232,24 @@ class SimpleWorkflowBehavior extends Behavior
 			ActiveRecord::EVENT_AFTER_INSERT 	=> 'afterSaveStatus',
 		];
 	}
+	// NOT USED YET
+	private function doAutoInsert()
+	{
+		if ( $this->autoInsert !== false) {
+			$workflowId = $this->autoInsert === true ? $this->getDefaultWorkflowId() : $this->autoInsert;
+			$workflow = $this->_wfSource->getWorkflow($workflowId);
+			if ($workflow !== null) {
+				$this->_status = $workflow->getInitialStatusId();
+			} else {
+				throw new WorkflowException("autoInsert failed - No workflow found for id : ".$workflowId);
+			}
+		}		
+	}
 	/**
-	 * Initialize the internal status value based on the owner model.
+	 * Initialize the internal status value based on the owner model status attribute.
 	 *
 	 * The <b>status</b> attribute belonging to the owner model is retrieved and if not
-	 * empty, converted into the corresponding Status object for later use.
+	 * empty, converted into the corresponding Status.
 	 * This method does not trigger any event, it is only restoring the model into its workflow.
 	 *
 	 * @throws raoul2000\workflow\WorkflowException if the status attribute could not be converted into a Status object
@@ -258,6 +272,7 @@ class SimpleWorkflowBehavior extends Behavior
 			$this->_status = null;
 		}
 	}
+	
 	/**
 	 * Puts the owner model into the workflow $workflowId or into its default workflow if no
 	 * $workflowId is provided.

@@ -116,4 +116,20 @@ class InitStatusTest extends TestCase
 
     	});
     }
+    
+//     public function testAutoInsertSuccess()
+//     {
+//     	$this->specify('autoInsert feature works ok', function() {
+    
+//     		$model = new Item01();
+//     		$model->attachBehavior('workflow', [
+//     				'class' => SimpleWorkflowBehavior::className(),
+//     				'defaultWorkflowId' => 'Workflow1',
+//     				'autoInsert' => true
+//     		]);
+    
+//     		expect('', $model->hasWorkflowStatus())->false();
+//     		expect_that(' status attribute is not null', $model->status != null);
+//     	});
+//     }    
 }
