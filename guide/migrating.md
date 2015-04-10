@@ -1,19 +1,29 @@
 # Migrating From *SimpleWorkflow* 1.x
 
 If you have been using the [previous version of *SimpleWorkflow*](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=home) 
-together with Yii 1.x and now want to migrate to Yii2, this chapter is for you. We will see what are the main differences between the
+together with Yii 1.x and now want to migrate to Yii2, this chapter is for you. We will focus on the main differences between the
 previous version of *SimpleWorkflow* (v1.x) and this one (v2.x).
 
 Main improvements in v2.x aimed to clearly separate the workflow definition in terms of status and transition, from the business logic
 that implements the way a model is going to behave inside a workflow. By doing so, the same workflow can be easily used by models of different
 types, each one having its own behavior.  
 
+Another goal was to provide maximum flexibility in the way the developer is going to setup its app architecture. For instance the workflow definition
+can be embeded in any PHP class that implements the appropriate interface (`raoul2000\workflow\base\IWorkflowDefinitionProvider`). Moreover almost
+all classes can be overloaded and new ones created to implements specific needs not covered by the current version. 
+
+
 ## Principles
 
-Not that much to say here, as there is no change in the way the *SimpleWorkflowBehavior* detects status changes. On one side an 
-Active Record attribute which can be viewed as the future status. On the other side, the actual status managed internally by the behavior.
+Not that much to say here, as there is no change in the way the *SimpleWorkflowBehavior* detects status changes :
+
+- On one side an Active Record attribute which can be viewed as the future status. 
+- On the other side, the actual status managed internally by the behavior.
+
+A transition is a link between the *current* and the *future* status.  
 
 ## Definition
+The workflow definition required by the `WorkflowPhpSource` component differs from previous version : 
 
 - key `initial` is replaced by `initialStatusId`
 - key `node` is replaced by `status`
