@@ -34,7 +34,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 			throw new WorkflowValidationException('Missing "initialStatusId"');
 		}
 	
-		list($workflowId, $statusId) = $source->parseStatusId( $definition['initialStatusId'],null,$wId);
+		list($workflowId, $statusId) = $source->parseStatusId( $definition['initialStatusId'],$wId);
 		$initialStatusId = $workflowId . WorkflowPhpSource::SEPARATOR_STATUS_NAME .$statusId;
 		if( $workflowId != $wId) {
 			throw new WorkflowValidationException('Initial status must belong to workflow : '.$initialStatusId);
@@ -76,7 +76,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 				throw new WorkflowValidationException("Wrong status definition : key = " . VarDumper::dumpAsString($key). " value = ". VarDumper::dumpAsString($value));
 			}
 	
-			list($workflowId, $statusId) = $source->parseStatusId($startStatusId,null,$wId);
+			list($workflowId, $statusId) = $source->parseStatusId($startStatusId,$wId);
 			$startStatusId = $startStatusIdIndex[] = $workflowId . WorkflowPhpSource::SEPARATOR_STATUS_NAME . $statusId;
 			if( $workflowId != $wId) {
 				throw new WorkflowValidationException('Status must belong to workflow : '.$startStatusId);
@@ -123,7 +123,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 								 */
 								$ids = array_map('trim', explode(',', $transitionDefinition));
 								foreach ($ids as $id) {
-									$pieces = $source->parseStatusId($id,null,$wId);
+									$pieces = $source->parseStatusId($id,$wId);
 									$canEndStId = \implode(WorkflowPhpSource::SEPARATOR_STATUS_NAME, $pieces);
 									$endStatusIdIndex[] = $canEndStId;
 									$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
@@ -153,7 +153,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 												. VarDumper::dumpAsString($tkey). " value = ". VarDumper::dumpAsString($tvalue));
 									}
 										
-									$pieces = $source->parseStatusId($endStatusId,null,$wId);
+									$pieces = $source->parseStatusId($endStatusId,$wId);
 									$canEndStId = \implode(WorkflowPhpSource::SEPARATOR_STATUS_NAME, $pieces);
 									$endStatusIdIndex[] = $canEndStId;
 										
@@ -209,7 +209,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 			if ( count($missingStatusIdSuspects) != 0) {
 				$missingStatusId = [];
 				foreach ($missingStatusIdSuspects as $id) {
-					list($thisWid, $thisSid) = $source->parseStatusId($id,null,$wId);
+					list($thisWid, $thisSid) = $source->parseStatusId($id,$wId);
 					if ($thisWid == $wId) {
 						$missingStatusId[] = $id; // refering to the same workflow, this Id is not defined
 					}

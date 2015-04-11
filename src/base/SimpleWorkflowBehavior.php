@@ -70,8 +70,6 @@ class SimpleWorkflowBehavior extends Behavior
 	 * to use a model property but in this case you must provide a suitable status accessor component that will handle
 	 * status persistence.
 	 */
-	// TODO : change property name to reflect the fact that both model attribute and property can be used here.
-	// Maybe add another property (e.g. statusFieldAsProperty = boolean)
 	public $statusAttribute = 'status';
 	/**
 	 * @var string name of the workflow source component to use with the behavior
@@ -263,7 +261,7 @@ class SimpleWorkflowBehavior extends Behavior
 		}
 
 		if ( ! empty($oStatus) ) {
-			$status = $this->_wfSource->getStatus($oStatus, self::isAttachedTo($this->owner) ? $this->owner : null);
+			$status = $this->_wfSource->getStatus($oStatus, self::isAttachedTo($this->owner) ? $this->selectDefaultWorkflowId() : null);
 			if ($status === null) {
 				throw new WorkflowException('Status not found : '.$oStatus);
 			}
@@ -564,7 +562,7 @@ class SimpleWorkflowBehavior extends Behavior
 			if ($workflow === null) {
 				throw new WorkflowException("Failed to load default workflow ID = ".$this->getDefaultWorkflowId());
 			}
-			$initialStatus = $this->_wfSource->getStatus($workflow->getInitialStatusId(), $this->owner);
+			$initialStatus = $this->_wfSource->getStatus($workflow->getInitialStatusId(), $this->selectDefaultWorkflowId() );
 			$nextStatus[$initialStatus->getId()] = ['status' => $initialStatus];
 		} else {
 			$transitions = $this->_wfSource->getTransitions($this->getWorkflowStatus()->getId(), $this->owner);
@@ -769,7 +767,7 @@ class SimpleWorkflowBehavior extends Behavior
 		}elseif ( $mixed instanceof Status ) {
 			return $mixed;
 		} else {
-			$status = $this->_wfSource->getStatus($mixed, $this->owner);
+			$status = $this->_wfSource->getStatus($mixed, $this->selectDefaultWorkflowId());
 			if ( $status === null && $strict) {
 				throw new WorkflowException('Status not found : '.$mixed);
 			}
@@ -827,7 +825,18 @@ class SimpleWorkflowBehavior extends Behavior
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @return string
+	 */
+	private function selectDefaultWorkflowId()
+	{
+		if( $this->getWorkflowStatus() != null){
+			return $this->getWorkflowStatus()->getWorkflowId();
+		} else {
+			return $this->getDefaultWorkflowId();
+		}
+	}
 	/**
 	 * Tests that a SimpleWorkflowBehavior behavior is attached to the object passed as argument.
 	 *

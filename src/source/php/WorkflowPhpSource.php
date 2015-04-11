@@ -158,9 +158,9 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * @see WorkflowPhpSource::evaluateWorkflowId()
 	 * @see WorkflowPhpSource::parseStatusId()
 	 */
-	public function getStatus($id, $model = null)
+	public function getStatus($id, $defaultWorkflowId = null)
 	{
-		list($wId, $stId) = $this->parseStatusId($id, $model);
+		list($wId, $stId) = $this->parseStatusId($id, $defaultWorkflowId);
 		
 		$canonicalStId = $wId . self::SEPARATOR_STATUS_NAME . $stId;
 		
@@ -214,7 +214,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 			if ( $trDef != null) {
 				
 				foreach ($trDef as $endStId => $trCfg) {					
-					$ids = $this->parseStatusId($endStId, $model, $wId);
+					$ids = $this->parseStatusId($endStId, $wId);
 					$endId =  implode(self::SEPARATOR_STATUS_NAME, $ids);
 					$end = $this->getStatus($endId);
 					
@@ -266,7 +266,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 				unset($def[self::KEY_NODES]);
 				$def['id'] = $id;
 				if ( isset($def[Workflow::PARAM_INITIAL_STATUS_ID])) {
-					$ids = $this->parseStatusId($def[Workflow::PARAM_INITIAL_STATUS_ID], null, $id);
+					$ids = $this->parseStatusId($def[Workflow::PARAM_INITIAL_STATUS_ID], $id);
 					$def[Workflow::PARAM_INITIAL_STATUS_ID] = implode(self::SEPARATOR_STATUS_NAME, $ids);
 				} else {
 					throw new WorkflowException('failed to load Workflow '.$id.' : missing initial status id');
@@ -382,57 +382,39 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * @throws WorkflowException Exception thrown if the method was not able to parse $val.
 	 * @see WorkflowPhpSource::evaluateWorkflowId()
 	 */
-	public function parseStatusId($val, $model = null, $defaultWorkflowId = null)
+	public function parseStatusId($val, $helper = null)
 	{
 		if (empty($val) || ! is_string($val)) {
 			throw new WorkflowException('Not a valid status id : a non-empty string is expected  - status = '.VarDumper::dumpAsString($val));
 		}
-
+	
 		$tokens = array_map('trim', explode(self::SEPARATOR_STATUS_NAME, $val));
 		$tokenCount = count($tokens);
 		if ( $tokenCount == 1) {
 			$tokens[1] = $tokens[0];
-			$tokens[0] = $this->evaluateWorkflowId($model, $defaultWorkflowId);
+			$tokens[0] = null;
+			if ( !empty($helper)) {
+				if (  is_string($helper)){
+					$tokens[0] = $helper;
+				} elseif (  $helper instanceof yii\db\BaseActiveRecord && $helper->hasWorkflowStatus()) {
+					$tokens[0] = $helper->getWorkflowStatus()->getWorkflowId();
+				}
+			}
 			if ( $tokens[0] === null ) {
 				throw new WorkflowException('Not a valid status id format: failed to get workflow id - status = '.VarDumper::dumpAsString($val));
 			}
 		} elseif ( $tokenCount != 2) {
 			throw new WorkflowException('Not a valid status id format: '.VarDumper::dumpAsString($val));
 		}
-
+	
 		if (! $this->isValidWorkflowId($tokens[0]) ) {
 			throw new WorkflowException('Not a valid status id : incorrect workflow id format in '.VarDumper::dumpAsString($val));
 		}elseif (! $this->isValidStatusLocalId($tokens[1]) ) {
 			throw new WorkflowException('Not a valid status id : incorrect status local id format in '.VarDumper::dumpAsString($val));
 		}
 		return $tokens;
-	}
+	}	
 
-	/**
-	 * Finds and returns the workflow ID to use with the model passed as argument.
-	 *
-	 * If $model is not NULL, this method returns the ID of the workflow $model is currently in,
-	 * or its default workflow ID if $model is not in a workflow.
-	 * If $model is NULL, this method simply returns $defaultWorkflowId
-	 *
-	 * @param yii\db\BaseActiveRecord $model a Model instance having the SimpleWorkflow Behavior
-	 * @param string $defaultWorkflowId
-	 * @return NULL| string a workflow ID or NULL if no workflow ID could be found
-	 */
-	private function evaluateWorkflowId($model, $defaultWorkflowId)
-	{
-		$workflowId = null;
-		if ( $model !== null && $model instanceof yii\db\BaseActiveRecord) {
-			if ($model->hasWorkflowStatus() ) {
-				$workflowId = $model->getWorkflowStatus()->getWorkflowId();
-			} else {
-				$workflowId = $model->getDefaultWorkflowId();
-			}
-		}elseif ( !empty($defaultWorkflowId) && is_string($defaultWorkflowId)){
-			$workflowId = $defaultWorkflowId;
-		}
-		return $workflowId;
-	}
 	/**
 	 * Checks if the string passed as argument can be used as a status ID.
 	 *
@@ -569,7 +551,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		if ( count($missingStatusIdSuspects) != 0) {
 			$missingStatusId = [];
 			foreach ($missingStatusIdSuspects as $id) {
-				list($thisWid, $thisSid) = $this->parseStatusId($id,null,$wId);
+				list($thisWid, $thisSid) = $this->parseStatusId($id,$wId);
 				if ($thisWid == $wId) {
 					$missingStatusId[] = $id; // refering to the same workflow, this Id is not defined
 				}

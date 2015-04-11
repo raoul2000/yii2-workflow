@@ -10,7 +10,8 @@ class m150203_201448_init extends Migration
 		 $this->createTable('item', [
 			'id' => Schema::TYPE_PK,
 			'name' => Schema::TYPE_STRING . ' DEFAULT NULL',
-			'status' => Schema::TYPE_STRING . ' DEFAULT NULL'
+			'status' => Schema::TYPE_STRING . ' DEFAULT NULL',
+		 	'status_ex' => Schema::TYPE_STRING . ' DEFAULT NULL'
 			], 
 			'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB'
 		);
