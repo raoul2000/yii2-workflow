@@ -1,3 +1,35 @@
+#version 0.0.7
+- update doc
+- rename `SimpleWorkflowBehavior::_createTransitionItems` to `SimpleWorkflowBehavior::createTransitionItems`
+- add *autoInsert* feature.
+
+The *autoInsert* feature allows to automatically insert a model into a workflow when the model is created and only
+if there is no previous status set.
+
+Example : 
+```php
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+    	return [
+			[
+    			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+    			'autoInsert' => true,
+    			'defaultWorkflowId' => 'MyWorkflow'
+    		]
+    	];
+    }
+}
+
+$post = new Post();
+echo $post->getWorkflowStatus()->getId();	// output : MyWorkflow/new
+```
+
+Note that no event is fired when a model is auto-inserted into a workflow.
+If *autoInsert* is a string, it must be the ID of the workflow where the model will be automatically inserted to. 
+If *autoInsert* is a TRUE boolean, the model is inserted into its default workflow.
+
 #version 0.0.6
 - add support for multi workflow : more than one workflow can be attached to a model.
 

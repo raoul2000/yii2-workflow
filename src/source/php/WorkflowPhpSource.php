@@ -191,10 +191,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * 
 	 * @see raoul2000\workflow\source\IWorkflowSource::getTransitions()
 	 */
-	public function getTransitions($statusId, $model = null)
+	public function getTransitions($statusId, $defaultWorkflowId = null)
 	{
 
-		list($wId, $lid) = $this->parseStatusId($statusId, $model);
+		list($wId, $lid) = $this->parseStatusId($statusId, $defaultWorkflowId);
 		$statusId = $wId.self::SEPARATOR_STATUS_NAME.$lid;
 
 		if ( ! array_key_exists($statusId, $this->_t) ) {
@@ -237,9 +237,9 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * (non-PHPdoc)
 	 * @see \raoul2000\workflow\source\IWorkflowSource::getTransition()
 	 */
-	public function getTransition($startId, $endId, $model = null)
+	public function getTransition($startId, $endId, $defaultWorkflowId = null)
 	{
-		$tr = $this->getTransitions($startId, $model);
+		$tr = $this->getTransitions($startId, $defaultWorkflowId);
 		if ( count($tr) > 0 ) {
 			foreach ($tr as $aTransition) {
 				if ($aTransition->getEndStatus()->getId() == $endId) {
@@ -374,8 +374,9 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * If $val does not include the workflow ID part (i.e it is not in formated like "workflowID/statusID")
 	 * this method uses $model and $defaultWorkflowId to get it.
 	 *
-	 * @param string $val the status ID to parse
-	 * @param Model|null $model a model used as workflow ID provider if needed
+	 * @param string $val the status ID to parse. If it is not an absolute ID, $helper is used to get the
+	 * workflow ID.
+	 * @param Model|string $model model used as workflow ID provider if needed
 	 * @param string|null $defaultWorkflowId a default workflow ID value
 	 * @return string[] array containing the workflow ID in its first index, and the status Local ID
 	 * in the second

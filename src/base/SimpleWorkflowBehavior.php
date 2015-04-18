@@ -91,6 +91,11 @@ class SimpleWorkflowBehavior extends Behavior
 	 * Set this attribute to NULL if you are not going to use any Workflow Event.
 	 */
 	public $eventSequence = 'eventSequence';
+	/**
+	 * @var bool|string if TRUE, the model is automatically inserted into the default workflow. If 
+	 * $autoInsert contains a string, it is assumed to be an initial status Id that will be used to set the 
+	 * status. If FALSE (default) the status is not modified. 
+	 */
 	public $autoInsert = false;
 	/**
 	 * @var string Read only property that contains the id of the default workflow to use with
@@ -214,6 +219,9 @@ class SimpleWorkflowBehavior extends Behavior
 			throw new InvalidConfigException('Attribute or property not found for owner model : \''.$this->statusAttribute.'\'');
 		}
 		$this->initStatus();
+		if( ! $this->hasWorkflowStatus()) {
+			$this->doAutoInsert();
+		}
 	}
 
 	/**
@@ -237,7 +245,9 @@ class SimpleWorkflowBehavior extends Behavior
 			$workflowId = $this->autoInsert === true ? $this->getDefaultWorkflowId() : $this->autoInsert;
 			$workflow = $this->_wfSource->getWorkflow($workflowId);
 			if ($workflow !== null) {
-				$this->_status = $workflow->getInitialStatusId();
+				$this->setStatusInternal(
+					$this->_wfSource->getStatus($workflow->getInitialStatusId())
+				);
 			} else {
 				throw new WorkflowException("autoInsert failed - No workflow found for id : ".$workflowId);
 			}
@@ -356,7 +366,7 @@ class SimpleWorkflowBehavior extends Behavior
 	{
 		$this->_pendingEvents = [];
 
-		list($newStatus, , $events) = $this->_createTransitionItems($status, false, true);
+		list($newStatus, , $events) = $this->createTransitionItems($status, false, true);
 
 		if ( ! empty($events['before']) ) {
 			foreach ($events['before'] as $eventBefore) {
@@ -394,7 +404,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public function getEventSequence($status)
 	{
-		list(,,$events) = $this->_createTransitionItems($status, false, true);
+		list(,,$events) = $this->createTransitionItems($status, false, true);
 		return $events;
 	}
 	/**
@@ -405,7 +415,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public function getScenarioSequence($status)
 	{
-		list( , $scenario) = $this->_createTransitionItems($status, true, false);
+		list( , $scenario) = $this->createTransitionItems($status, true, false);
 		return $scenario;
 	}
 
@@ -431,7 +441,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * @return array event sequence or an empty array if no event is found.
 	 *
 	 */
-	public function _createTransitionItems($status, $scenarioNames, $eventSequence)
+	public function createTransitionItems($status, $scenarioNames, $eventSequence)
 	{
 		$start = $this->getWorkflowStatus();
 		$end = $status;
@@ -480,7 +490,7 @@ class SimpleWorkflowBehavior extends Behavior
 			// change status ---------------------------------------
 
 			$end = $this->ensureStatusInstance($end, true);
-			$transition = $this->_wfSource->getTransition($start->getId(), $end->getId(), $this->owner);
+			$transition = $this->_wfSource->getTransition($start->getId(), $end->getId(), $this->selectDefaultWorkflowId()); // TODO : replace $this->owner with defaultWorkflowId
 			if ( $transition === null && $start->getId() != $end->getId() ) {
 				throw new WorkflowException('No transition found between status '.$start->getId().' and '.$end->getId());
 			}
@@ -504,7 +514,6 @@ class SimpleWorkflowBehavior extends Behavior
 		}
 		return [$newStatus, $scenario, $events];
 	}
-
 
 	/**
 	 * Returns all status that can be reached from the current status.
@@ -565,7 +574,7 @@ class SimpleWorkflowBehavior extends Behavior
 			$initialStatus = $this->_wfSource->getStatus($workflow->getInitialStatusId(), $this->selectDefaultWorkflowId() );
 			$nextStatus[$initialStatus->getId()] = ['status' => $initialStatus];
 		} else {
-			$transitions = $this->_wfSource->getTransitions($this->getWorkflowStatus()->getId(), $this->owner);
+			$transitions = $this->_wfSource->getTransitions($this->getWorkflowStatus()->getId(), $this->selectDefaultWorkflowId());
 			foreach ($transitions as $transition) {
 				$nextStatus[$transition->getEndStatus()->getId()] = [ 'status' => $transition->getEndStatus()];
 			}
@@ -826,8 +835,12 @@ class SimpleWorkflowBehavior extends Behavior
 		}
 	}
 	/**
+	 * Returns the default workflow ID to use with this model.
+	 * The workflow ID returned is the current workflow ID (if the model is in a workflow)
+	 * or the default workflow id as it has been configured.
 	 * 
-	 * @return string
+	 * @return string workflow Id
+	 * @see \raoul2000\workflow\base\SimpleWorkflowBehavior::getDefaultWorkflowId()
 	 */
 	private function selectDefaultWorkflowId()
 	{
