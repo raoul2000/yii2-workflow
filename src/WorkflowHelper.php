@@ -8,7 +8,9 @@ use raoul2000\workflow\base\WorkflowException;
 class WorkflowHelper
 {
 	/**
-	 *
+	 * Returns an associative array containing all statuses that can be reached by model.
+	 * 
+	 * Note that the current model status is NOT included in this list.
 	 * @param BaseActiveRecord $model
 	 * @param boolean $validate
 	 * @param boolean $beforeEvents
@@ -28,5 +30,35 @@ class WorkflowHelper
 			}
 		}
 		return $listData;
+	}
+	/**
+	 * Displays the status for the model passed as argument.
+	 * 
+	 * This method assumes that the status includes a metadata value called 'labelTemplate' thta contains
+	 * the HTML template of the rendering status. In this template the string '{label}' will be replaced by the 
+	 * status label.
+	 * 
+	 * Example : 
+	 *		'status' => [
+	 *			'draft' => [
+	 *				'label' => 'Draft',
+	 *				'transition' => ['ready' ],
+	 *				'metadata' => [
+	 *					'labelTemplate' => '<span class="label label-default">{label}</span>'
+	 *				]
+	 *			],
+	 * 
+	 * @param BaseActiveRecord $model
+	 * @return string|NULL the HTML rendered status or null if not labelTemplate is found
+	 */
+	public static function renderLabel($model)
+	{
+		if($model->hasWorkflowStatus()) {
+			$labelTemplate = $model->getWorkflowStatus()->getMetadata('labelTemplate');
+			if( ! empty($labelTemplate)) {
+				return strtr($labelTemplate, ['{label}' => $model->getWorkflowStatus()->getLabel()]);
+			}
+		}
+		return null;
 	}
 }
