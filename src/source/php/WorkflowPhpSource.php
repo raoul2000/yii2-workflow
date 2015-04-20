@@ -582,4 +582,20 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 			'stat' => $stat
 		];
 	}
+	/**
+	 * (non-PHPdoc)
+	 * @see \raoul2000\workflow\source\IWorkflowSource::getAllStatuses()
+	 */
+	public function getAllStatuses($workflowId)
+	{
+		$wDef = $this->getWorkflowDefinition($workflowId);
+		if ( $wDef == null) {
+			throw new WorkflowException('No workflow found with id ' . $workflowId);
+		}	
+		$allStatuses = [];		
+		foreach( $wDef[self::KEY_NODES] as $statusId => $statusDef){
+			$allStatuses[$statusId] = $this->getStatus($statusId);
+		}
+		return $allStatuses;
+	}
 }

@@ -14,6 +14,15 @@ interface IWorkflowSource
 	 */
 	public function getStatus($id, $model = null);
 	/**
+	 * Returns an array containing all Status instances belonging to the workflow
+	 * whose id is passed as argument.
+	 * 
+	 * @param string $id workflow Id
+	 * @return array Status instances 
+	 * @throws WorkflowException no workflow is found with this Id
+	 */
+	public function getAllStatuses($id);
+	/**
 	 * Returns an array of transitions leaving the status whose id is passed as argument.
 	 *
 	 * If no start status is found a WorkflowException must be thrown.
