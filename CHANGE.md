@@ -1,3 +1,24 @@
+#version 0.0.8
+- **WARNING** : relocate WorkflowHelper, now in namespace `raoul2000\workflow\helpers`
+- add helper function getAllStatusListData()
+
+**getAllStatusListData()** returns an associative array containing all statuses that belong to a workflow.
+The array returned is suitable to be used as list data value in (for instance) a dropdown list control.
+ 
+Usage example : assuming model Post has a *SimpleWorkflowBehavior* the following code displays a dropdown list
+ containing all statuses defined in $post current the workflow : 
+ 
+```php
+echo Html::dropDownList(
+		'status',
+ 		null,
+ 		WorkflowHelper::getAllStatusListData(
+ 			$post->getWorkflow()->getId(),
+ 			$post->getWorkflowSource()
+ 		)
+)
+```
+
 #version 0.0.7
 - update doc
 - rename `SimpleWorkflowBehavior::_createTransitionItems` to `SimpleWorkflowBehavior::createTransitionItems`

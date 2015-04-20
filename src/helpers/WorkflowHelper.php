@@ -1,5 +1,5 @@
 <?php
-namespace raoul2000\workflow;
+namespace raoul2000\workflow\helpers;
 
 use yii\db\BaseActiveRecord;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
@@ -32,9 +32,39 @@ class WorkflowHelper
 		return $listData;
 	}
 	/**
+	 * Returns an associative array containing all statuses that belong to a workflow.
+	 * The array returned is suitable to be used as list data value in (for instance) a dropdown list control.
+	 * 
+	 * Usage example : assuming model Post has a SimpleWorkflowBehavior the following code displays a dropdown list
+	 * containing all statuses defined in $post current the workflow : 
+	 * 
+	 * echo Html::dropDownList(
+	 * 		'status',
+	 * 		null,
+	 * 		WorkflowHelper::getAllStatusListData(
+	 * 			$post->getWorkflow()->getId(),
+	 * 			$post->getWorkflowSource()
+	 * 		)
+	 * )
+	 * 
+	 * @param string $workflowId
+	 * @param Object $workflowSource
+	 * @return Array
+	 */
+	public static function getAllStatusListData($workflowId, $workflowSource)
+	{
+		$listData = [];
+		$statuses = $workflowSource->getAllStatuses($workflowId);
+		foreach ($statuses as $statusId => $statusInstance) {
+			$listData[$statusId] =$statusInstance->getLabel();
+		}
+		return $listData;
+	}
+	
+	/**
 	 * Displays the status for the model passed as argument.
 	 * 
-	 * This method assumes that the status includes a metadata value called 'labelTemplate' thta contains
+	 * This method assumes that the status includes a metadata value called 'labelTemplate' that contains
 	 * the HTML template of the rendering status. In this template the string '{label}' will be replaced by the 
 	 * status label.
 	 * 
