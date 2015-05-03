@@ -1,3 +1,50 @@
+#version 0.0.9
+- add *propagateErrorsToModel* configuration setting to the *SimpleWorkflowBehavior*
+
+If TRUE, all errors that may be registred on an invalidated 'before' event, are assigned to
+the status attribute of the owner model (allowing to display them to the user).
+
+Example : 
+```php
+class Post extends \yii\db\ActiveRecord
+{
+	public function init() 
+	{
+		$this->on(
+		    WorkflowEvent::beforeEnterStatus('Post/to-publish'),
+		    function ($event) {
+		        // test if the model can enter in status 'publish'
+		        if( $error ) {
+		        	$event->invalidate('the post can\'t be published');
+		        }
+		    }
+		);	
+	}
+	
+    public function behaviors()
+    {
+    	return [
+			[
+    			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+    			'defaultWorkflowId' => 'MyWorkflow',
+    			'propagateErrorsToModel' => true
+    		]
+    	];
+    }
+}
+
+$post = Post::findOne(1);
+$post->status = 'Post/to-publish';
+if( $post->save() == false ) {
+	echo 'error : '.$item->getFirstError('status');	 // the post can\'t be published
+}
+```
+
+- add *stopOnFirstInvalidEvent* configuration setting to the *SimpleWorkflowBehavior*
+	
+if TRUE, all "before" events are fired event if one of them is invalidated by an attached handler.
+When FALSE, the first invalidated event interrupts the event sequence.
+  
 #version 0.0.8
 - **WARNING** : relocate WorkflowHelper, now in namespace `raoul2000\workflow\helpers`
 - add helper function getAllStatusListData()
@@ -23,6 +70,8 @@ echo Html::dropDownList(
 - update doc
 - rename `SimpleWorkflowBehavior::_createTransitionItems` to `SimpleWorkflowBehavior::createTransitionItems`
 - add *autoInsert* feature.
+
+**this feature is not enabled** 
 
 The *autoInsert* feature allows to automatically insert a model into a workflow when the model is created and only
 if there is no previous status set.

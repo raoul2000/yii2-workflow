@@ -12,6 +12,7 @@ use yii\base\Exception;
 use raoul2000\workflow\events\IEventSequence;
 use raoul2000\workflow\validation\WorkflowScenario;
 use tests\unit\workflow\behavior\InitStatusTest;
+use raoul2000\workflow\events\WorkflowEvent;
 
 /**
  * SimpleWorkflowBehavior implements the behavior of db model evolving inside a simple workflow.
@@ -97,6 +98,18 @@ class SimpleWorkflowBehavior extends Behavior
 	 * status. If FALSE (default) the status is not modified. 
 	 */
 	public $autoInsert = false;
+	/**
+	 * @var bool If TRUE, all errors that may be registred on an invalidated 'before' event, are assigned to
+	 * the status attribute of the owner model.
+	 */
+	public $propagateErrorsToModel = false;	
+	/**
+	 * @var bool if TRUE, all "before" events are fired even if one of them is invalidated by an attached handler.
+	 * When FALSE, the first invalidated event interrupts the event sequence. Note that if an event is attached to 
+	 * several handlers, they will all be invoked unless the event is invalidated and marked as handled.
+	 * @see WorkflowEvent::invalidate()
+	 */
+	public $stopOnFirstInvalidEvent = true;
 	/**
 	 * @var string Read only property that contains the id of the default workflow to use with
 	 * this behavior.
@@ -368,13 +381,24 @@ class SimpleWorkflowBehavior extends Behavior
 
 		list($newStatus, , $events) = $this->createTransitionItems($status, false, true);
 
+		$delayedStop = false;
 		if ( ! empty($events['before']) ) {
 			foreach ($events['before'] as $eventBefore) {
 				$this->owner->trigger($eventBefore->name, $eventBefore);
 				if ( $eventBefore->isValid === false) {
-					return false;
+					if ( $this->propagateErrorsToModel === true && count($eventBefore->getErrors()) != 0 ) {
+						$this->owner->addErrors([ $this->statusAttribute => $eventBefore->getErrors() ]);
+					}
+					if($this->stopOnFirstInvalidEvent === true) {
+						return false;
+					} else {
+						$delayedStop = true;
+					}
 				}
 			}
+		}
+		if( $delayedStop == true) {
+			return false;
 		}
 
 		$this->setStatusInternal($newStatus);

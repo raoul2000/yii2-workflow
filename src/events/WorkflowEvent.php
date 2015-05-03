@@ -73,13 +73,22 @@ class WorkflowEvent extends ModelEvent
 
 	/**
 	 * Invalidate this event.
+	 * 
 	 * Calling this methid is equivalent to setting the *isValid* property to false. Additionnally an
 	 * message can be added to the internal error message queue.
-	 * @param string $message
+	 * If $handled is set to true, following event handlers that may be installed for this event
+	 * will not be invoked.
+	 * 
+	 * @see http://www.yiiframework.com/doc-2.0/guide-concept-events.html#event-handler-order
+	 * @see http://www.yiiframework.com/doc-2.0/yii-base-event.html#$handled-detail
+	 * @param boolean $handled Whether the event is handled. Defaults to false. When a handler sets this to be 
+	 * true, the event processing will stop and ignore the rest of the uninvoked event handlers.
+	 * @param string $message error message
 	 */
-	public function invalidate($message = null)
+	public function invalidate($message = null, $handled = false)
 	{
 		$this->isValid = false;
+		$this->handled = $handled;
 		if ( !empty($message)) {
 			$this->_errorMessage[] = $message;
 		}
