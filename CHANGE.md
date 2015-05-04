@@ -6,6 +6,13 @@ the status attribute of the owner model (allowing to display them to the user).
 
 Example : 
 ```php
+/**
+ * This is the model class for table "Post".
+ *
+ * @property integer $id
+ * @property string $name
+ * @property string $status
+ */
 class Post extends \yii\db\ActiveRecord
 {
 	public function init() 
@@ -14,6 +21,7 @@ class Post extends \yii\db\ActiveRecord
 		    WorkflowEvent::beforeEnterStatus('Post/to-publish'),
 		    function ($event) {
 		        // test if the model can enter in status 'publish'
+		        // ...
 		        if( $error ) {
 		        	$event->invalidate('the post can\'t be published');
 		        }
@@ -26,7 +34,6 @@ class Post extends \yii\db\ActiveRecord
     	return [
 			[
     			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-    			'defaultWorkflowId' => 'MyWorkflow',
     			'propagateErrorsToModel' => true
     		]
     	];

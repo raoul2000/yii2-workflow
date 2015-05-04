@@ -144,13 +144,17 @@ class Post extends \yii\db\ActiveRecord
 }
 ```
 
+## Event Object
+
+TBD
+
 ## Event Handler
 
 A event handler is used to implement specific process on any of the events in the event sequence. Installing an event handler is
 a standard operation described in the [Yii2 Definitive Guide](http://www.yiiframework.com/doc-2.0/guide-concept-events.html#attaching-event-handlers). 
 
 In the example below, we are attaching an handler for the event that is fired when a Post instance goes from the status *draft* to the
-status *correction*. 
+status *correction*. When this happens, we have decided to send a mail.
 
 ```php
 use raoul2000\workflow\events\WorkflowEvent;
@@ -181,9 +185,9 @@ that a handler attached to a *before* event is able to block the transition in p
 for a handler attached to a "after* event. Using this feature it becomes possible to block a transition based on the result of a complex
 processing.
 
-In the example below, an event handler is attached to be invoked *before* a Post instance enters into the status 'W1/A'. 
+In the following example, an event handler is attached to be invoked *before* a Post instance enters into the status 'Post/published'. 
 This handler checks that the user who is performing the action has the appropriate permission and if not it *invalidates* the event : the
-Post instance will not be able to reach the status 'W1/A', the transition is blocked.
+Post instance will not be able to reach the status 'W1/A', the transition is blocked. 
 
 ```php
 use raoul2000\workflow\events\WorkflowEvent;
@@ -193,10 +197,13 @@ class Post extends \yii\db\ActiveRecord
 	public function init()
 	{
 		$this->on(
-			'beforeEnterStatus{W1/A}',
+			'beforeEnterStatus{Post/published}',
 			function ($event) {
-				// if the user doesn't have the current authorization, the transition to 'W1/A' is blocked
-				$event->isValid = \Yii::$app->user->can('do.action');
+				// if the user doesn't have the current authorization, the transition to 'Post/published' is blocked
+				
+				if( \Yii::$app->user->can('publish.post') == false) {
+					$event->invalidate("you don't have permission to publish this post");
+				}
 			}
 		);
 	}	
