@@ -1,9 +1,9 @@
 # yii2-workflow
 
-![Alt text](https://travis-ci.org/raoul2000/yii2-workflow.svg?branch=master "Optional title") 
-[![Latest Stable Version](https://poser.pugx.org/raoul2000/yii2-workflow/v/dev.svg)](https://packagist.org/packages/raoul2000/yii2-workflow)
-[![Total Downloads](https://poser.pugx.org/raoul2000/yii2-workflow/downloads.svg)](https://packagist.org/packages/raoul2000/yii2-workflow) 
-
+[![Build](https://travis-ci.org/raoul2000/yii2-workflow.svg?branch=master)](https://travis-ci.org/raoul2000/yii2-workflow)
+[![Latest Stable Version](https://poser.pugx.org/raoul2000/yii2-workflow/v/stable)](https://packagist.org/packages/raoul2000/yii2-workflow)
+[![Total Downloads](https://poser.pugx.org/raoul2000/yii2-workflow/downloads)](https://packagist.org/packages/raoul2000/yii2-workflow)
+[![License](https://poser.pugx.org/raoul2000/yii2-workflow/license)](https://packagist.org/packages/raoul2000/yii2-workflow)
 
 
 ## Installation
