@@ -145,8 +145,6 @@ our example, but it can be any attribute.
 
 *Post.php in @app/models*
 ```php
-<?php
-
 namespace app\models;
 /**
  * @property integer $id
@@ -202,7 +200,8 @@ When we run this code, we get an Exception !
 Could it be more clear ? Ok, maybe it could. Let's see in detail what just happened. 
 
 The *SimpleWorkflowBehavior* enters in action when the Post is saved. At this point it tests if the transitions is possible
-between the current status and the final one. In our case, there was no current status (the object has just been created) and the final
+between the current status (managed internally by the behavior) and the final one (assigned to the `status` attribute. 
+In our case, there was no current status (the object has just been created) and the final
 status has been set to *published*, so, from the *SimpleWorkflowBehavior* point of view, we are dealing with the following transition : 
 
 	null -> 'published'
@@ -239,10 +238,10 @@ Another way of assigning a status to our Post model is by using the method `send
 When you use `sendToStatus()` it is not required to save the model for the *SimpleWorkflowBehavrior* to enter in action. A call to
 `sendToStatus()` will perform following tasks :
 
-- retrieve the current status
+- retrieve the current status (stored internally by the *SimpleWorkflowBehavior*)
 - find a transition between the current status and the one passed as argument
-- if such a transition exists, ensure that it can be used, that it is valid
-- on success, apply the transition and update the `status` attribute owned by the Post model 
+- if such a transition exists, ensure that it can be used and that it is valid
+- on success, apply the transition and update the `status` attribute owned by the Post model.
 
 **_sendToStatus()_ actually performs the transition : the model leaves it current status and goes to the new one.** It is equivalent
 to `status` attribute assignment and model being saved.
@@ -255,7 +254,7 @@ $post->sendToStatus('draft');
 echo 'the status is : ' . $post->status;
 ```
 
-And of course if we try to break the initial status rule again, we will also get the same exception as before.
+And of course if we try to break the *initial status* rule again, we will also get the same exception as before.
 
 ```php
 $post = new Post();
@@ -371,7 +370,7 @@ $post->save();
 ```
 
 That being said, if you know what you are doing you can of course use the `status` attribute directly to perform some operations. In this
-case remember that when the `status` value is set by the *SimpleWorkflowBehavior* the absolute form of status id is used.
+case remember that when the `status` value is set by the *SimpleWorkflowBehavior* the absolute form of status id is used (e.g workflowId/statusId).
  
 ## Workflow Tasks
 
@@ -443,13 +442,13 @@ something, but it doesn't completely satisfies our requirement which was :
 > [...] sending an email to all correctors, as soon as a new post is requesting correction.
 
 If we take a look to our workflow, we can see that there are 2 ways to reach the status *correction* : one coming from *draft* the 
-other coming from *ready*... and this one is not taken into account by the current event handler installed the the Post model.
+other coming from *ready*... and this last one is not taken into account by the current event handler installed the the Post model.
  
 We could of course handle both transitions, but what if tomorrow, a new transition to *correction* is added ? To be sure to still notify correctors, the
 proper solution would be to handle the *enter to status* event. 
 
 
-The event registration now becomes : 
+The event handler registration now becomes : 
 
 ```php
 $this->on(
@@ -458,7 +457,8 @@ $this->on(
 );
 ```
 
-The *sendMail()* method will be invoked each time a post model enter into the status *correction*, and **no matters where it comes from**. 
+The *AfterEnterStatus* event is fired each time a models enters into a status, no matter what is its start status. The *sendMail()* method 
+will be invoked each time a post model enter into the status *correction*, and **no matters where it comes from**. 
 
 Ok, next requirement ! .. yes, we have some business rules to implement in our super great multi-user publishing system ! (I hope you didn't 
 forgot it). One of our rule was :
@@ -488,7 +488,7 @@ class Post extends \yii\db\ActiveRecord
 ```
 
 Assuming we have created the *chief.editor* permission, this event handler only checks if it has been assigned to the current user. If that's
-not the case, the `$event` object is set as invalid and when this happens in a *before* event, it interrupts immediately the process of transition
+not the case, the `$event` object **is set as invalid** and when this happens in a *before* event, it interrupts immediately the process of transition
 validation : **the model will not be able to reach the end status** ( here *published*).
 
 Yes, you understood well (I hope) : invalidating a *before* event will block the transition. Events like *beforeEnterStatus*, *beforeEnterWorkflow*,
@@ -498,8 +498,8 @@ There's more than that and events in *SimpleWorkflow* is a vas subject that is c
    
 ## Workflow Driven Model Validation
 
- When dealing with complex workflows where model validation rules are strongly related to statuses and user interaction is required, 
- attributes validation can quickly become a nightmare to handle
+When dealing with complex workflows where model validation rules are strongly related to statuses and user interaction is required, 
+attributes validation can quickly become a nightmare to handle
 
 Again, let's see that on an example.
 
@@ -513,7 +513,7 @@ In terms of validation rules for the Post model, this new requirement can be def
 - When the Post enter into status *ready*, it must have **tags**
 - When the Post is sent from *ready* to *published* status, is must have a **priority**
 
-Theses validation could of course be implemented using the event model we saw in the previous chapter : in the appropriate event handled we would test
+Theses validation could of course be implemented using the event model we saw in the previous chapter : in the appropriate event handler we would test
 the appropriate attribut. Ok but why reinventing the wheel when Yii2 provides a 
 great [Model Validation](http://www.yiiframework.com/doc-2.0/guide-input-validation.html) feature ? Why not use it ? 
 
@@ -580,10 +580,10 @@ As you can see *SimpleWorkflow* allows to validate model attributes at different
 for instance validate that the attribute `tags` is not empty when the post model *enter status {Post3Workflow/ready}*, or 
 as soon as the post *enter workflow {Post3Workflow}*.
 
-The helper class *WorkflowScenario* can help you with scenario names, and if you favorite IDE includes a nice auto-completion feature
+The helper class *WorkflowScenario* is here tp assist you with scenario names, and if you favorite IDE includes a nice auto-completion feature
 writting scenario name may become a real pleasure (more or less).
 
-Let's rewrite our validation rules using *WorkflowScenario* :
+Let's rewrite our validation rules using the *WorkflowScenario* helper:
 
 ```php
 use raoul2000\workflow\validation\WorkflowValidator;
@@ -603,8 +603,7 @@ class Post extends \yii\db\ActiveRecord
 ```
 
 
-
-## <a name="references"></a>References
+## References
 
 The SimpleWorkflow behavior, is not dedicated to provide a complete workflow driven model that would replace MVC or any other pattern. 
 It should only be considered as a set of tools that facilitate workflow managment for simple applications. 

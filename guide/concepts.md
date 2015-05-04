@@ -23,7 +23,6 @@ implement your own features.
 The *SimpleWorkflow* refers to workflows and statuses using identifiers. The way these identifiers are formatted, depends 
 on the *WorkflowSource* components used. 
 
-
 ## Initial Status
 
 The initial status is the first status assigned to a model, that's the *entry point* into a workflow. Each
@@ -45,11 +44,18 @@ reach status 'published' (the end status), but not the opposite.
 
 The *Workflow Source* is a component responsible for providing workflow, status and transitions objects based on a formatted workflow definition.
 
+A *Workflow Source* component can ready virtually any kind of source. The first release include the `WorkflowPhpSource`component, which
+ia designed to read a workflow definition from a PHP array wrapped in a class that implements the `IWorkflowDefinitionProvider`interface.
+
+[Read more about Workflow Source](workflow-source.md)
 
 ## Events
 
 The *SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow customization
-of model behavior. 
+of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle 
+inside the workflow.
+
+[Read more about events](events.md)
 
 
 
