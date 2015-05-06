@@ -109,7 +109,6 @@ Now let's tell to the behavior of the Post model that it must use the *myReduced
 instead of the default one.
 
 ```php
-<?php
 namespace app\models;
 class Post extends \yii\db\ActiveRecord
 {
@@ -130,7 +129,6 @@ will use a specific one (*ReducedEventSequence*).
 attaching the behavior to the model. In this case as you may expect, no event is fired for this model.
 
 ```php
-<?php
 namespace app\models;
 class Post extends \yii\db\ActiveRecord
 {
@@ -268,7 +266,6 @@ the output which matches the *BasicEventSequence* specifications.
 	type = after event name = afterLeaveStatus{PostWorkflow/ready}
 	type = after event name = afterChangeStatusFrom{PostWorkflow/ready}to{PostWorkflow/published}
 	type = after event name = afterEnterStatus{PostWorkflow/published}
-	
 Remember that events will be fired in this exact order until the last event or until the event is invalidated by a handler attached
 to the *before* events.
 

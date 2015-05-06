@@ -19,9 +19,10 @@ better understanding theorical basis on the subject, you'll find some [reference
 
 To demonstrate how the workflow concept can be used in a valuable way, let's consider a real life example : a Blog. 
 In a typical blog, you would find a model for Post with a *status* attribute that accept 3 values defined
-as class constants (this is how status were implemented on the [yii demo blog](https://github.com/yiisoft/yii/tree/master/demos/blog)). 
+as class constants (this is how status were implemented on the "old" [yii 1.x demo blog](https://github.com/yiisoft/yii/tree/master/demos/blog)). 
 
-*models/Post.php*	
+`models/Post.php`	
+
 ```php
 class Post extends \yii\db\ActiveRecord
 {
@@ -38,7 +39,7 @@ At last an *archived* post can be *published* or become *draft*.
 What we have just described here are possible transitions between different statuses of the Post, and if we try to give 
 a graphical representation to this description, we'll end up with our first (and very simple) workflow. 
 
-<img src="images/post-workflow.png" alt="the workflow for Post"/>
+![A workflow for the Post model](images/post-workflow.png)
 
 Our workflow definition is:
 
@@ -99,7 +100,7 @@ can of course be overloaded with values provided by the developer at initialisat
 
 Let's see how our workflow definition looks like : 
 
-*@app/models/PostWorkflow.php*
+`@app/models/PostWorkflow.php`
 
 ```php
 namespace app\models;
@@ -143,7 +144,8 @@ To be able to manage our Post model inside the workflow, we must take care about
 - add an attribute that will be used to store the current status of a post. We will use attribute `status` with type VARCHAR(40) for
 our example, but it can be any attribute.
 
-*Post.php in @app/models*
+`Post.php in @app/models`
+
 ```php
 namespace app\models;
 /**
@@ -195,8 +197,7 @@ $post->save();
 When we run this code, we get an Exception !
 
 	Workflow Exception – raoul2000\workflow\base\WorkflowException
-	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected)
-	
+	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected)	
 Could it be more clear ? Ok, maybe it could. Let's see in detail what just happened. 
 
 The *SimpleWorkflowBehavior* enters in action when the Post is saved. At this point it tests if the transitions is possible
@@ -205,7 +206,6 @@ In our case, there was no current status (the object has just been created) and 
 status has been set to *published*, so, from the *SimpleWorkflowBehavior* point of view, we are dealing with the following transition : 
 
 	null -> 'published'
-	
 This transition is particular as it happens **only when a model enters into a workflow**. If you remember well, the *PostWorkflow* definition 
 above contained a key called *initialStatusId*. This key is used to define the status Id that must be used by any model when entering a workflow. 
 Obviously we didn't comply with this rule as we tried to enter through the *published* status and that's why we get a self explanatory
@@ -304,7 +304,6 @@ The output is :
 
 	(1) the status is : PostWorkflow/draft 
 	(2) the status is : PostWorkflow/draft 
-	
 Seeing at this result, it is not obvious why we should use the `getWorkflowStatus()` method instead of direct attribute access to get
 the status of a model. Ok but remember that the `status` attribute may not contain the actual value of the model's status, until this model is 
 saved (or updated). 
@@ -391,7 +390,7 @@ square attached to the transition.
 
 Let's see how to implement this *sendMail()* task and include it in our workflow :
 
-*@app/models/Post.php*
+`@app/models/Post.php`
 
 ```php
 use raoul2000\workflow\events\WorkflowEvent;
@@ -603,7 +602,7 @@ class Post extends \yii\db\ActiveRecord
 ```
 
 
-## References
+## <a name="references"></a>References 
 
 The SimpleWorkflow behavior, is not dedicated to provide a complete workflow driven model that would replace MVC or any other pattern. 
 It should only be considered as a set of tools that facilitate workflow managment for simple applications. 

@@ -35,7 +35,8 @@ The *WorkflowPhpSource* component reads workflow definition from *Workflow provi
 the *IWorkflowDefinitionProvider* interface which defines a single method : `getDefinition()`. 
 This method must return the actual description of our workflow as a PHP array.
 
-*PostWorkflow.php in @app/models*
+`PostWorkflow.php in @app/models`
+
 ```php
 namespace app\models;
 class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider 
