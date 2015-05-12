@@ -1,6 +1,6 @@
 # Workflow Creation : PHP Source
 
-The way a workflow is defined depends on the [Workflow Source](workflow-source.md) component we will be using. By default
+The way a workflow is defined depends on the [Workflow Source](concept-source.md) component we will be using. By default
 the *SimpleWorkflowBehavior* is using an instance of the class `WorkflowPhpSource` defined in the namespace `raoul2000\workflow\source\php`.
 This component is able to read a workflow definition out of an associative PHP array. In this chapter we are going to learn 
 how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really....

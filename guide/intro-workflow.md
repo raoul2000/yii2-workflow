@@ -493,7 +493,7 @@ validation : **the model will not be able to reach the end status** ( here *publ
 Yes, you understood well (I hope) : invalidating a *before* event will block the transition. Events like *beforeEnterStatus*, *beforeEnterWorkflow*,
 *beforeLeaveStatus* etc .. are concerned but if you do the same thing on *afterChangeStatus* for example, nothing will happen, that's too late .. sorry.
 
-There's more than that and events in *SimpleWorkflow* is a vas subject that is covered in detailed in [another chapter](events.md). 
+There's more than that and events in *SimpleWorkflow* is a vas subject that is covered in detailed in [another chapter](concept-events.md). 
    
 ## Workflow Driven Model Validation
 

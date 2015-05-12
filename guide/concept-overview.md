@@ -47,7 +47,7 @@ The *Workflow Source* is a component responsible for providing workflow, status 
 A *Workflow Source* component can ready virtually any kind of source. The first release include the `WorkflowPhpSource`component, which
 ia designed to read a workflow definition from a PHP array wrapped in a class that implements the `IWorkflowDefinitionProvider`interface.
 
-[Read more about Workflow Source](workflow-source.md)
+[Read more about Workflow Source](concept-source.md)
 
 ## Events
 
@@ -55,7 +55,7 @@ The *SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/
 of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle 
 inside the workflow.
 
-[Read more about events](events.md)
+[Read more about events](concept-events.md)
 
 
 
