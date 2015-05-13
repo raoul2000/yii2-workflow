@@ -5,7 +5,7 @@ php:
   - 5.4
 install:
   - composer self-update
-  - composer global require "fxp/composer-asset-plugin:1.0.0-beta4"
+  - composer global require "fxp/composer-asset-plugin:1.0.0"
   - composer install --prefer-dist --dev
   - composer info --installed
 before_script:
