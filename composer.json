@@ -9,7 +9,9 @@
 	"type" : "yii2-extension",
 	"license" : "BSD-3-Clause",
 	"support" : {
-		"issues" : "https://github.com/raoul2000/yii2-guiders-widget/issues"
+		"issues" : "https://github.com/raoul2000/yii2-guiders-widget/issues",
+		"source" : "https://github.com/raoul2000/yii2-workflow",
+		"email" : "raoul.boulard@gmail.com"
 	},
 	"minimum-stability" : "stable",
 	"require" : {
@@ -19,7 +21,8 @@
 	"require-dev" : {
 		"codeception/codeception" : "2.0.9",
 		"codeception/specify" : "*",
-		"codeception/verify" : "*"
+		"codeception/verify" : "*",
+		"yiisoft/yii2-codeception" : "*"
 	},
 	"config" : {
 		"process-timeout" : 1800
@@ -28,5 +31,11 @@
 		"psr-4" : {
 			"raoul2000\\workflow\\" : "src/"
 		}
-	}
+	},
+	"authors" : [{
+			"name" : "Raoul",
+			"email" : "raoul.boulard@gmail.com",
+			"homepage" : "https://github.com/raoul2000/yii2-workflow"
+		}
+	]
 }
