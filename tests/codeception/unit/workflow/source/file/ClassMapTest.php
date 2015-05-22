@@ -73,20 +73,23 @@ class ClassMapTest extends TestCase
 	public function testClassMapStatus()
 	{
 		$this->specify('Replace default status class with custom one',function (){
-
 			$src = new WorkflowFileSource([
+				'definitionLoader' => [
+					'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
+					'namespace' => 'tests\codeception\unit\models'
+				],
 				'classMap' =>  [
 					WorkflowFileSource::TYPE_STATUS     => 'tests\codeception\unit\models\MyStatus',
 				]
 			]);
-
+	
 			verify($src->getClassMapByType(WorkflowFileSource::TYPE_WORKFLOW))->equals(	'raoul2000\workflow\base\Workflow'  );
 			verify($src->getClassMapByType(WorkflowFileSource::TYPE_STATUS))->equals(	'tests\codeception\unit\models\MyStatus'  );
 			verify($src->getClassMapByType(WorkflowFileSource::TYPE_TRANSITION))->equals('raoul2000\workflow\base\Transition');
-
+	
 			$status = $src->getStatus('Item04Workflow/A');
-
+	
 			expect(get_class($status))->equals('tests\codeception\unit\models\MyStatus');
 		});
-	}
+	}	
 }
