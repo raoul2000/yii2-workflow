@@ -1,3 +1,45 @@
+#version 0.0.10
+**Massive refactoring of the workflow source component architecture** to allow loading workflow definition from virtually
+*any* file (and not only PHP class).
+
+**WARNING** : this modification may break back compatibility so pay attention to the following major changes : 
+
+- namespace `raoul2000\workflow\source\php` has been renamed `raoul2000\workflow\source\file`
+- class `WorkflowPhpSource` has been renamed `WorkflowFileSource`
+- the `namespace` configuration setting has been removed from the source component
+- add configuration attribute `definitionLoader` to `WorkflowFileSource`
+
+The `WorkflowFileSource` component is dedicated to load workflow definition from *any file*, for this reason, 
+it relies on a *WorkflowDefinitionLoader* component that is used to :
+
+1. locate the file containing the workflow definition
+2. load the workflow definition
+3. convert it into a PHP array having the structure expected by the `WorkflowFileSource` component.
+
+By Default, the *WorkflowFileSource* component uses a `PhpClassLoader` instance, maintaining this way the default feature that 
+allows a workflow definition to be retrieved from a PHP class. The default namespace remains `app\models` and if you want to change
+it, you must explicitely declare the Workflow source component with appropriate settings (like required in the previous versions).
+
+In the example below, we declare a Workflow Source component, using the `PhpClassLoader` and with a customized namespace attribute 
+(in our example, workflow definition classes are located in `app\models\workflows`).
+
+```php
+$config = [
+    // ....
+    'components' => [
+        'workflowSource' => [
+          'class' => '\raoul2000\workflow\source\file\WorkflowFileSource',
+          'definitionLoader' => [
+              'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
+              'namespace' => 'app\models\workflows'
+		  ]
+   // ...
+```
+
+
+
+
+
 #version 0.0.9
 - add *propagateErrorsToModel* configuration setting to the *SimpleWorkflowBehavior*
 
