@@ -1,11 +1,11 @@
 <?php
 
-namespace tests\unit\workflow\source\php;
+namespace tests\unit\workflow\source\file;
 
 use Yii;
 use yii\codeception\TestCase;
-use raoul2000\workflow\source\php\DefaultArrayParser;
-use raoul2000\workflow\source\php\WorkflowPhpSource;
+use raoul2000\workflow\source\file\DefaultArrayParser;
+use raoul2000\workflow\source\file\WorkflowFileSource;
 
 
 class DefaultArrayParserTest extends TestCase
@@ -17,10 +17,10 @@ class DefaultArrayParserTest extends TestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->src = new WorkflowPhpSource();
+		$this->src = new WorkflowFileSource();
 		Yii::$app->set('parser',[
 			'class' => DefaultArrayParser::className(),
-		]);		
+		]);
 	}
 	
 	/**

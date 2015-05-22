@@ -26,9 +26,13 @@ class ChangeStatusReducedEventTest extends DbTestCase
 		$this->eventsAfter = [];
 
 		Yii::$app->set('workflowSource',[
-			'class'=> 'raoul2000\workflow\source\php\WorkflowPhpSource',
-			'namespace' => 'tests\codeception\unit\models'
+			'class'=> 'raoul2000\workflow\source\file\WorkflowFileSource',
+				'definitionLoader' => [
+					'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
+					'namespace' => 'tests\codeception\unit\models'
+				]
 		]);
+		
 		Yii::$app->set('eventSequence',[
 			'class'=> 'raoul2000\workflow\events\ReducedEventSequence',
 		]);

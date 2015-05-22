@@ -1,13 +1,13 @@
 <?php
 
-namespace tests\unit\workflow\source\php;
+namespace tests\unit\workflow\source\file;
 
 use Yii;
 use yii\codeception\TestCase;
 use tests\codeception\unit\models\Item01;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
-use raoul2000\workflow\source\php\WorkflowPhpSource;
+use raoul2000\workflow\source\file\WorkflowFileSource;
 use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
 use raoul2000\workflow\base\Workflow;
@@ -22,7 +22,7 @@ class WorkflowTest extends TestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->src = new WorkflowPhpSource();
+		$this->src = new WorkflowFileSource();
 	}
 
 	public function testIsValidWorkflowId()
@@ -68,18 +68,7 @@ class WorkflowTest extends TestCase
 	{
 		$this->src->addWorkflowDefinition('wid', ['initialStatusId' => 'A']);
 	}
-	public function testGetClassname()
-	{
-		$this->src->namespace = 'a\b\c';
-		$this->assertEquals('a\b\c\PostWorkflow', $this->src->getClassname('PostWorkflow'));
-		$this->src->namespace = '';
-		$this->assertEquals('\PostWorkflow', $this->src->getClassname('PostWorkflow'));
 
-		$this->specify('exception thrown on invalid workflow id', function() {
-			$this->src->getClassname('');
-		},['throws'=> 'raoul2000\workflow\base\WorkflowException']);
-
-	}
     public function testFailToLoadWorkflowClass()
     {
     	$this->specify('incorrect status id format', function () {
@@ -101,7 +90,7 @@ class WorkflowTest extends TestCase
 
     public function testLoadMinimalWorkflowSuccess()
     {
-    	$src = new WorkflowPhpSource();
+    	$src = new WorkflowFileSource();
     	$src->addWorkflowDefinition('wid', [
     		'initialStatusId' => 'A',
     		'status' => ['A']

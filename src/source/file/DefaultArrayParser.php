@@ -1,6 +1,6 @@
 <?php 
 
-namespace raoul2000\workflow\source\php;
+namespace raoul2000\workflow\source\file;
 
 use Yii;
 use yii\base\Object;
@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 use raoul2000\workflow\base\WorkflowValidationException;
 use yii\helpers\VarDumper;
 
-class DefaultArrayParser extends Object implements IArrayParser {
+class DefaultArrayParser extends WorkflowArrayParser {
 	
 	/**
 	 * @var boolean when TRUE, the parse method will also perform some validations
@@ -19,11 +19,11 @@ class DefaultArrayParser extends Object implements IArrayParser {
 	 * Parse a workflow defined as a PHP Array.
 	 *
 	 * The workflow definition passed as argument is turned into an array that can be
-	 * used by the WorkflowPhpSource components. 
+	 * used by the WorkflowFileSource components. 
 	 * 
 	 * @param string $wId
 	 * @param array $definition
-	 * @param raoul2000\workflow\source\php\WorkflowPhpSource $source
+	 * @param raoul2000\workflow\source\file\WorkflowFileSource $source
 	 * @return array The parse workflow array definition
 	 * @throws WorkflowValidationException
 	 */
@@ -35,23 +35,23 @@ class DefaultArrayParser extends Object implements IArrayParser {
 		}
 	
 		list($workflowId, $statusId) = $source->parseStatusId( $definition['initialStatusId'],$wId);
-		$initialStatusId = $workflowId . WorkflowPhpSource::SEPARATOR_STATUS_NAME .$statusId;
+		$initialStatusId = $workflowId . WorkflowFileSource::SEPARATOR_STATUS_NAME .$statusId;
 		if( $workflowId != $wId) {
 			throw new WorkflowValidationException('Initial status must belong to workflow : '.$initialStatusId);
 		}
 	
-		if ( ! isset($definition[WorkflowPhpSource::KEY_NODES])) {
+		if ( ! isset($definition[WorkflowFileSource::KEY_NODES])) {
 			throw new WorkflowValidationException("No status definition found");
 		}
 		$normalized['initialStatusId'] = $initialStatusId;
 	
-		if (! \is_array($definition[WorkflowPhpSource::KEY_NODES])) {
+		if (! \is_array($definition[WorkflowFileSource::KEY_NODES])) {
 			throw new WorkflowValidationException('Invalid Status definition : array expected');
 		}
 		$startStatusIdIndex = [];
 		$endStatusIdIndex = [];
 	
-		foreach($definition[WorkflowPhpSource::KEY_NODES] as $key => $value) {
+		foreach($definition[WorkflowFileSource::KEY_NODES] as $key => $value) {
 			$startStatusId = null;
 			$startStatusDef = null;
 			if ( is_string($key) ) {
@@ -77,7 +77,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 			}
 	
 			list($workflowId, $statusId) = $source->parseStatusId($startStatusId,$wId);
-			$startStatusId = $startStatusIdIndex[] = $workflowId . WorkflowPhpSource::SEPARATOR_STATUS_NAME . $statusId;
+			$startStatusId = $startStatusIdIndex[] = $workflowId . WorkflowFileSource::SEPARATOR_STATUS_NAME . $statusId;
 			if( $workflowId != $wId) {
 				throw new WorkflowValidationException('Status must belong to workflow : '.$startStatusId);
 			}
@@ -90,10 +90,10 @@ class DefaultArrayParser extends Object implements IArrayParser {
 					 *
 					 * 'A' => []
 					 */
-					$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId] = null;
+					$normalized[WorkflowFileSource::KEY_NODES][$startStatusId] = null;
 				} else {
 					foreach ($startStatusDef as $startStatusKey => $startStatusValue) {
-						if ( $startStatusKey == WorkflowPhpSource::KEY_METADATA )
+						if ( $startStatusKey == WorkflowFileSource::KEY_METADATA )
 						{
 							/**
 							 * validate metadata
@@ -103,14 +103,14 @@ class DefaultArrayParser extends Object implements IArrayParser {
 							 * ]
 							 */
 								
-							if ( \is_array($startStatusDef[WorkflowPhpSource::KEY_METADATA])) {
-								if (! ArrayHelper::isAssociative($startStatusDef[WorkflowPhpSource::KEY_METADATA])) {
+							if ( \is_array($startStatusDef[WorkflowFileSource::KEY_METADATA])) {
+								if (! ArrayHelper::isAssociative($startStatusDef[WorkflowFileSource::KEY_METADATA])) {
 									throw new WorkflowValidationException("Invalid metadata definition for status $startStatusId : associative array expected");
 								}
 							} else {
 								throw new WorkflowValidationException("Invalid metadata definition for status $startStatusId : array expected");
 							}
-							$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId][WorkflowPhpSource::KEY_METADATA] = $startStatusDef[WorkflowPhpSource::KEY_METADATA];
+							$normalized[WorkflowFileSource::KEY_NODES][$startStatusId][WorkflowFileSource::KEY_METADATA] = $startStatusDef[WorkflowFileSource::KEY_METADATA];
 						}
 						elseif ( $startStatusKey == 'transition')
 						{
@@ -124,9 +124,9 @@ class DefaultArrayParser extends Object implements IArrayParser {
 								$ids = array_map('trim', explode(',', $transitionDefinition));
 								foreach ($ids as $id) {
 									$pieces = $source->parseStatusId($id,$wId);
-									$canEndStId = \implode(WorkflowPhpSource::SEPARATOR_STATUS_NAME, $pieces);
+									$canEndStId = \implode(WorkflowFileSource::SEPARATOR_STATUS_NAME, $pieces);
 									$endStatusIdIndex[] = $canEndStId;
-									$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
+									$normalized[WorkflowFileSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
 								}
 							} elseif ( \is_array($transitionDefinition)) {
 								/**
@@ -154,13 +154,13 @@ class DefaultArrayParser extends Object implements IArrayParser {
 									}
 										
 									$pieces = $source->parseStatusId($endStatusId,$wId);
-									$canEndStId = \implode(WorkflowPhpSource::SEPARATOR_STATUS_NAME, $pieces);
+									$canEndStId = \implode(WorkflowFileSource::SEPARATOR_STATUS_NAME, $pieces);
 									$endStatusIdIndex[] = $canEndStId;
 										
 									if ( $transDef != null) {
-										$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = $transDef;
+										$normalized[WorkflowFileSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = $transDef;
 									}else {
-										$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
+										$normalized[WorkflowFileSource::KEY_NODES][$startStatusId]['transition'][$canEndStId] = [];
 									}
 								}
 							} else {
@@ -168,7 +168,7 @@ class DefaultArrayParser extends Object implements IArrayParser {
 							}
 						}
 						elseif ( \is_string($startStatusKey)) {
-							$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId][$startStatusKey] = $startStatusValue;
+							$normalized[WorkflowFileSource::KEY_NODES][$startStatusId][$startStatusKey] = $startStatusValue;
 						}
 					}
 				}
@@ -185,40 +185,21 @@ class DefaultArrayParser extends Object implements IArrayParser {
 				 * ]
 	
 				 */
-				$normalized[WorkflowPhpSource::KEY_NODES][$startStatusId] = null;
+				$normalized[WorkflowFileSource::KEY_NODES][$startStatusId] = null;
 			}
 		}
 	
 		// copy remaining workflow properties
 		foreach($definition as $propName => $propValue) {
 			if( is_string($propName)) {
-				if( $propName != 'initialStatusId' && $propName != WorkflowPhpSource::KEY_NODES) {
+				if( $propName != 'initialStatusId' && $propName != WorkflowFileSource::KEY_NODES) {
 					$normalized[$propName] = $propValue;
 				}
 			}
 		}
 		
-		if ( $this->validate === true) {
-			if ( ! \in_array($initialStatusId, $startStatusIdIndex)) {
-				throw new WorkflowValidationException("Initial status not defined : $initialStatusId");
-			}
-		
-			// detect not defined statuses
-		
-			$missingStatusIdSuspects = \array_diff($endStatusIdIndex, $startStatusIdIndex);
-			if ( count($missingStatusIdSuspects) != 0) {
-				$missingStatusId = [];
-				foreach ($missingStatusIdSuspects as $id) {
-					list($thisWid, $thisSid) = $source->parseStatusId($id,$wId);
-					if ($thisWid == $wId) {
-						$missingStatusId[] = $id; // refering to the same workflow, this Id is not defined
-					}
-				}
-				if ( count($missingStatusId) != 0) {
-					throw new WorkflowValidationException("One or more end status are not defined : ".VarDumper::dumpAsString($missingStatusId));
-				}
-			}
-		}
+		$this->validate($wId, $source, $initialStatusId, $startStatusIdIndex, $endStatusIdIndex);
+
 		return $normalized;
-	}	
+	}
 } 

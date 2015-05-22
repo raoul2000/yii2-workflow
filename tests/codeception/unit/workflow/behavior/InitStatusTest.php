@@ -17,8 +17,11 @@ class InitStatusTest extends TestCase
 		parent::setUp();
 		Item01::deleteAll();
 		Yii::$app->set('workflowSource',[
-			'class'=> 'raoul2000\workflow\source\php\WorkflowPhpSource',
-			'namespace' => 'tests\codeception\unit\models'
+			'class'=> 'raoul2000\workflow\source\file\WorkflowFileSource',
+			'definitionLoader' => [
+				'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
+				'namespace' => 'tests\codeception\unit\models'
+			]			
 		]);
 
 	}

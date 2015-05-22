@@ -1,12 +1,12 @@
 <?php
 
-namespace tests\unit\workflow\source\php;
+namespace tests\unit\workflow\source\file;
 
 use Yii;
 use yii\codeception\TestCase;
-use raoul2000\workflow\source\php\DefaultArrayParser;
-use raoul2000\workflow\source\php\WorkflowPhpSource;
-use raoul2000\workflow\source\php\MinimalArrayParser;
+use raoul2000\workflow\source\file\DefaultArrayParser;
+use raoul2000\workflow\source\file\WorkflowFileSource;
+use raoul2000\workflow\source\file\MinimalArrayParser;
 use yii\helpers\VarDumper;
 
 
@@ -23,9 +23,7 @@ class MinimalArrayParserTest extends TestCase
 			'class' => MinimalArrayParser::className(),
 		]);
 		
-		$this->src = new WorkflowPhpSource([
-			'parser' => 'parser'
-		]);
+		$this->src = new WorkflowFileSource();
 	}
 	
 	/**

@@ -1,13 +1,13 @@
 <?php
 
-namespace tests\unit\workflow\source\php;
+namespace tests\unit\workflow\source\file;
 
 use Yii;
 use yii\codeception\TestCase;
 use tests\codeception\unit\models\Item01;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
-use raoul2000\workflow\source\php\WorkflowPhpSource;
+use raoul2000\workflow\source\file\WorkflowFileSource;
 use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
 use raoul2000\workflow\base\Workflow;
@@ -22,7 +22,7 @@ class TransitionTest extends TestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->src = new WorkflowPhpSource();
+		$this->src = new WorkflowFileSource();
 	}
 
 	/**

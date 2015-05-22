@@ -1,48 +1,48 @@
 <?php
 
-namespace tests\unit\workflow\source\php;
+namespace tests\unit\workflow\source\file;
 
 use Yii;
 use yii\codeception\TestCase;
-use tests\codeception\unit\models\Item01;
+use tests\codeception\unit\models\Item04;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
-use raoul2000\workflow\source\php\WorkflowPhpSource;
+use raoul2000\workflow\source\file\WorkflowFileSource;
 use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
 use raoul2000\workflow\base\Workflow;
 
 
-class WorkflowSourceTest extends TestCase
+class ClassMapTest extends TestCase
 {
 	use \Codeception\Specify;
-
-
+	
 	public function testConstructFails1()
 	{
 		$this->specify('Workflow source construct fails if classMap is not an array',function (){
-
+	
 			$this->setExpectedException(
 				'yii\base\InvalidConfigException',
 				'Invalid property type : \'classMap\' must be a non-empty array'
 			);
-
-			new WorkflowPhpSource([
+	
+			new WorkflowFileSource([
 				'namespace' =>'a\b\c',
 				'classMap' => null
 			]);
 		});
 	}
+	
 	public function testConstructFails2()
 	{
 		$this->specify('Workflow source construct fails if classMap is an empty array',function (){
-
+	
 			$this->setExpectedException(
 				'yii\base\InvalidConfigException',
 				'Invalid property type : \'classMap\' must be a non-empty array'
 			);
-
-			new WorkflowPhpSource([
+	
+			new WorkflowFileSource([
 				'namespace' =>'a\b\c',
 				'classMap' => null
 			]);
@@ -51,13 +51,13 @@ class WorkflowSourceTest extends TestCase
 	public function testConstructFails3()
 	{
 		$this->specify('Workflow source construct fails if a class entry is missing',function (){
-
+	
 			$this->setExpectedException(
 				'yii\base\InvalidConfigException',
 				'Invalid class map value : missing class for type workflow'
 			);
-
-			 new WorkflowPhpSource([
+	
+			new WorkflowFileSource([
 				'namespace' =>'a\b\c',
 				'classMap' =>  [
 					'workflow'   => null,
@@ -65,27 +65,28 @@ class WorkflowSourceTest extends TestCase
 					'transition' => 'raoul2000\workflow\base\Transition'
 				]
 			]);
-
-
+	
+	
 		});
-
-
 	}
-	public function testConstructSuccess()
+	
+	public function testClassMapStatus()
 	{
-		$this->specify('Workflow source construct fails if classMap is not an array',function (){
+		$this->specify('Replace default status class with custom one',function (){
 
-			$src = new WorkflowPhpSource([
-				'namespace' =>'a\b\c',
+			$src = new WorkflowFileSource([
 				'classMap' =>  [
-					WorkflowPhpSource::TYPE_WORKFLOW   => 'my\namespace\Workflow',
-					WorkflowPhpSource::TYPE_STATUS     => 'my\namespace\Status',
-					WorkflowPhpSource::TYPE_TRANSITION => 'my\namespace\Transition'
+					WorkflowFileSource::TYPE_STATUS     => 'tests\codeception\unit\models\MyStatus',
 				]
 			]);
-			expect($src->getClassMapByType(WorkflowPhpSource::TYPE_WORKFLOW))->equals(	'my\namespace\Workflow'		);
-			expect($src->getClassMapByType(WorkflowPhpSource::TYPE_STATUS))->equals(	'my\namespace\Status'		);
-			expect($src->getClassMapByType(WorkflowPhpSource::TYPE_TRANSITION))->equals('my\namespace\Transition'	);
+
+			verify($src->getClassMapByType(WorkflowFileSource::TYPE_WORKFLOW))->equals(	'raoul2000\workflow\base\Workflow'  );
+			verify($src->getClassMapByType(WorkflowFileSource::TYPE_STATUS))->equals(	'tests\codeception\unit\models\MyStatus'  );
+			verify($src->getClassMapByType(WorkflowFileSource::TYPE_TRANSITION))->equals('raoul2000\workflow\base\Transition');
+
+			$status = $src->getStatus('Item04Workflow/A');
+
+			expect(get_class($status))->equals('tests\codeception\unit\models\MyStatus');
 		});
 	}
 }

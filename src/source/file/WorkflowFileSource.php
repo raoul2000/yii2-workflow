@@ -1,5 +1,5 @@
 <?php
-namespace raoul2000\workflow\source\php;
+namespace raoul2000\workflow\source\file;
 
 use Yii;
 use yii\base\Object;
@@ -10,17 +10,15 @@ use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
 use raoul2000\workflow\base\Workflow;
 use raoul2000\workflow\base\WorkflowException;
-use raoul2000\workflow\base\IWorkflowDefinitionProvider;
 use raoul2000\workflow\source\IWorkflowSource;
 use yii\helpers\ArrayHelper;
 use raoul2000\workflow\base\WorkflowValidationException;
 
 
 /**
- * This class provides workflow items (Workflow, Status, Transitions) from
- * a PHP array workflow definition.
+ * This class provides workflow items (Workflow, Status, Transitions) to the SimpleWorkflowBehavior behavior.   
  */
-class WorkflowPhpSource extends Object implements IWorkflowSource
+class WorkflowFileSource extends Object implements IWorkflowSource
 {
 	/**
 	 *	The regular expression used to validate status and workflow Ids.
@@ -46,23 +44,25 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	/**
 	 * Name of the parser class to use by default
 	 */
-	const DEFAULT_PARSER_CLASS = '\raoul2000\workflow\source\php\DefaultArrayParser';
+	const DEFAULT_WDLOADER_CLASS = '\raoul2000\workflow\source\file\PhpClassLoader';
 	/**
-	 * Name of the default parser component to use with the behavior. This value can be overwritten
-	 * by the 'parser' configuration setting.
-	 * Example : 
-	 * 'workflowSource' => [
-	 * 		'class' => 'raoul2000\workflow\source\php\WorkflowPhpSource',
-	 * 		'parser' => 'myparser'
-	 * ]
-	 */	
-	const DEFAULT_PARSER_NAME = 'workflowArrayParser';
-	/**
-	 * @var string namespace where workflow definition class are located
+	 *
+	 * @var string|array|object The workflow definition loader user by this source component can be can
+	 * be specified in one of the following forms :
+	 *
+	 * - string : name of an existing workflow definition component registered in the current Yii::$app.
+	 * - a configuration array: the array must contain a class element which is treated as the object class,
+	 * and the rest of the name-value pairs will be used to initialize the corresponding object properties
+	 * - object : the instance of the workflow definition loader
+	 *
+	 * Note that in any case, the workflow definition loader configured here must implement the
+	 * `WorkflowDefinitionLoader` interface.
+	 *
+	 * If this attribute is not set then a default object of type `PhpClassLoader` is used.
 	 */
-	public $namespace = 'app\models';
+	public $definitionLoader;
 	/**
-	 * @var Object reference to the parser to use with this WorkflowPhpSource
+	 * @var Object reference to the parser to use with this WorkflowFileSource
 	 */
 	private $_parser;
 	/**
@@ -81,8 +81,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * @var Transition[] list of out-going Transition instances indexed by the start status id
 	 */
 	private $_t = [];
-	
-
+	/**
+	 * @var object Workflow definition loader instance
+	 */
+	private $_dl;
 	/**
 	 * Built-in types names used for class map configuration.
 	 */
@@ -124,24 +126,38 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 			} else {
 				throw new InvalidConfigException("Invalid property type : 'classMap' must be a non-empty array");
 			}
-		}
-		
-		// create the parser component or get it by name from Yii::$app
-		
-		$parserName = isset($config['parser']) ? $config['parser'] : 'workflowArrayParser';
-		if ( $parserName == null ) {
-			$this->_parser = null;
-		} elseif ( is_string($parserName)) {
-			if (  ! Yii::$app->has($parserName)) {
-				Yii::$app->set($parserName, ['class'=> self::DEFAULT_PARSER_CLASS]);
-			}
-			$this->_parser = Yii::$app->get($parserName);
-			unset($config['parser']);
-		} else {
-			throw new InvalidConfigException("Invalid property type : 'parser' must be a a string or NULL");
-		}		
+		}	
 
 		parent::__construct($config);
+	}
+	/**
+	 * Returns the Workflow Definition Loader component.
+	 * This component is created the first time this method is invoked (lazy loading).
+	 * 
+	 * @return WorkflowDefinitionLoader the workflow definition loader instance
+	 */
+	public function getDefinitionLoader()
+	{
+		if( ! isset($this->_dl)) {
+			
+			if( !isset($this->definitionLoader)) {
+				$this->_dl = Yii::createObject([
+					'class' => self::DEFAULT_WDLOADER_CLASS
+				]);
+			}elseif( is_array($this->definitionLoader)) {
+				$this->_dl = Yii::createObject($this->definitionLoader);
+			} elseif( is_string($this->definitionLoader)) {
+				$this->_dl = Yii::$app->get($this->definitionLoader);
+			}  elseif( is_object($this->$this->definitionLoader)) {
+				$this->_dl = $this->definitionLoader;
+			} else {
+				throw new InvalidConfigException('invalid "definitionLoader" attribute : string, array or object expected');
+			}
+			if( ! $this->_dl instanceof WorkflowDefinitionLoader ) {
+				throw new InvalidConfigException('the workflow definition loader must implement the WorkflowDefinitionLoader interface');
+			}			
+		}
+		return $this->_dl;
 	}
 	/**
 	 * Returns the status whose id is passed as argument.
@@ -155,8 +171,8 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * @return Status the status instance
 	 *
 	 * @see raoul2000\workflow\source\IWorkflowSource::getStatus()
-	 * @see WorkflowPhpSource::evaluateWorkflowId()
-	 * @see WorkflowPhpSource::parseStatusId()
+	 * @see WorkflowFileSource::evaluateWorkflowId()
+	 * @see WorkflowFileSource::parseStatusId()
 	 */
 	public function getStatus($id, $defaultWorkflowId = null)
 	{
@@ -296,36 +312,11 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		}
 
 		if ( ! isset($this->_workflowDef[$id]) ) {
-			$wfClassname = $this->getClassname($id);
-			try {
-				$wfProvider = Yii::createObject(['class' => $wfClassname]);
-			} catch ( \ReflectionException $e) {
-				throw new WorkflowException('failed to load workflow definition : '.$e->getMessage());
-			}
-			if ( $this->isWorkflowProvider($wfProvider)) {
-				$this->_workflowDef[$id] = $this->parse($id, $wfProvider->getDefinition());
-			} else {
-				throw new WorkflowException('Invalid workflow provider class : '.$wfClassname);
-			}
+			
+			$this->_workflowDef[$id] = $this->getDefinitionLoader()->loadDefinition($id,$this);
 		}
 		return $this->_workflowDef[$id];
 	}
-
-	/**
-	 * Returns the complete name for the Workflow Provider class used to retrieve the definition of workflow $workflowId.
-	 * The class name is built by appending the workflow id to the namespace parameter set for this source component.
-	 *
-	 * @param string $workflowId a workflow id
-	 * @return string the full qualified class name used to provide definition for the workflow
-	 */
-	public function getClassname($workflowId)
-	{
-		if ( ! $this->isValidWorkflowId($workflowId)) {
-			throw new WorkflowException('Not a valid workflow Id : '.$workflowId);
-		}
-		return $this->namespace . '\\' . $workflowId;
-	}
-
 	/**
 	 * Returns the class map array for this Workflow source instance.
 	 *
@@ -354,18 +345,6 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	{
 		return array_key_exists($type, $this->_classMap) ? $this->_classMap[$type] : null;
 	}
-	/**
-	 * Returns TRUE if the $object is a workflow provider.
-	 * An object is a workflow provider if it implements the IWorkflowDefinitionProvider interface.
-	 *
-	 * @param Object $object
-	 * @return boolean
-	 */
-	public function isWorkflowProvider($object)
-	{
-		return method_exists($object, 'getDefinition');
-		return $object instanceof IWorkflowDefinitionProvider;
-	}
 
 	/**
 	 * Parses the string $val assuming it is a status id and returns and array
@@ -381,7 +360,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * @return string[] array containing the workflow ID in its first index, and the status Local ID
 	 * in the second
 	 * @throws WorkflowException Exception thrown if the method was not able to parse $val.
-	 * @see WorkflowPhpSource::evaluateWorkflowId()
+	 * @see WorkflowFileSource::evaluateWorkflowId()
 	 */
 	public function parseStatusId($val, $helper = null)
 	{
@@ -424,7 +403,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 *
 	 * @param string $id the status ID to test
 	 * @return boolean TRUE if $id is a valid status ID, FALSE otherwise.
-	 * @see WorkflowPhpSource::parseStatusId()
+	 * @see WorkflowFileSource::parseStatusId()
 	 */
 	public function isValidStatusId($id)
 	{
@@ -464,7 +443,7 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 	 * This method can be use for instance, by a model that holds the definition of the workflow it is
 	 * using.<br/>
 	 * If a workflow with same id already exist in this source, it is overwritten if the last parameter
-	 * is set to TRUE. Note that in this case the overwritten workflow is not available anymore.
+	 * is set to TRUE.
 	 *
 	 * @see SimpleWorkflowBehavior::attach()
 	 * @param string $workflowId
@@ -482,41 +461,16 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		if ( $overwrite == false && isset($this->_workflowDef[$workflowId])) {
 			return false;
 		} else {
-			$this->_workflowDef[$workflowId] = $this->parse($workflowId, $definition);
+			$this->_workflowDef[$workflowId] = $this->getDefinitionLoader()->getParser()->parse($workflowId, $definition, $this);
 			unset($this->_w[$workflowId]);
 			return true;
-		}
-	}
-	/**
-	 * Returns the parser used by this source or NULL if no parser is used. In this case, it is assumed
-	 * that all workflow definitions provided to this source as PHP array, are in the normalized form.
-	 * 
-	 * @return \raoul2000\workflow\source\php\IArrayParser 
-	 */
-	public function getWorkflowParser()
-	{
-		return $this->_parser;
-	}
-	/**
-	 * Convert the $definition array in its normalized form used internally by this source.
-	 * 
-	 * @param string $workflowId
-	 * @param array $definition
-	 * @return array the workflow in its normalized format
-	 */
-	public function parse($workflowId, $definition) 
-	{
-		if( $this->getWorkflowParser() != null) {
-			return $this->getWorkflowParser()->parse($workflowId, $definition, $this);
-		} else {
-			return $definition;
 		}
 	}
 	
 	/**
 	 * Validate the workflow definition passed as argument.
 	 * The workflow definition array format is the one rused internally by this class, and that should
-	 * have been provided by a parser. 
+	 * have been provided by the configured workflow definition provider component. 
 	 * 
 	 * @param string $wId Id of the workflow to validate
 	 * @param array $definition workflow definition
@@ -540,7 +494,10 @@ class WorkflowPhpSource extends Object implements IWorkflowSource
 		foreach( $startStatusIds as $statusId) {
 			if( $definition[self::KEY_NODES][$statusId][self::KEY_EDGES] != null) {
 				$stat['transitionCount'] += count($definition[self::KEY_NODES][$statusId][self::KEY_EDGES]);
-				$endStatusIds = array_merge($endStatusIds, array_keys($definition[self::KEY_NODES][$statusId][self::KEY_EDGES]));
+				$endStatusIds = array_merge(
+					$endStatusIds, 
+					array_keys($definition[self::KEY_NODES][$statusId][self::KEY_EDGES])
+				);
 			} else {
 				$finalStatusIds[] = $statusId;
 			}
