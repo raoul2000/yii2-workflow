@@ -23,7 +23,7 @@ Not that much to say here, as there is no change in the way the *SimpleWorkflowB
 A transition is a link between the *current* and the *future* status.  
 
 ## Definition
-The workflow definition required by the `WorkflowPhpSource` component differs from previous version : 
+The workflow definition required by the `WorkflowFileSource` component differs from previous version : 
 
 - key `initial` is replaced by `initialStatusId`
 - key `node` is replaced by `status`

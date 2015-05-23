@@ -1,7 +1,7 @@
 # Workflow Creation : PHP Source
 
 The way a workflow is defined depends on the [Workflow Source](concept-source.md) component we will be using. By default
-the *SimpleWorkflowBehavior* is using an instance of the class `WorkflowPhpSource` defined in the namespace `raoul2000\workflow\source\php`.
+the *SimpleWorkflowBehavior* is using an instance of the class `WorkflowFileSource` defined in the namespace `raoul2000\workflow\source\file`.
 This component is able to read a workflow definition out of an associative PHP array. In this chapter we are going to learn 
 how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really....
 
@@ -26,12 +26,12 @@ used to separate both ids.
 For example, if we have a status with "draft" that belong to the workflow 'PostWorkflow', the absolute status Id is 'PostWorkflow/draft'.
 
 Most of the time, you will not use absolute status id, but it's good to know that internally they are required by 
-the *WorkflowPhpSource* component.
+the *WorkflowFileSource* component.
 
 
 ## Workflow Provider
 
-The *WorkflowPhpSource* component reads workflow definition from *Workflow provider* objects. This type of object t implements 
+By Default the *WorkflowFileSource* component reads workflow definition from *Workflow provider* objects. This type of object  implements 
 the *IWorkflowDefinitionProvider* interface which defines a single method : `getDefinition()`. 
 This method must return the actual description of our workflow as a PHP array.
 

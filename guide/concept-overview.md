@@ -10,7 +10,7 @@ model within a *workflow*.
 It includes :
 
 - a behavior (*SimpleWorkflowBehavior*)
-- a Workflow Source Component (*WorkflowPhpSource*) supporting 2 workflows formats (for now)
+- a Workflow Source Component (*WorkflowFileSource*)
 - a Validator (*WorkflowValidator*)
 - three event sequence models
 - various helpers 
@@ -44,8 +44,8 @@ reach status 'published' (the end status), but not the opposite.
 
 The *Workflow Source* is a component responsible for providing workflow, status and transitions objects based on a formatted workflow definition.
 
-A *Workflow Source* component can ready virtually any kind of source. The first release include the `WorkflowPhpSource`component, which
-ia designed to read a workflow definition from a PHP array wrapped in a class that implements the `IWorkflowDefinitionProvider`interface.
+A *Workflow Source* component can ready virtually any kind of source. The first release include the `WorkflowFileSource`component, which
+ia designed to read by default, a workflow definition from a PHP array wrapped in a class.
 
 [Read more about Workflow Source](concept-source.md)
 

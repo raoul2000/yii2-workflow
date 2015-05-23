@@ -1,10 +1,10 @@
 # Workflow Source
 
-The *Workflow Source* is a Yii2 component dedicated to read the persistent representation of a workflow and provide on demand, its memory 
-representation in terms of PHP objects.
+The *Workflow Source* is a Yii2 component dedicated to read the persistent representation of a workflow and provide on demand to the
+*SimpleWorkflowBehavior*, its memory representation in terms of PHP objects.
 
-The main Workflow Source component included in the *SimpleWorkflow* package is `raoul2000\workflow\source\php\WorkflowPhpSource`. It is designed
-to process workflow definition provided as regular PHP Arrays. 
+The main Workflow Source component included in the *SimpleWorkflow* package is `raoul2000\workflow\source\file\WorkflowFileSource`. It is designed
+to process workflow definition provided as regular PHP Arrays and stored in a file.
 
 Note that it is possible that in the future, other workflow source component are provided like for instance a *WorkflowDbSource* that would
 read from a database. 
@@ -18,24 +18,80 @@ all part of the `raoul2000\workflow\base` namespace:
 - Transition
 - Workflow 
 
-The main purpose of the *WorkflowPhpSource* component is to turn a PHP array (the workflow definition) into a set Status, Transition and Workflow 
+The main purpose of a  Workflow Source component is to turn a workflow definition into a set Status, Transition and Workflow 
 objects. 
 
 ## Configuration
 
+### Default Workflow Source : PHP class
+
+By default, the *SimpleWorkflowBehavior* reads workflow definitions from PHP class that implement the 
+`raoul2000\workflow\source\file\IWorkflowDefinitionProvider` interface. This interface is very basic, as it defines only one method, `getDefinition()` 
+that must returns the workflow definition as an associative PHP array.
+
+Here is an example of such a class :
+
+```php
+namespace app\models;
+
+class PostWorkflow implements \raoul2000\workflow\file\IWorkflowDefinitionProvider 
+{
+	public function getDefinition() {
+		return [ 
+			'initialStatusId' => 'draft',
+			'status' => [
+				'draft' => [
+					'transition' => ['correction']
+				],
+				'correction' => [
+					'transition' => ['draft','ready']
+				],
+				'ready' => [
+					'transition' => ['draft', 'correction', 'published']
+				],
+				'published' => [
+					'transition' => ['ready', 'archived']
+				],
+				'archived' => [
+					'transition' => ['ready']
+				]
+			]
+		];
+	}
+}
+``` 
+
+Note that the name of the class **must be equals to the workflow Id** (here *PostWorkflow*).
+
+By default, the workflow definition class is assumed to belong to the `app\models` namespace (i.e. it must be located in the corresponding
+folder). However it is very likely that you will want to store your workflow definitions somewhere else, and that can be easely achieved through
+the special `@workflowDefinitionNamespace` alias. 
+
+For instance, if classes holding workflow definition are located in *app\models\workflows* we just need to define the alias :
+
+```php
+Yii::setAlias('@workflowDefinitionNamespace','app\\models\\workflows');
+```
+
+See the [Workflow File Source](source-file.md) Documentation to learn more about this topic.
+
 ### Component registration
 
-When the *SimpleWorkflowBehavior* is initialized, it tries to get a reference to the **Workflow Source Component** to use. By default
-this component is assumed to have the id *workflowSource*. If no such component is available, *it will create one* using the *WorkflowPhpSource* 
-class, and register it in the Yii2 application so to make it available to other *SimpleWorkflowBehavior*.
+When the *SimpleWorkflowBehavior* is initialized, it tries to get a reference to the *Workflow Source Component* to use. By default
+this component is assumed to have the id **workflowSource**. If no such component is available, the *SimpleWorkflowBehavior* will create one,
+with type `WorkflowFileSource` (default) and registers it in the Yii2 application, so to make it available to other instances of *SimpleWorkflowBehavior*.
+
+This implies that, unless specified otherwise, by default, all *SimpleWorkflowBehavior* are sharing **the same Workflow Source component**.
+
+If you're not familiar with "application Component", please refer to the "[Definitive Guide to Yii2](http://www.yiiframework.com/doc-2.0/guide-structure-application-components.html)"
 
 To summarize :
  
 - **workflowSource** : default Id of the workflow source component used by the *SimpleWorkflowBehavior*
-- **\raoul2000\workflow\source\php\WorkflowPhpSource** : default workflow source component type 
+- **\raoul2000\workflow\source\file\WorkflowFileSource** : default workflow source component type 
 
 If for instance you want to use another Workflow Source Component instead of the default one, you must configure it like you would do for 
-any other Yii2 component and keep the default Id.
+any other Yii2 component and use the expected default Id.
 
 ```php
 $config = [
@@ -48,78 +104,49 @@ $config = [
 ``` 
 With this configuration, all *SimpleWorkflowBehavior* are going to use your *SuperCoolWorkflowSource* to get Status, Transition and Workflow objects.
 
-Another option is to mix Workflow Source Components and for instance use the default one with all models except for your Post model. To achieve this,
-simply configure your custom Workflow Source Component under a custom Id.
+Another option is to mix Workflow Source Components and for instance use the default one with all models except for a particular one. To achieve this,
+simply configure your custom Workflow Source Component under a custom Id. Let's see that on an example: 
+
+> Let's assume that you have developped a super cool workflow source component, able to read workflow definition from a satelite data stream, live
+from deep outer space (if you did so, pull requests are welcome !!). You want to use this source only for the *SpaceShip* model in your app, leaving all other models
+with the default source (PHP class). 
+
+To do so, first declare your workflow source as a Yii2 component : 
 
 ```php
 $config = [
     // ....
     'components' => [
-    	// This is my custom Workflow Source Component with a custom id
-        'mySuperSource' => [
-          'class' => '\my\own\component\SuperCoolWorkflowSource',
+    	// declare your source component under a custom id 
+        'mySpaceSource' => [
+          'class' => '\my\own\component\AlienWorkflowSource',
         ]
    // ...
 ``` 
 
-And then use the component *mySuperSource* as Workflow source for the Post model only :
+And then use the component *mySpaceSource* as Workflow source for the *SpaceShip* model only :
 
 ```php
 namespace app\models;
-class Post extends \yii\db\ActiveRecord
+class SpaceShip extends \yii\db\ActiveRecord
 {
     public function behaviors()
     {
     	return [
 			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-			// Post will use a specific Workflow Source Component
+			// SpaceShip will use a specific Workflow Source Component
 			// All other models are using the default one
-			'source' => 'mySuperSource'
+			'source' => 'mySpaceSource'
     	];
     }
 }
 ```
 
-
-### Namespace : workflow location
-
-By default the `WorkflowPhpSource`component is loading workflows from the `app\models` namespace. 
-So for example in the following delcaration, the default workflow associated with the *Post* model will be loaded from 
-the class `app\models\MyWorkflow` : 
-
-```php
-namespace app\models;
-class Post extends \yii\db\ActiveRecord
-{
-    public function behaviors()
-    {
-    	return [
-			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-			'defaultWorkflowId' => 'MyWorkflow'
-    	];
-    }
-}
-```
-If you need to change the default namespace value (and in general if you need to change any configuration setting), you must
-declare it as an Yii2 application component. In the example below, we are defining the source component using the default Id (*workflowSource*)
-and set the namespace to the location where workflow definitions are supposed to be located.
-
-```php
-$config = [
-    'components' => [
-        'workflowSource' => [
-          'class' => '\raoul2000\workflow\source\php\WorkflowPhpSource',
-          'namespace' => '\app\models\workflows'
-        ]
-``` 
-
-As you may have guessed, there is only one namespace per workflow source component so you are encouraged to locate all your workflows in the
-same folder. In the case you must load workflows from various location, you should declare another workflow source component (one per namespace) but
-remember that each workflow source component serves workflows from only one namespace (folder).
- 
 
 ## Implementing Your Own Workflow source
 
 You can create your own Workflow Source Component by implementing the `\raoul2000\workflow\source\IWorkflowSource` interface.
+
+TBD
  
 
