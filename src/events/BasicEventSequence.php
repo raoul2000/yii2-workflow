@@ -7,7 +7,7 @@ use raoul2000\workflow\events\IEventSequence;
 /**
  * The basic event sequence.
  *
- * @see \raoul2000\workflow\events\IEventSequence
+ * @see IEventSequence
  */
 class BasicEventSequence extends Object implements IEventSequence
 {
@@ -20,7 +20,7 @@ class BasicEventSequence extends Object implements IEventSequence
 	 * - afterEnterWorkflow(workflowID)
 	 * - afterEnterStatus(statusID)
 	 *
-	 * @see \raoul2000\workflow\events\IEventSequenceScheme::createEnterWorkflowSequence()
+	 * @see IEventSequence::createEnterWorkflowSequence()
 	 */
 	public function createEnterWorkflowSequence($initalStatus, $sender)
 	{
@@ -69,7 +69,7 @@ class BasicEventSequence extends Object implements IEventSequence
 	 * - afterLeaveStatus(statusID)
 	 * - afterLeaveWorkflow(workflowID)
 	 *
-	 * @see \raoul2000\workflow\events\IEventSequenceScheme::createLeaveWorkflowSequence()
+	 * @see IEventSequence::createLeaveWorkflowSequence()
 	 */
 	public function createLeaveWorkflowSequence($finalStatus, $sender)
 	{
@@ -120,7 +120,7 @@ class BasicEventSequence extends Object implements IEventSequence
 	 * - afterChangeStatus(A,B)
 	 * - afterEnterStatus(B)
 	 *
-	 * @see \raoul2000\workflow\events\IEventSequenceScheme::createChangeStatusSequence()
+	 * @see IEventSequence::createChangeStatusSequence()
 	 */
 	public function createChangeStatusSequence($transition, $sender)
 	{

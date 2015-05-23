@@ -20,12 +20,12 @@ use yii\base\Exception;
  *
  * <pre>
  * $map = [
- * 		'post/new' => 12,
- * 		'post/corrected' => 25,
- * 		'post/published' => 1,
- * 		'post/archived' => 6,
- *  	'null' => 'some value',
- *  	'workflow/Status' => 'null'
+ *     'post/new' => 12,
+ *     'post/corrected' => 25,
+ *     'post/published' => 1,
+ *     'post/archived' => 6,
+ *     'null' => 'some value',
+ *     'workflow/Status' => 'null'
  * ]
  * </pre>
  *
@@ -36,14 +36,13 @@ use yii\base\Exception;
  * status column equals to NULL, is considered as being in status 'post/toDelete' :
  *
  * <pre>
- * 	$map = [
- * 		StatusIdConverter::VALUE_NULL => 25,
- *      'post/toDelete' => StatusIdConverter::VALUE_NULL
- *  ];
+ * $map = [
+ *      StatusIdConverter::VALUE_NULL => 25,
+ *     'post/toDelete' => StatusIdConverter::VALUE_NULL
+ * ];
  * </pre>
  *
- *
- * @see raoul2000\workflow\base\IStatusIdConverter
+ * @see IStatusIdConverter
  */
 class StatusIdConverter extends Object implements IStatusIdConverter
 {
@@ -78,7 +77,7 @@ class StatusIdConverter extends Object implements IStatusIdConverter
 	}
 	/**
 	 * (non-PHPdoc)
-	 * @see \raoul2000\workflow\IStatusIdConverter::toSimpleWorkflow()
+	 * @see IStatusIdConverter::toSimpleWorkflow()
 	 */
 	public function toSimpleWorkflow($id)
 	{
@@ -94,7 +93,7 @@ class StatusIdConverter extends Object implements IStatusIdConverter
 
 	/**
 	 * (non-PHPdoc)
-	 * @see \raoul2000\workflow\IStatusIdConverter::toModelAttribute()
+	 * @see IStatusIdConverter::toModelAttribute()
 	 */
 	public function toModelAttribute($id)
 	{

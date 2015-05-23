@@ -23,9 +23,6 @@ abstract class WorkflowDefinitionLoader extends Object
 	
 	/**
 	 * Initialize the parser component to use.
-	 * 
-	 * (non-PHPdoc)
-	 * @see \yii\base\Object::init()
 	 */
 	public function init() {
 		parent::init();

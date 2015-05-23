@@ -16,7 +16,11 @@ use raoul2000\workflow\base\WorkflowValidationException;
 
 
 /**
- * This class provides workflow items (Workflow, Status, Transitions) to the SimpleWorkflowBehavior behavior.   
+ * This class provides workflow items (Workflow, Status, Transitions) to the *SimpleWorkflowBehavior* behavior.
+ * The task of loading the workflow definition file, and turns it content into a normalized array, is delegated
+ * to a [[WorkflowDefinitionLoader]] instance. The definition loader can be initialized through the [[definitionLoader]]
+ * attribute.
+ * 
  */
 class WorkflowFileSource extends Object implements IWorkflowSource
 {
@@ -47,7 +51,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	const DEFAULT_WDLOADER_CLASS = '\raoul2000\workflow\source\file\PhpClassLoader';
 	/**
 	 *
-	 * @var string|array|object The workflow definition loader user by this source component can be can
+	 * @var string|array|object The workflow definition loader user by this source component can be
 	 * be specified in one of the following forms :
 	 *
 	 * - string : name of an existing workflow definition component registered in the current Yii::$app.
@@ -82,12 +86,17 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 */
 	private $_dl;
 	/**
-	 * Built-in types names used for class map configuration.
+	 * array key for status class in class map  
 	 */
 	const TYPE_STATUS = 'status';
+	/**
+	 * array key for transition class in class map 
+	 */
 	const TYPE_TRANSITION = 'transition';
+	/**
+	 * array key for workflow class in class map
+	 */
 	const TYPE_WORKFLOW = 'workflow';
-
 	/**
 	 * The class map is used to allow the use of alternate classes to implement built-in types. This way
 	 * you can provide your own implementation for status, transition or workflow.
@@ -101,7 +110,8 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 		self::TYPE_TRANSITION => 'raoul2000\workflow\base\Transition'
 	];
 	/**
-	 *
+	 * Constructor method.
+	 * 
 	 * @param array $config
 	 */
 	public function __construct($config = [])
@@ -167,8 +177,6 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * @return Status the status instance
 	 *
 	 * @see raoul2000\workflow\source\IWorkflowSource::getStatus()
-	 * @see WorkflowFileSource::evaluateWorkflowId()
-	 * @see WorkflowFileSource::parseStatusId()
 	 */
 	public function getStatus($id, $defaultWorkflowId = null)
 	{
@@ -201,7 +209,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * This method also create instances for the initial status and all statuses that can be
 	 * reached from it.
 	 * 
-	 * @see raoul2000\workflow\source\IWorkflowSource::getTransitions()
+	 * @see IWorkflowSource::getTransitions()
 	 */
 	public function getTransitions($statusId, $defaultWorkflowId = null)
 	{
@@ -246,8 +254,9 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	}
 
 	/**
-	 * (non-PHPdoc)
-	 * @see \raoul2000\workflow\source\IWorkflowSource::getTransition()
+	 * Returns the transition between $startId and $endId statuses.
+	 * 
+	 * @see [[IWorkflowSource::getTransition()]]
 	 */
 	public function getTransition($startId, $endId, $defaultWorkflowId = null)
 	{
@@ -264,8 +273,8 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	/**
 	 * Returns the Workflow instance whose id is passed as argument.
 	 *
-	 * @see \raoul2000\workflow\WorkflowSource::getWorkflow()
 	 * @return raoul2000\workflow\base\Workflow|null The workflow instance or NULL if no workflow could be found
+	 * @see [[IWorkflowSource::getTransition()]]
 	 */
 	public function getWorkflow($id)
 	{
@@ -441,7 +450,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * If a workflow with same id already exist in this source, it is overwritten if the last parameter
 	 * is set to TRUE.
 	 *
-	 * @see SimpleWorkflowBehavior::attach()
+	 * @see \raoul2000\workflow\base\SimpleWorkflowBehavior::attach()
 	 * @param string $workflowId
 	 * @param array $definition
 	 * @param boolean $overwrite When set to TRUE, the operation will fail if a workflow definition

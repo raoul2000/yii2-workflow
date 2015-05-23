@@ -30,7 +30,7 @@ class ExtendedEventSequence extends Object implements IEventSequence
 	 *
 	 * Where WID is the workflow Id and ID is the status Id.
 	 *
-	 * @see \raoul2000\workflow\events\IEventSequenceScheme::createEnterWorkflowSequence()
+	 * @see \raoul2000\workflow\events\IEventSequence::createEnterWorkflowSequence()
 	 */
 	public function createEnterWorkflowSequence($initalStatus, $sender)
 	{
@@ -118,7 +118,7 @@ class ExtendedEventSequence extends Object implements IEventSequence
 	 * - afterLeaveWorkflow(*)
 	 * - afterLeaveWorkflow(WID)
 	 *
-	 * @see \raoul2000\workflow\events\IEventSequenceScheme::createLeaveWorkflowSequence()
+	 * @see \raoul2000\workflow\events\IEventSequence::createLeaveWorkflowSequence()
 	 */
 	public function createLeaveWorkflowSequence($finalStatus, $sender)
 	{
@@ -207,7 +207,7 @@ class ExtendedEventSequence extends Object implements IEventSequence
 	 * - afterEnterStatus(*)
 	 * - afterEnterStatus(B)
 
-	 * @see \raoul2000\workflow\events\IEventSequenceScheme::createChangeStatusSequence()
+	 * @see \raoul2000\workflow\events\IEventSequence::createChangeStatusSequence()
 	 */
 	public function createChangeStatusSequence($transition, $sender)
 	{

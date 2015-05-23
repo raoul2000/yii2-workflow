@@ -35,7 +35,6 @@ class WorkflowValidator extends Validator
 	 * If a workflow event sequence is about to occur, this method scan all validators defined in the
 	 * owner model, and applies the ones which are valid for the upcomming events.
 	 *
-	 * @see \yii\validators\Validator::validateAttribute()
 	 * @see \raoul2000\workflow\events\IEventSequence
 	 */
 	public function validateAttribute($object, $attribute)

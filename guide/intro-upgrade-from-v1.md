@@ -9,7 +9,7 @@ that implements the way a model is going to behave inside a workflow. By doing s
 types, each one having its own behavior.  
 
 Another goal was to provide maximum flexibility in the way the developer is going to setup its app architecture. For instance the workflow definition
-can be embeded in any PHP class that implements the appropriate interface (`raoul2000\workflow\base\IWorkflowDefinitionProvider`). Moreover almost
+can be embeded in any PHP class that implements the appropriate interface (`raoul2000\workflow\source\file\IWorkflowDefinitionProvider`). Moreover almost
 all classes can be overloaded and new ones created to implements specific needs not covered by the current version. 
 
 

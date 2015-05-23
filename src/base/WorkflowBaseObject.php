@@ -34,7 +34,6 @@ abstract class WorkflowBaseObject extends Object
 
 	/**
 	 *
-	 * @see \yii\base\Object::__get()
 	 */
 	public function __get($name)
 	{

@@ -84,7 +84,8 @@ class Status extends WorkflowBaseObject implements StatusInterface
 	 * Returns the id of this status.
 	 *
 	 * Note that the status id returned must be unique inside the workflow it belongs to, but it
-	 * doesn't have to be unique among all workflows (@see getName)
+	 * doesn't have to be unique among all workflows.
+	 * 
 	 * @return string the id for this status
 	 */
 	public function getId()

@@ -23,7 +23,6 @@ class WorkflowEvent extends ModelEvent
 	 * Create a WorkflowEvent instance.
 	 *
 	 * @param $name string name of the event.
-	 * @see \yii\base\Object::__construct()
 	 */
 	public function __construct($name, array $config = [])
 	{
@@ -64,7 +63,7 @@ class WorkflowEvent extends ModelEvent
 	/**
 	 * @return \raoul2000\workflow\Transition the transition involved in this event or NULL if no
 	 * transition is available (e.g. EnterWorkflow, LeaveWorkflow)
-	 * @see \raoul2000\workflow\Transition
+	 * @see \raoul2000\workflow\base\Transition
 	 */
 	public function getTransition()
 	{

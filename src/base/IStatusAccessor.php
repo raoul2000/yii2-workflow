@@ -5,8 +5,7 @@ use raoul2000\workflow\base\Status;
 use yii\db\BaseActiveRecord;
 
 /**
- *
- *
+ * Interface for status accessor component.
  */
 interface IStatusAccessor
 {
@@ -17,14 +16,13 @@ interface IStatusAccessor
 	 * @return string the status Id
 	 */
 	public function readStatus(BaseActiveRecord $model);
+
 	/**
 	 * This method is invoked each time a status value must be updated.
 	 *
 	 * Updating a status value differs from actually saving the status in persistent storage (the database).
-	 *
 	 * @param BaseActiveRecord $model
 	 * @param Status $status
-	 * @param string $statusId
 	 */
 	public function updateStatus(BaseActiveRecord $model, Status $status = null);
 
