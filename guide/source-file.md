@@ -126,7 +126,7 @@ return [
 
 Loads workflow definition from a graphml file.
 
-From the [The GraphML File Format](http://graphml.graphdrawing.org/)web site : 
+From the [The GraphML File Format](http://graphml.graphdrawing.org/) web site : 
 
 > GraphML is a comprehensive and easy-to-use file format for graphs. It consists of a language core to describe the structural 
 properties of a graph and a flexible extension mechanism to add application-specific data.
