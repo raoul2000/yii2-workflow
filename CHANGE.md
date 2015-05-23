@@ -8,6 +8,7 @@
 - class `WorkflowPhpSource` has been renamed `WorkflowFileSource`
 - the `namespace` configuration setting has been removed from the source component
 - add configuration attribute `definitionLoader` to `WorkflowFileSource`
+- `IWorkflowDefinitionProvider` has been moved to namespace `raoul2000\workflow\source\file`
 
 The `WorkflowFileSource` component is dedicated to load workflow definition from *any file*, for this reason, 
 it relies on a *WorkflowDefinitionLoader* component that is used to :
