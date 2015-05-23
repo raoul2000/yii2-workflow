@@ -2,7 +2,7 @@
 
 namespace tests\codeception\unit\models;
 
-use raoul2000\workflow\base\IWorkflowDefinitionProvider;
+use raoul2000\workflow\source\file\IWorkflowDefinitionProvider;
 
 class Item06Workflow implements IWorkflowDefinitionProvider
 {

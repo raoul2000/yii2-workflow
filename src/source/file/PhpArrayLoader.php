@@ -19,7 +19,7 @@ class PhpArrayLoader extends WorkflowDefinitionLoader {
 	/**
 	 * @var string path where the php file to load is located
 	 */
-	public $path = '@app/models/workflows';
+	public $path = '@app/models';
 	
 	/**
 	 * Loads and returns the workflow definition available as a PHP array in a file.

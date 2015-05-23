@@ -9,6 +9,11 @@ use yii\base\InvalidConfigException;
 
 class PhpClassLoader extends WorkflowDefinitionLoader {
 	/**
+	 * yii2 alias name containing the namespace value to use to load definition provider class.
+	 * If this alias is defined, it take precedence over the *namespace* configuration attribute.
+	 */
+	const NAMESPACE_ALIAS_NAME = '@workflowDefinitionNamespace';
+	/**
 	 * @var string namespace where workflow definition class are located
 	 */
 	public $namespace = 'app\models';
@@ -28,8 +33,9 @@ class PhpClassLoader extends WorkflowDefinitionLoader {
 		} catch ( \ReflectionException $e) {
 			throw new WorkflowException('failed to load workflow definition : '.$e->getMessage());
 		}	
-		if( ! method_exists($defProvider, 'getDefinition')) {
-			throw new WorkflowException('Invalid workflow provider class : '.$wfClassname);
+		if( ! $defProvider instanceof IWorkflowDefinitionProvider ) {
+			throw new WorkflowException('Invalid workflow provider : class '.$wfClassname
+				.' doesn\'t implement \raoul2000\workflow\source\file\IWorkflowDefinitionProvider');
 		}
 		
 		return $this->parse($workflowId, $defProvider->getDefinition(), $source);
@@ -44,6 +50,19 @@ class PhpClassLoader extends WorkflowDefinitionLoader {
 	 */
 	public function getClassname($workflowId)
 	{
-		return $this->namespace . '\\' . $workflowId;
+		return $this->getNameSpace() . '\\' . $workflowId;
 	}	
+
+	/**
+	 * Returns the namespace value used to load the workflow definition provider class.
+	 * If the alias with name self::NAMESPACE_ALIAS_NAME is found, it takes precedence over the configured *namespace* 
+	 * attribute.
+	 * @return string the namespace value
+	 */
+	public function getNameSpace()
+	{
+		$nsAlias = Yii::getAlias(self::NAMESPACE_ALIAS_NAME,false);
+		
+		return   $nsAlias === false ? $this->namespace : $nsAlias;
+	}
 }

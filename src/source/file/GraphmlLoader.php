@@ -11,7 +11,7 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 	/**
 	 * @var string path where the graphml file to load is located
 	 */
-	public $path = '@app/models/workflows';
+	public $path = '@app/models';
 
 	/**
 	 * Maps a named attribute with a id attribute defined in the input graphml file.

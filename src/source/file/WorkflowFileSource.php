@@ -62,10 +62,6 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 */
 	public $definitionLoader;
 	/**
-	 * @var Object reference to the parser to use with this WorkflowFileSource
-	 */
-	private $_parser;
-	/**
 	 * @var array list of all workflow definition indexed by workflow id
 	 */
 	private $_workflowDef = [];
