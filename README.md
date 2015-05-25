@@ -44,7 +44,6 @@ Here is the PHP class that implements the definition for our workflow :
 
 *PostWorkflow.php in @app/models*
 ```php
-<?php
 namespace app\models;
 
 class PostWorkflow implements \raoul2000\workflow\base\IWorkflowDefinitionProvider 
@@ -70,14 +69,12 @@ class PostWorkflow implements \raoul2000\workflow\base\IWorkflowDefinitionProvid
 
 ## Attach To The Model
 
-Now let's have a look to our Post model. We decide to store the status of a post in a column named `status` of type STRING(40). 
+Now let's have a look to our Post model: we store the status of a post in a column named `status` of type STRING(40). 
 
 The last step is to associate the workflow definition with posts models. To do so we must declare the *SimpleWorkflowBehavior* behavior 
 in the Post model class and let the default configuration settings do the rest.
  
 ```php
-<?php
-
 namespace app\models;
 /**
  * @property integer $id
@@ -120,8 +117,8 @@ If you do the same thing but instead of *draft* set the status to *publish* and 
 That's because in your workflow definition the **initial status** is  set to *draft* and not *publish*.
 
 Ok, one more example for the fun ! This time we are not going to perform the transition when the Post is saved (like we did in the previous
-example), but immediately by invoking the `sendToStatus` method. Our Post is going to try to reach status *publish* passing through *deleted* 
-which is strictly forbidden by the workflow. Will it be successful in this risky attempt of breaking workflow rules ?   
+example), but immediately, by invoking the `sendToStatus` method. Our Post is going to try to reach status *publish* passing through *deleted* 
+which is strictly forbidden by the workflow. Will it be successful in this risky attempt to break workflow rules ?   
 
 ```php
 $post = new Post();
