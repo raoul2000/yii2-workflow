@@ -42,7 +42,7 @@ Let's define a very *simple workflow* that will be used to manage posts in a bas
 
 Here is the PHP class that implements the definition for our workflow :
 
-*PostWorkflow.php in @app/models*
+`@app/models/PostWorkflow.php`
 ```php
 namespace app\models;
 
@@ -74,6 +74,7 @@ Now let's have a look to our Post model: we store the status of a post in a colu
 The last step is to associate the workflow definition with posts models. To do so we must declare the *SimpleWorkflowBehavior* behavior 
 in the Post model class and let the default configuration settings do the rest.
  
+`@app/models/Post.php` 
 ```php
 namespace app\models;
 /**
