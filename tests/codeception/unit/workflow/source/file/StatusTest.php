@@ -11,6 +11,8 @@ use raoul2000\workflow\source\file\WorkflowFileSource;
 use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
 use raoul2000\workflow\base\Workflow;
+use raoul2000\workflow\base\StatusInterface;
+use raoul2000\workflow\base\TransitionInterface;
 
 
 class StatusTest extends TestCase
@@ -100,5 +102,5 @@ class StatusTest extends TestCase
     		$this->src->getWorkflow('wid');
     		verify('status instances are the same', spl_object_hash($this->src->getStatus('wid/A')) )->equals(spl_object_hash($this->src->getStatus('wid/A')));
     	});
-    }
+    }  
 }

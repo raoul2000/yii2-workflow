@@ -9,6 +9,8 @@ use yii\base\InvalidConfigException;
 use tests\codeception\unit\models\Item01;
 use raoul2000\workflow\base\Workflow;
 use raoul2000\workflow\base\Status;
+use raoul2000\workflow\base\StatusInterface;
+use raoul2000\workflow\source\file\WorkflowFileSource;
 
 class WorkflowObjectTest extends TestCase
 {
@@ -79,4 +81,28 @@ class WorkflowObjectTest extends TestCase
     		]);
     	});
     }
+    public function testWorkflowAccessorSuccess()
+    {
+    	$src = new WorkflowFileSource();
+    	$src->addWorkflowDefinition('wid', [
+    		'initialStatusId' => 'A',
+    		'status' => [
+    			'A' => [
+    				'label' => 'label A',
+    				'transition' => ['B','C']
+    			],
+    			'B' => [],
+    			'C' => []
+    		]
+    	]);
+    	$w = $src->getWorkflow('wid');
+    	verify_that($w != null);
+    		
+    	$this->specify('initial status can be obtained through workflow',function() use($w) {
+    
+    		expect_that($w->getInitialStatus() instanceof StatusInterface);
+    		expect_that($w->getInitialStatus()->getId() == $w->getInitialStatusId());
+
+    	});
+    }    
 }

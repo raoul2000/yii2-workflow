@@ -8,11 +8,20 @@ use tests\codeception\unit\models\Item01;
 use raoul2000\workflow\base\Workflow;
 use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
+use raoul2000\workflow\source\file\WorkflowFileSource;
+use raoul2000\workflow\base\TransitionInterface;
+use raoul2000\workflow\base\WorkflowInterface;
 
 class StatusObjectTest extends TestCase
 {
 	use\Codeception\Specify;
-
+	
+	protected function setUp()
+	{
+		parent::setUp();
+		$this->src = new WorkflowFileSource();
+	}
+	
 	public function testStatusCreationSuccess()
 	{
 		$this->specify('create a status instance', function ()
@@ -24,7 +33,6 @@ class StatusObjectTest extends TestCase
 			expect("status id is 'draft'", $s->getId())->equals('draft');
 			expect("workflow id is 'workflow1'", $s->getWorkflowId())->equals('workflow1');
 			expect("label is empty string", $s->getLabel())->equals('');
-			expect("empty out going transition set", count($s->getTransitions()))->equals(0);
 		});
 
 		$this->specify('create a status instance with a label', function ()
@@ -136,65 +144,130 @@ class StatusObjectTest extends TestCase
 			]);
 		});
 	}
-	public function testAddTransitionSuccess()
+	
+	public function testCreateWithSourceSuccess()
 	{
-		$this->specify('create a status instance with transition', function ()
+		$this->specify('create a status instance with source component', function ()
 		{
+			$src = Yii::createObject([
+				'class' => WorkflowFileSource::className()
+			]);
+			
 			$start = new Status([
 				'id' => 'draft',
-				'workflowId' => 'workflow1'
+				'workflowId' => 'workflow1',
+				'source' => $src
 			]);
 
-			$end = new Status([
-				'id' => 'published',
-				'workflowId' => 'workflow1'
-			]);
-
-			$transition = new Transition([
-				'start' => $start,
-				'end' => $end
-			]);
-
-			$start->addTransition($transition);
-
-			verify('$start status has one transition',count($start->getTransitions()))->equals(1);
-			verify('$end status has no transition',count($end->getTransitions()))->equals(0);
+			verify('a source component is available', $start->getSource())->notNull();
 		});
 	}
 
-	public function testAddTransitionFails1()
+	public function testCreateWithSourceFails1()
 	{
-		$this->specify('an exception is thrown if empty transition argument is provided', function ()
+		$this->specify('create a status instance with an invalid source component', function ()
+		{
+			$src = new \stdClass();
+			
+			$this->setExpectedException(
+				'yii\base\InvalidConfigException',
+				'The "source" property must implement interface raoul2000\workflow\source\IWorkflowSource'
+			);				
+			$start = new Status([
+				'id' => 'draft',
+				'workflowId' => 'workflow1',
+				'source' => $src
+			]);
+		});		
+	}
+	
+	public function testCreateWithSourceFails2()
+	{
+		$this->specify('create a status instance with an invalid source component', function ()
+		{
+			$this->setExpectedException(
+				'yii\base\InvalidConfigException',
+				'The "source" property must implement interface raoul2000\workflow\source\IWorkflowSource'
+			);
+			new Status([
+				'id' => 'draft',
+				'workflowId' => 'workflow1',
+				'source' => ''
+			]);
+		});
+	}	
+	
+	public function testStatusAccessorSuccess()
+	{
+		$this->src->addWorkflowDefinition('wid', [
+			'initialStatusId' => 'A',
+			'status' => [
+				'A' => [
+					'label' => 'label A',
+					'transition' => ['B','C']
+				],
+				'B' => [],
+				'C' => []
+			]
+		]);
+		$w = $this->src->getWorkflow('wid');
+		verify_that($w != null);
+		 
+		$this->specify('transitions can be obtained through status',function() {
+	
+			$status = $this->src->getStatus('wid/A');
+	
+			expect_that($status != null);
+	
+			$tr = $status->getTransitions();
+	
+			expect_that(is_array($tr));
+			expect(count($tr))->equals(2);
+	
+			$keys = array_keys($tr);
+			
+			expect($keys)->equals(['wid/B','wid/C']);
+			expect_that( $tr['wid/B'] instanceof TransitionInterface);
+			expect_that( $tr['wid/C'] instanceof TransitionInterface);
+		});
+		
+		$this->specify('parent workflow can be obtained through status',function() {
+		
+			$status = $this->src->getStatus('wid/A');
+		
+			expect_that($status != null);
+		
+			$wrk = $status->getWorkflow();
+		
+			expect_that($wrk != null);
+			verify_that( $wrk instanceof WorkflowInterface);
+			verify($wrk->getId())->equals('wid');
+		});		
+	}		
+	
+	public function testStatusAccessorFails()
+	{
+		$st = new Status([
+			'id' => 'draft',
+			'workflowId' => 'workflow1'
+		]);
+		
+		$this->specify('Failed to get transitions when no source is configured', function () use($st)
 		{
 			$this->setExpectedException(
 				'raoul2000\workflow\base\WorkflowException',
-				'"transition" object must implement raoul2000\workflow\baseTransition'
+				'no workflow source component available'
 			);
-			$start = new Status([
-				'id' => 'draft',
-				'workflowId' => 'workflow1'
-			]);
-
-			$start->addTransition(null);
-
+			$st->getTransitions();
 		});
-	}
-	public function testAddTransitionFails2()
-	{
-		$this->specify('an exception is thrown if Transition instance is not provided', function ()
+	
+		$this->specify('Failed to get workflow object when no source is configured', function () use($st)
 		{
 			$this->setExpectedException(
 				'raoul2000\workflow\base\WorkflowException',
-				'"transition" object must implement raoul2000\workflow\baseTransition'
+				'no workflow source component available'
 			);
-			$start = new Status([
-				'id' => 'draft',
-				'workflowId' => 'workflow1'
-			]);
-
-			$start->addTransition($start);
-
-		});
-	}
-
+			$st->getWorkflow();
+		});		
+	}	
 }

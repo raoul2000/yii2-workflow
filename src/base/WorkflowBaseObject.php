@@ -6,6 +6,8 @@ use yii\base\InvalidConfigException;
 use yii\base\InvalidCallException;
 use yii\base\InvalidParamException;
 use yii\base\UnknownPropertyException;
+use raoul2000\workflow\source\IWorkflowSource;
+
 
 /**
  * This class is the base class for Workflow, Transition and Status objects.
@@ -17,17 +19,32 @@ use yii\base\UnknownPropertyException;
  */
 abstract class WorkflowBaseObject extends Object
 {
-	private $_metadata = [];
-
 	/**
-	 *
+	 * @var array optional Meatadata are user defined properties where array key is the property name 
+	 * and array value the property value
+	 */
+	private $_metadata = [];
+	/**
+	 * @var IWorkflowSource workflow source component used to create this Status instance
+	 */
+	private $_source;
+	/**
+	 * Construct a workflow object.
 	 * @param array $config
 	 */
 	public function __construct($config = [])
 	{
-		if ( ! empty($config['metadata']) && is_array($config['metadata'])) {
+		if ( array_key_exists('metadata', $config) && is_array($config['metadata'])) {
 			$this->_metadata = $config['metadata'];
 			unset($config['metadata']);
+		}
+		
+		if( array_key_exists('source', $config) ) {
+			$this->_source = $config['source'];
+			if( ! $this->_source instanceof IWorkflowSource){
+				throw new InvalidConfigException('The "source" property must implement interface raoul2000\workflow\source\IWorkflowSource');
+			}
+			unset($config['source']);
 		}
 		parent::__construct($config);
 	}
@@ -79,5 +96,15 @@ abstract class WorkflowBaseObject extends Object
 			throw new WorkflowException("Invalid metadata name : non empty string expected");
 		}
 		return array_key_exists($paramName, $this->_metadata);
+	}
+	/**
+	 * Returns the source workflow component used to create this instance.
+	 * 
+	 * @return \raoul2000\workflow\base\IWorkflowSource the source instance or null if no 
+	 * source was been provided
+	 */
+	public function getSource()
+	{
+		return $this->_source;
 	}
 }

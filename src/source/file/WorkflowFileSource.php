@@ -199,6 +199,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 			$stDef['workflowId'] = $wId;
 			$stDef['id'] = $canonicalStId;
 			$stDef['label'] = (isset($stDef['label']) ? $stDef['label'] : Inflector::camel2words($stId, true));
+			$stDef['source'] = $this;
 			
 			$this->_s[$canonicalStId] = Yii::createObject($stDef);	
 		}
@@ -241,10 +242,11 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 					if ( $end == null ) {
 						throw new WorkflowException('end status not found : start(id='.$statusId.') end(id='.$endStId.')');
 					} else {
-						$trCfg['class'] = $this->getClassMapByType(self::TYPE_TRANSITION);
-						$trCfg['start'] = $start;
-						$trCfg['end'  ] = $end;
-						$transitions[] = Yii::createObject($trCfg);
+						$trCfg['class' ] = $this->getClassMapByType(self::TYPE_TRANSITION);
+						$trCfg['start' ] = $start;
+						$trCfg['end'   ] = $end;
+						$trCfg['source'] = $this;
+						$transitions[$endId] = Yii::createObject($trCfg);
 					}					
 				}
 			}
@@ -293,6 +295,8 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 					throw new WorkflowException('failed to load Workflow '.$id.' : missing initial status id');
 				}
 				$def['class'] = $this->getClassMapByType(self::TYPE_WORKFLOW);
+				$def['source'] = $this;
+				
 				$workflow = Yii::createObject($def);
 			}
 			$this->_w[$id] = $workflow;

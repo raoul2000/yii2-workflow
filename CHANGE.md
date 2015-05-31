@@ -1,3 +1,26 @@
+#version 0.0.11
+- update unit tests
+- check interface implemented instead of class
+- remove *StatusI.addTransition()* method
+- add workflow source component to WorkflowBaseObject constructor. Update Status and Workflow interface to enable accessing 
+workflow items from Status or Workflow.
+
+For instance it is now possible to do the following : 
+
+```php
+// let's get a status instance from our Post model
+$status = $post->getWorkflowStatus();
+
+// get an array containing out going Transitions objects 
+$status->getTransitions();
+
+// get the parent workflow
+$status->getWorkflow();
+
+// get the initial status of the parent workflow
+$status->getWorkflow()->getInitialStatus();
+```
+
 #version 0.0.10
 **Massive refactoring of the workflow source component architecture** to allow loading workflow definition from virtually
 *any* file (and not only PHP class).

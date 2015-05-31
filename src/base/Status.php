@@ -28,8 +28,7 @@ class Status extends WorkflowBaseObject implements StatusInterface
 	 * @var Transition[] list of all out-going transitions for this status
 	 */
 	private $_transitions = [];
-
-
+	
 	/**
 	 * Status constructor.
 	 *
@@ -69,18 +68,6 @@ class Status extends WorkflowBaseObject implements StatusInterface
 		parent::__construct($config);
 	}
 	/**
-	 * Add an out-going transition to this status.
-	 *
-	 * @param Transition $transition
-	 */
-	public function addTransition($transition)
-	{
-		if ( empty($transition) || ! $transition instanceof Transition) {
-			throw new WorkflowException('"transition" object must implement raoul2000\workflow\baseTransition');
-		}
-		$this->_transitions[$transition->getEndStatus()->getId()] = $transition;
-	}
-	/**
 	 * Returns the id of this status.
 	 *
 	 * Note that the status id returned must be unique inside the workflow it belongs to, but it
@@ -109,11 +96,24 @@ class Status extends WorkflowBaseObject implements StatusInterface
 		return $this->_workflow_id;
 	}
 	/**
-	 * @return Transition[] the list of out-going transitions for this status. Note that an empty array can be returned if this
-	 * status has no out-going transition (i.e. no other status can be reached).
+	 * 
+	 * @see \raoul2000\workflow\base\StatusInterface::getTransitions()
 	 */
 	public function getTransitions()
 	{
-		return $this->_transitions;
+		if( $this->getSource() === null) {
+			throw new WorkflowException('no workflow source component available');
+		}
+		return $this->getSource()->getTransitions($this->getId());
+	}
+	/**
+	 * @see \raoul2000\workflow\base\StatusInterface::getWorkflow()
+	 */
+	public function getWorkflow()
+	{
+		if( $this->getSource() === null) {
+			throw new WorkflowException('no workflow source component available');
+		}
+		return $this->getSource()->getWorkflow($this->getWorkflowId());		
 	}
 }

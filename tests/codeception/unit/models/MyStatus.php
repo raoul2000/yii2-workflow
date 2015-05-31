@@ -37,5 +37,14 @@ class MyStatus implements StatusInterface
 		// TODO: Auto-generated method stub
 
 	}
+	
+	/* (non-PHPdoc)
+	 * @see \raoul2000\workflow\base\StatusInterface::getWorkflow()
+	 */
+	public function getWorkflow() {
+		// TODO: Auto-generated method stub
+
+	}
+
 
 }
