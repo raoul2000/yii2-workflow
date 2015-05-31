@@ -22,6 +22,11 @@ Key Concepts
 * [Events](concept-events.md)
 * [Attribute Validation](concept-validation.md)
 
+Workflow Components
+-------------------
+
+* [Behavior](workflow-behavior.md)
+* [Source](workflow-creation.md)
 
 Helpers
 -------
