@@ -147,6 +147,5 @@ class SpaceShip extends \yii\db\ActiveRecord
 
 You can create your own Workflow Source Component by implementing the `\raoul2000\workflow\source\IWorkflowSource` interface.
 
-TBD
  
 

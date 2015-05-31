@@ -26,7 +26,8 @@ Workflow Components
 -------------------
 
 * [Behavior](workflow-behavior.md)
-* [Source](workflow-creation.md)
+* [File Source](source-file.md)
+
 
 Helpers
 -------
