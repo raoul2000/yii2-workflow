@@ -168,7 +168,7 @@ class StatusObjectTest extends TestCase
 		{
 			$this->setExpectedException(
 				'raoul2000\workflow\base\WorkflowException',
-				'"transition" must be an instance of Transition'
+				'"transition" object must implement raoul2000\workflow\baseTransition'
 			);
 			$start = new Status([
 				'id' => 'draft',
@@ -185,7 +185,7 @@ class StatusObjectTest extends TestCase
 		{
 			$this->setExpectedException(
 				'raoul2000\workflow\base\WorkflowException',
-				'"transition" must be an instance of Transition'
+				'"transition" object must implement raoul2000\workflow\baseTransition'
 			);
 			$start = new Status([
 				'id' => 'draft',

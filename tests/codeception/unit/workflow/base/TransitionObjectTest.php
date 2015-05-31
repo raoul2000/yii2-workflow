@@ -79,7 +79,7 @@ class TransitionObjectTest extends TestCase
 		{
 			$this->setExpectedException(
 				'raoul2000\workflow\base\WorkflowException',
-				'Start status must be an instance of Status'
+				'Start status object must implement raoul2000\workflow\base\StatusInterface'
 			);
 			new Transition([
 				'start'   => new \stdClass()
@@ -127,7 +127,7 @@ class TransitionObjectTest extends TestCase
 		{
 			$this->setExpectedException(
 				'raoul2000\workflow\base\WorkflowException',
-				'End status must be an instance of Status'
+				'End status object must implement raoul2000\workflow\base\StatusInterface'
 			);
 			new Transition([
 				'start' => new Status([

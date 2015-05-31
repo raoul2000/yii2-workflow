@@ -76,7 +76,7 @@ class Status extends WorkflowBaseObject implements StatusInterface
 	public function addTransition($transition)
 	{
 		if ( empty($transition) || ! $transition instanceof Transition) {
-			throw new WorkflowException('"transition" must be an instance of Transition');
+			throw new WorkflowException('"transition" object must implement raoul2000\workflow\baseTransition');
 		}
 		$this->_transitions[$transition->getEndStatus()->getId()] = $transition;
 	}

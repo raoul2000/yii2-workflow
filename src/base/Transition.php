@@ -37,8 +37,8 @@ class Transition extends WorkflowBaseObject implements TransitionInterface
 		if ( ! empty($config['start'])) {
 			$this->_startStatus = $config['start'];
 			unset($config['start']);
-			if ( ! $this->_startStatus instanceof Status) {
-				throw new WorkflowException('Start status must be an instance of Status');
+			if ( ! $this->_startStatus instanceof StatusInterface ) {
+				throw new WorkflowException('Start status object must implement raoul2000\workflow\base\StatusInterface');
 			}
 		} else {
 			throw new InvalidConfigException('missing start status');
@@ -48,7 +48,7 @@ class Transition extends WorkflowBaseObject implements TransitionInterface
 			$this->_endStatus = $config['end'];
 			unset($config['end']);
 			if ( ! $this->_endStatus instanceof Status) {
-				throw new WorkflowException('End status must be an instance of Status');
+				throw new WorkflowException('End status object must implement raoul2000\workflow\base\StatusInterface');
 			}
 
 		} else {
