@@ -144,6 +144,9 @@ To be able to manage our Post model inside the workflow, we must take care about
 - add an attribute that will be used to store the current status of a post. We will use attribute `status` with type VARCHAR(40) for
 our example, but it can be any attribute.
 
+Attaching the behavior to our model is a standard Yii2 operation. For more information on Yii2 Behaviors please 
+refer the [The Definitive Guide to Yii2.0](http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html).
+
 `Post.php in @app/models`
 
 ```php
@@ -165,7 +168,7 @@ class Post extends \yii\db\ActiveRecord
     // ...
 ```
 
-For more information on Yii2 Behaviors please refer the [The Definitive Guide to Yii2.0](http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html).
+We know have a *Post* model with workflow capabilities. Let's see how we can use it.
 
 ## Basic Status Usage 
  
@@ -180,7 +183,7 @@ $post->status = 'published';
 ```
 
 When you assign a value to the `status` attribute, no verification is done against the workflow and the *SimpleWorkflowBehavior* is
-not event invoked in any way. **The status validation occurs only when the status attribute is saved** : at this time only, the
+not event invoked in any way. **The status validation occurs when the status attribute is saved** : at this time only, the
 post object is considered as really sent to a specific status.
 
 The status validation consists in verifying that the model can perform the transition between its actual status and the value assigned
@@ -201,7 +204,7 @@ When we run this code, we get an Exception !
 Could it be more clear ? Ok, maybe it could. Let's see in detail what just happened. 
 
 The *SimpleWorkflowBehavior* enters in action when the Post is saved. At this point it tests if the transitions is possible
-between the current status (managed internally by the behavior) and the final one (assigned to the `status` attribute. 
+between the current status (managed internally by the behavior) and the final one (assigned to the `status` attribute). 
 In our case, there was no current status (the object has just been created) and the final
 status has been set to *published*, so, from the *SimpleWorkflowBehavior* point of view, we are dealing with the following transition : 
 
@@ -278,12 +281,12 @@ is committed immediately.
 ## Getting the Status
 
 If status assignment can be done by assigning a value to the `status` attribute, getting the status value of a model should not involve
-accessing this attribute directly but use the method `getWorkflowStatus()` instead. However in certain circumstances, reading the 
-status attribute value is acceptable but then it is your responsibility to ensure that both values are synchronized.
+accessing this attribute directly but use the method `getWorkflowStatus()` instead. However in certain circumstances, reading the status 
+attribute value is acceptable but then it is your responsibility to ensure that both values are synchronized.
 
 ### getWorkflowStatus() vs attribute
 
-When you call `getWorkflowStatus()` on a model attached to the *SimpleWorkflowBehavior*, you will get the instance of the  
+When you call `getWorkflowStatus()` on a model attached to the *SimpleWorkflowBehavior*, you will get the instance of the 
 status your model is currently in. The type of the object returned in this case is *\raoul2000\workflow\base\Status*. If your model is
 not in a workflow, `getWorkflowStatus()` returns NULL.
 
