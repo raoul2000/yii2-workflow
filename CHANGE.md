@@ -1,7 +1,37 @@
+#version 0.0.12
+- add status conversion map setter to the class `raoul2000\workflow\base\StatusIdConverter`. The map is still required by the constructor
+but it can be updated at runtime using the `setMap()` method. (see [dynamic maps for status conversion issue](https://github.com/raoul2000/yii2-workflow/issues/9)) 
+- Both status converter and status accessor components can now be configured as an object instance. 
+
+For example, assuming that variable `$myConverter` contains a reference to an object instance 
+that implements `raoul2000\workflow\base\StatusIdConverter`, you can now write :
+
+```php
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+    	return [
+			[
+    			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+    			'statusConverter' => $myConverter
+    		]
+    	];
+    }
+}
+```
+In the previous version it was only possible to initialize the 'statusConverter' parameter to a string, representing the id of 
+a component registered in `Yii::$app`.
+
+This also applies to 'statusAccessor' parameter.
+
+- lazy component initialization for status converter and status accessor. If configured, these component are actually initialized (assigned)
+and validated when accessed for the first time.
+
 #version 0.0.11
 - update unit tests
 - check interface implemented instead of class
-- remove *StatusI.addTransition()* method
+- remove *StatusInterface.addTransition()* method
 - add workflow source component to WorkflowBaseObject constructor. Update Status and Workflow interface to enable accessing 
 workflow items from Status or Workflow.
 

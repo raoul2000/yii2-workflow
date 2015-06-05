@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Object;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
+use yii\base\InvalidCallException;
 
 /**
  * This class implements a status Id converter.
@@ -24,8 +25,8 @@ use yii\base\Exception;
  *     'post/corrected' => 25,
  *     'post/published' => 1,
  *     'post/archived' => 6,
- *     'null' => 'some value',
- *     'workflow/Status' => 'null'
+ *     StatusIdConverter::VALUE_NULL => 'some value',
+ *     'workflow/Status' => StatusIdConverter::VALUE_NULL
  * ]
  * </pre>
  *
@@ -50,7 +51,9 @@ class StatusIdConverter extends Object implements IStatusIdConverter
 	private $_map = [];
 
 	/**
-	 * Contruct an instance of the StatusIdConverter
+	 * Contruct an instance of the StatusIdConverter.
+	 * The parameter `map` must be defined in the configuration array passed as argument. It contains the 
+	 * associative array used to convert statuses.
 	 *
 	 * @param array $config
 	 * @throws InvalidConfigException
@@ -58,10 +61,10 @@ class StatusIdConverter extends Object implements IStatusIdConverter
 	public function __construct($config = [])
 	{
 		if ( ! empty($config['map'])) {
-			$this->_map = $config['map'];
-			if ( ! is_array($this->_map)) {
+			if ( ! is_array($config['map'])) {
 				throw new InvalidConfigException('The map must be an array');
 			}
+			$this->_map = $config['map'];
 			unset($config['map']);
 		} else {
 			throw new InvalidConfigException('missing map');
@@ -74,6 +77,19 @@ class StatusIdConverter extends Object implements IStatusIdConverter
 	public function getMap()
 	{
 		return $this->_map;
+	}
+	/**
+	 * Replace the convertion map initialized in constructor by the one passed as argument.
+	 * 
+	 * @param array $map
+	 * @throws InvalidCallException
+	 */
+	public function setMap($map)
+	{
+		if ( ! is_array($map)) {
+			throw new InvalidCallException('The map argument must be an array');
+		}
+		$this->_map = $map;		
 	}
 	/**
 	 * (non-PHPdoc)

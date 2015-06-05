@@ -88,14 +88,30 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public $source = 'workflowSource';
 	/**
-	 * @var string name of an existing status Id converter component, to use with this behavior. When NULL, no status converter
-	 * component will be used.
-	 */
+	 *
+	 * @var NULL|string|array|object The status converter component definition or NULL (default) if no
+	 * status converter is used by this behavior.<br/>
+	 * When not null, the value of this attribute can be specified in one of the following forms :
+	 *
+	 * - string : name of an existing status converter component registered in the current Yii::$app.
+	 * - object : the instance of the status converter
+	 *
+	 * Note that the status converter configured here must implement the
+	 * `raoul2000\workflow\base\IStatusIdConverter` interface.
+	 */	
 	public $statusConverter = null;
 	/**
-	 * @var string Name of the status accessor component used by this behavior to set/get status values. By default, no external
-	 * accessor is used and the behavior directly access the the status attribute in the owner model.
-	 */
+	 *
+	 * @var NULL|string|array|object The status accessor component definition or NULL (default) if no
+	 * status accessor is used by this behavior.<br/>
+	 * When not null, the value of this attribute can be specified in one of the following forms :
+	 *
+	 * - string : name of an existing status accessor component registered in the current Yii::$app.
+	 * - object : the instance of the status converter
+	 *
+	 * Note that the status accessor configured here must implement the
+	 * `raoul2000\workflow\base\IStatusAccessor` interface.
+	 */	
 	public $statusAccessor = null;
 	/**
 	 * @var string name of the event sequence provider component. If the component does not exist it is created
@@ -177,9 +193,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * At initialization time, following actions are performed :
 	 * 
 	 * - get a reference to the workflow source component. If it doesn't exist, it is created.
-	 * - get a reference to the event model component or create it if needed
-	 * - get a reference to the status converter component
-	 * - get a reference to the status accessor component
+	 * - get a reference to the event model component or create it if not configured
 	 *  
 	 */
 	public function init()
@@ -191,6 +205,7 @@ class SimpleWorkflowBehavior extends Behavior
 		}
 
 		// init source
+		
 		if (empty($this->source)) {
 			throw new InvalidConfigException('The "source" configuration for the Behavior can\'t be empty.');
 		} elseif (  ! Yii::$app->has($this->source)) {
@@ -199,6 +214,7 @@ class SimpleWorkflowBehavior extends Behavior
 		$this->_wfSource = Yii::$app->get($this->source);
 
 		// init Event Sequence
+		
 		if ( $this->eventSequence == null) {
 			$this->_eventSequence = null;
 		} elseif ( is_string($this->eventSequence)) {
@@ -209,15 +225,6 @@ class SimpleWorkflowBehavior extends Behavior
 		} else {
 			throw new InvalidConfigException('Invalid "eventSequence" value.');
 		}
-
-		// init status converter
-		if ( ! empty($this->statusConverter) ) {
-			$this->_statusConverter = Yii::$app->get($this->statusConverter);
-		}
-		// init status accessor
-		if ( ! empty($this->statusAccessor) ) {
-			$this->_statusAccessor = Yii::$app->get($this->statusAccessor);
-		}
 	}
 	/**
 	 * Attaches the behavior to the model.
@@ -225,8 +232,9 @@ class SimpleWorkflowBehavior extends Behavior
 	 * This method is automatically called by Yii. The behavior can successfully be attached to the model if :
 	 *
 	 * - the model is an instance of yii\db\BaseActiveRecord
-	 * - the model has a attribute to hold the status value. The name of this attribute can be configured  when the behavior
-	 * is created (see statusAttribute). By Default the status attribute name is 'status'. Note that a property name can also be used
+	 * - the model has a attribute to hold the status value. The name of this attribute can be configured using the `statusAttribute`
+	 * configuration parameter at construciton time.<br/>
+	 * By Default the status attribute name is 'status'. Note that a property name can also be used
 	 * but in this case you must provide a suitable Status Accessor component to handle status persistence.
 	 *
 	 * If previous requirements are met, the internal status value is initialized.
@@ -302,7 +310,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public function initStatus()
 	{
-		if ( $this->_statusAccessor != null) {
+		if ( $this->getStatusAccessor() != null) {
 			$oStatus = $this->_statusAccessor->readStatus($this->owner);
 		} else {
 			$oStatus = $this->getOwnerStatus();
@@ -438,7 +446,7 @@ class SimpleWorkflowBehavior extends Behavior
 			}
 		}
 
-		if ($this->_statusAccessor != null) {
+		if ($this->getStatusAccessor() != null) {
 			$this->_statusAccessor->updateStatus($this->owner, $newStatus);
 		}
 		return true;
@@ -741,16 +749,62 @@ class SimpleWorkflowBehavior extends Behavior
 	{
 		return $this->_wfSource;
 	}
+	
 	/**
-	 * Returns the status accessor.
+	 * Returns the status accessor instance used by this behavior or NULL
+	 * if no status accessor is used.
 	 * 
-	 * @return \raoul2000\workflow\IStatusAccessor|null returns the Status accessor component used by this behavior
-	 * or NULL if no status accessor is used.
+	 * @throws InvalidConfigException
+	 * @return NULL|\raoul2000\workflow\base\IStatusAccessor
 	 */
 	public function getStatusAccessor()
 	{
+		if ( empty($this->statusAccessor)) {
+			return null;
+		}
+		
+		if( ! isset($this->_statusAccessor)) {
+			if( is_string($this->statusAccessor)) {
+				$this->_statusAccessor = Yii::$app->get($this->statusAccessor);
+			}  elseif( is_object($this->statusAccessor)) {
+				$this->_statusAccessor = $this->statusAccessor;
+			} else {
+				throw new InvalidConfigException('invalid "statusAccessor" attribute : string or object expected');
+			}
+			if( ! $this->_statusAccessor instanceof IStatusAccessor ) {
+				throw new InvalidConfigException('the status converter must implement the IStatusAccessor interface');
+			}
+		}
+			
 		return $this->_statusAccessor;
 	}
+	/**
+	 * Returns the status converter instance used by this behavior or NULL
+	 * if no status converter is used.
+	 * 
+	 * @throws InvalidConfigException
+	 * @return NULL|\raoul2000\workflow\base\IStatusIdConverter
+	 */
+	public function getStatusConverter()
+	{
+		if ( empty($this->statusConverter) ) {
+			return null;
+		}
+		
+		if( ! isset($this->_statusConverter)) {
+			if( is_string($this->statusConverter)) {
+				$this->_statusConverter = Yii::$app->get($this->statusConverter);
+			}  elseif( is_object($this->statusConverter)) {
+				$this->_statusConverter = $this->statusConverter;
+			} else {
+				throw new InvalidConfigException('invalid "statusConverter" attribute : string or object expected');
+			}
+			if( ! $this->_statusConverter instanceof IStatusIdConverter ) {
+				throw new InvalidConfigException('the status converter must implement the IStatusConverter interface');
+			}
+		}
+		return $this->_statusConverter;
+	}	
 	/**
 	 * Returns the current Status instance.
 	 * 
@@ -859,7 +913,7 @@ class SimpleWorkflowBehavior extends Behavior
 	{
 		$ownerStatus = $this->owner->{$this->statusAttribute};
 
-		if ( $this->_statusConverter != null) {
+		if ( $this->getStatusConverter() != null) {
 			$ownerStatus = $this->_statusConverter->toSimpleWorkflow($ownerStatus);
 		}
 		return $ownerStatus;
@@ -878,7 +932,7 @@ class SimpleWorkflowBehavior extends Behavior
 		$this->_status = $status;
 
 		$statusId = ($status === null ? null : $status->getId());
-		if ($this->_statusConverter != null ) {
+		if ($this->getStatusConverter() != null ) {
 			$statusId = $this->_statusConverter->toModelAttribute($statusId);
 		}
 
@@ -898,7 +952,7 @@ class SimpleWorkflowBehavior extends Behavior
 			}
 			$this->_pendingEvents = [];
 
-			if ( $this->_statusAccessor) {
+			if ( $this->getStatusAccessor() != null) {
 				$this->_statusAccessor->commitStatus($this->owner);
 			}
 		}

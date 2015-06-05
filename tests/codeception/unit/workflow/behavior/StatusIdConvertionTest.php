@@ -52,6 +52,30 @@ class StatusIdConvertionTest extends TestCase
 			$this->assertEquals(null, $item->status);
 		});
 	}
+	
+	public function testConvertionOnAttachSuccess2()
+	{
+		$converter = new StatusIdConverter([
+			'map' => [
+				'Item04Workflow/A' => '1',
+				'Item04Workflow/C' => '2',
+				StatusIdConverter::VALUE_NULL => '55',
+				'Item04Workflow/B' => StatusIdConverter::VALUE_NULL
+			]
+		]);
+		
+		$item = new Item04();
+		$item->attachBehavior('workflow',[
+			'class' => SimpleWorkflowBehavior::className(),
+			'statusConverter' => $converter
+		]);
+		$this->specify('on attach, initialize status and convert NULL to status ID', function() use ($item) {
+			$this->assertEquals('Item04Workflow/B', $item->getWorkflowStatus()->getId());
+			$this->assertTrue($item->getWorkflow()->getId() == 'Item04Workflow');
+			$this->assertEquals(null, $item->status);
+		});
+	}	
+	
 	public function testConvertionOnAttachFails()
 	{
 		$item = new Item04();

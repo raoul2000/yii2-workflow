@@ -59,10 +59,10 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * and the rest of the name-value pairs will be used to initialize the corresponding object properties
 	 * - object : the instance of the workflow definition loader
 	 *
-	 * Note that in any case, the workflow definition loader configured here must implement the
+	 * Note that in all cases, the workflow definition loader configured here must implement the
 	 * `WorkflowDefinitionLoader` interface.
 	 *
-	 * If this attribute is not set then a default object of type `PhpClassLoader` is used.
+	 * If this attribute is not set then a default object of type `\raoul2000\workflow\source\file\PhpClassLoader` is used.
 	 */
 	public $definitionLoader;
 	/**

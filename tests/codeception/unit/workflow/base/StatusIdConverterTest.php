@@ -23,6 +23,10 @@ class StatusIdConverterTest extends TestCase
 		$this->specify(' the map parameter must be an array', function() {
 			Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter', 'map' => 'string']);
 		},['throws' => 'yii\base\InvalidConfigException']);
+		
+		$this->specify(' the map parameter must be a non empty array', function() {
+			Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter', 'map' => [] ]);
+		},['throws' => 'yii\base\InvalidConfigException']);		
 	}
 
 	public function testCreateSuccess()
@@ -37,7 +41,7 @@ class StatusIdConverterTest extends TestCase
 					StatusIdConverter::VALUE_NULL => '0'
 				]
 			]);
-		});
+		});	
 	}
 
 	public function testConvertionSuccess()
@@ -66,6 +70,38 @@ class StatusIdConverterTest extends TestCase
 		$this->assertEquals('Post/new', $c->toSimpleWorkflow(null));
 	}
 
+	public function testConvertionRuntimeMapAssignement()
+	{
+		$c = Yii::createObject([
+			'class'=> 'raoul2000\workflow\base\StatusIdConverter',
+			'map' => [
+				'Post/ready' => '1',
+				'Post/draft' => '2',
+				'Post/deleted' => '3',
+				StatusIdConverter::VALUE_NULL => '0',
+				'Post/new' => StatusIdConverter::VALUE_NULL
+			]
+		]);
+	
+		$this->assertEquals('1', $c->toModelAttribute('Post/ready'));
+		$this->assertEquals('2', $c->toModelAttribute('Post/draft'));
+		$this->assertEquals('3', $c->toModelAttribute('Post/deleted'));
+		
+		$c->setMap([
+			'Post/ready' => '11',
+			'Post/draft' => '22',
+			'Post/deleted' => '33',			
+			StatusIdConverter::VALUE_NULL => '0',
+			'Post/new' => StatusIdConverter::VALUE_NULL			
+		]);
+		$this->assertEquals('11', $c->toModelAttribute('Post/ready'));
+		$this->assertEquals('22', $c->toModelAttribute('Post/draft'));
+		$this->assertEquals('33', $c->toModelAttribute('Post/deleted'));		
+		$this->assertEquals(null, $c->toSimpleWorkflow(0));
+		$this->assertEquals('Post/new', $c->toSimpleWorkflow(null));	
+
+	}	
+	
 	public function testConvertionFails()
 	{
 		$c = Yii::createObject([
