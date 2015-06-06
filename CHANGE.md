@@ -1,5 +1,5 @@
 #version 0.0.12
-- add status conversion map setter to the class `raoul2000\workflow\base\StatusIdConverter`. The map is still required by the constructor
+- **add status conversion map setter** to the class `raoul2000\workflow\base\StatusIdConverter`. The map is still required by the constructor
 but it can be updated at runtime using the `setMap()` method. (see [dynamic maps for status conversion issue](https://github.com/raoul2000/yii2-workflow/issues/9)) 
 - Both status converter and status accessor components can now be configured as an object instance. 
 
@@ -25,9 +25,22 @@ a component registered in `Yii::$app`.
 
 This also applies to 'statusAccessor' parameter.
 
-- lazy component initialization for status converter and status accessor. If configured, these component are actually initialized (assigned)
+- **lazy component initialization** for status converter and status accessor. If configured, these component are actually initialized (assigned)
 and validated when accessed for the first time.
+- add **cache** to `WorkflowFileSource` component. If set, the `definitionCache` parameter defines the cache object to use.
 
+To initialize the `WorkflowFileSource` component to use a cache : 
+
+```php
+$config = [
+    'components' => [
+        'workflowSource' => [
+          'class' => 'raoul2000\workflow\source\file\WorkflowFileSource',
+          'definitionCache' => [
+          		'class' => 'yii\caching\FileCache',
+          ],
+        ],
+``` 
 #version 0.0.11
 - update unit tests
 - check interface implemented instead of class

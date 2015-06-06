@@ -51,10 +51,10 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	const DEFAULT_WDLOADER_CLASS = '\raoul2000\workflow\source\file\PhpClassLoader';
 	/**
 	 *
-	 * @var string|array|object The workflow definition loader user by this source component can be
-	 * be specified in one of the following forms :
+	 * @var string|array|\raoul2000\workflow\source\file\WorkflowDefinitionLoader The workflow definition loader used by this 
+	 * source component can be be specified in one of the following forms :
 	 *
-	 * - string : name of an existing workflow definition component registered in the current Yii::$app.
+	 * - string : ID of an existing workflow definition component registered in the current Yii::$app.
 	 * - a configuration array: the array must contain a class element which is treated as the object class,
 	 * and the rest of the name-value pairs will be used to initialize the corresponding object properties
 	 * - object : the instance of the workflow definition loader
@@ -65,6 +65,19 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * If this attribute is not set then a default object of type `\raoul2000\workflow\source\file\PhpClassLoader` is used.
 	 */
 	public $definitionLoader;
+	/**
+	 *
+	 * @var string|array|yii\caching\Cache The workflow definition cache used by this
+	 * source component can be be specified in one of the following forms :
+	 *
+	 * - string : ID of an existing cache component registered in the current Yii::$app.
+	 * - a configuration array: the array must contain a class element which is treated as the object class,
+	 * and the rest of the name-value pairs will be used to initialize the corresponding object properties
+	 * - object : the instance of the cache component
+	 *
+	 * By default no cache is used.
+	 */	
+	public $definitionCache;	
 	/**
 	 * @var array list of all workflow definition indexed by workflow id
 	 */
@@ -85,6 +98,10 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * @var object Workflow definition loader instance
 	 */
 	private $_dl;
+	/**
+	 * @var object workflow definition cache
+	 */
+	private $_dc;
 	/**
 	 * array key for status class in class map  
 	 */
@@ -150,7 +167,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 				$this->_dl = Yii::createObject([
 					'class' => self::DEFAULT_WDLOADER_CLASS
 				]);
-			}elseif( is_array($this->definitionLoader)) {
+			} elseif( is_array($this->definitionLoader)) {
 				$this->_dl = Yii::createObject($this->definitionLoader);
 			} elseif( is_string($this->definitionLoader)) {
 				$this->_dl = Yii::$app->get($this->definitionLoader);
@@ -164,6 +181,35 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 			}			
 		}
 		return $this->_dl;
+	}
+
+	/**
+	 * Return the workflow definition cache component used by this workflow source or NULL
+	 * if no cvache is used.
+	 * 
+	 * @throws InvalidConfigException
+	 * @return NULL|yii\caching\Cache
+	 */
+	public function getDefinitionCache()
+	{
+		if( !isset($this->definitionCache)) {
+			return null;
+		}
+		if( ! isset($this->_dc)) {
+			if( is_string($this->definitionCache)) {
+				$this->_dc = Yii::$app->get($this->definitionCache);
+			} elseif( is_array($this->definitionCache)) {
+				$this->_dc = Yii::createObject($this->definitionCache);
+			}  elseif( is_object($this->definitionCache)) {
+				$this->_dc = $this->definitionCache;
+			}  else {
+				throw new InvalidConfigException('invalid "definitionCache" attribute : string or object expected');
+			}
+			if( ! $this->_dc instanceof yii\caching\Cache ) {
+				throw new InvalidConfigException('the workflow definition cache must implement the yii\caching\Cache interface');
+			}	
+		}
+		return $this->_dc;
 	}
 	/**
 	 * Returns the status whose id is passed as argument.
@@ -322,7 +368,18 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 
 		if ( ! isset($this->_workflowDef[$id]) ) {
 			
-			$this->_workflowDef[$id] = $this->getDefinitionLoader()->loadDefinition($id,$this);
+			if( $this->getDefinitionCache() != null ) {
+				$cache = $this->getDefinitionCache();
+				$key = $cache->buildKey('yii2-workflow-def-'.$id);
+				if( $cache->exists($key) ) {
+					$this->_workflowDef[$id] = $cache->get($key);
+				} else {
+					$this->_workflowDef[$id] = $this->getDefinitionLoader()->loadDefinition($id,$this);
+					$cache->set($key, $this->_workflowDef[$id]);
+				}
+			} else {				
+				$this->_workflowDef[$id] = $this->getDefinitionLoader()->loadDefinition($id,$this);
+			}
 		}
 		return $this->_workflowDef[$id];
 	}
