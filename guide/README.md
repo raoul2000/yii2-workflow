@@ -29,8 +29,3 @@ Workflow Components
 * [File Source](source-file.md)
 
 
-Helpers
--------
-
-* [Scenario](helper-array.md)
-
