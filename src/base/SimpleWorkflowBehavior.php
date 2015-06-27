@@ -193,7 +193,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * At initialization time, following actions are performed :
 	 * 
 	 * - get a reference to the workflow source component. If it doesn't exist, it is created.
-	 * - get a reference to the event model component or create it if not configured
+	 * - get a reference to the event model component or create it if not configured.
 	 *  
 	 */
 	public function init()
@@ -228,15 +228,14 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 	/**
 	 * Attaches the behavior to the model.
-	 *
-	 * This method is automatically called by Yii. The behavior can successfully be attached to the model if :
-	 *
-	 * - the model is an instance of yii\db\BaseActiveRecord
-	 * - the model has a attribute to hold the status value. The name of this attribute can be configured using the `statusAttribute`
-	 * configuration parameter at construciton time.<br/>
-	 * By Default the status attribute name is 'status'. Note that a property name can also be used
-	 * but in this case you must provide a suitable Status Accessor component to handle status persistence.
-	 *
+	 * 
+	 * The operation is successful if the owner component has the appropriate attribute or property to store the workflow
+	 * status value. The name of this attribute or property is set to 'status' by default, but can be configured  
+	 * using the `statusAttribute` configuration parameter at construction time.<br/>
+	 * 
+	 * Note that using a property instead of a model attribute to store the status value is not recomender as it is then the developer
+	 * responsability to ensure that the workflow operations are consistent.
+	 *  
 	 * If previous requirements are met, the internal status value is initialized.
 	 *
 	 * @see \yii\base\Behavior::attach()
@@ -245,14 +244,17 @@ class SimpleWorkflowBehavior extends Behavior
 	public function attach($owner)
 	{
 		parent::attach($owner);
-		if ( ! ($this->owner instanceof BaseActiveRecord)) {
-			throw new InvalidConfigException('The attached model is not an instance of yii\db\BaseActiveRecord ('.get_class($this->owner).')');
+		
+		if( $this->owner instanceof \yii\db\BaseActiveRecord ) {
+			if( ! $this->owner->hasAttribute($this->statusAttribute) &&  ! $this->owner->hasProperty($this->statusAttribute) ) {
+				throw new InvalidConfigException('Attribute or property not found for owner model : \''.$this->statusAttribute.'\'');
+			}
+		}elseif($this->owner instanceof \yii\base\Object) {
+			if(   ! $this->owner->hasProperty($this->statusAttribute) ) {
+				throw new InvalidConfigException('Property not found for owner model : \''.$this->statusAttribute.'\'');
+			}			
 		}
-		if ( $this->owner->hasAttribute($this->statusAttribute) || $this->owner->hasProperty($this->statusAttribute) ) {
-			//
-		} else {
-			throw new InvalidConfigException('Attribute or property not found for owner model : \''.$this->statusAttribute.'\'');
-		}
+		
 		$this->initStatus();
 		if( ! $this->hasWorkflowStatus()) {
 			$this->doAutoInsert();
@@ -984,7 +986,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public static function isAttachedTo($model)
 	{
-		if ( $model instanceof BaseActiveRecord) {
+		if ( $model instanceof  yii\base\Component) {
 			foreach ($model->getBehaviors() as $behavior) {
 				if ($behavior instanceof SimpleWorkflowBehavior) {
 					return true;

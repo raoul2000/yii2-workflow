@@ -1,3 +1,11 @@
+#version 0.0.13
+- the *SimpleWorkflowBehavior* can now be safely attached to any object that inherits from \yii\base\Object.
+
+**warning** : The *SimpleWorkflowBehavior* has been first designed to be attached to an `ActiveRecord` instance and thus integrates in the life cycle
+of such objects. By installing event handlers on various `ActiveRecord` events, it automatically handles status persistence and restore. If the behavior
+is attached to another type of object, the developer must understand and (possibly) implement all the features that otherwise would be already available.
+
+
 #version 0.0.12
 - **add status conversion map setter** to the class `raoul2000\workflow\base\StatusIdConverter`. The map is still required by the constructor
 but it can be updated at runtime using the `setMap()` method. (see [dynamic maps for status conversion issue](https://github.com/raoul2000/yii2-workflow/issues/9)) 

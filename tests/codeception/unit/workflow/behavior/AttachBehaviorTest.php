@@ -13,7 +13,7 @@ class AttachBehaviorTest extends TestCase
 	use \Codeception\Specify;
 
 
-    public function testAttachCorrect()
+    public function testAttachSuccess1()
     {
     	$model = new Item01();
 
@@ -23,10 +23,19 @@ class AttachBehaviorTest extends TestCase
     		expect('model has a SimpleWorkflowBehavior attached', SimpleWorkflowBehavior::isAttachedTo($model) )->true();
     	});
     }
-
+    
+    public function testAttachSuccess2()
+    {
+    	$this->specify('behavior can be attached to a Component with the "status" property', function () {
+    		$model = Yii::createObject('\tests\codeception\unit\models\Component01',['status'=>'']);
+    		$model->attachBehavior('workflow', SimpleWorkflowBehavior::className());
+    	});
+    }
+    
+    
     public function testAttachFails1()
     {
-    	$this->specify('behavior cannot be attached to a non-ActiveRecord object', function () {
+    	$this->specify('behavior cannot be attached if the owner has no suitable attribute or property to store the status', function () {
     		$model = Yii::createObject("yii\base\Component",[]);
     		$model->attachBehavior('workflow', SimpleWorkflowBehavior::className());
     	},['throws' => 'yii\base\InvalidConfigException']);
