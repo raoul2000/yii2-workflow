@@ -49,26 +49,60 @@ As you can see, scenario names are quite self explanatory !
 
 ## Usage example
 
-In the example below we are defined several validation rules applied to the model during its life-cycle through the workflow 
-it is assigned to.
+In the example below we are defining several validation rules applied to the model during its life-cycle through the workflow 
+it is assigned to. 
 
 ```php
 use raoul2000\workflow\validation\WorkflowValidator;
-
+/**
+ * @property integer $id
+ * @property string $col_status
+ * @property string $title
+ * @property string $body
+ * @property string $category
+ * @property string $tags
+ */
 class Post extends \yii\db\ActiveRecord
 {
+    public function behaviors()
+    {
+    	// declare the SimpleWorkflowBehavior.
+        return [
+        	'workflow' => [
+        		'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+        		'defaultWorkflowId'      => 'post',
+        		'statusAttribute'        => 'col_status',
+        		'propagateErrorsToModel' => true
+    	    ]
+        ];
+    } 
+    
     public function rules()
     {
         return [
-        	[['status'],raoul2000\workflow\validation\WorkflowValidator::className()],
-        	['name','required',
-        		'on' => 'from {Post3Workflow/draft} to {Post3Workflow/correction}'],        	
+        	[['col_status'],raoul2000\workflow\validation\WorkflowValidator::className()],
+        	
+        	// the 'title' is always required
+        	['title','required'],
+        	
+        	// the 'body' is required when the post is about to enter to 'post/correction'
+        	[['body'],'required',
+        		'on' => 'enter status {post/correction}'],
+        		
+        	// 'category' is set during correction. When the post has been corrected
+        	// it must include a category 
+        	['category', 'required',
+        		'on' => 'leave status {post/correction}'
+        		
+        	// 'tags' and 'category' are required before being published or archived.
+        	[['tags', 'category'], 'required',
+        		'on' => ['enter status {post/published}', 'enter status {post/archived}']
+        	],        	
         ];
     }	
 ```
 
-
-
+TBC
 
 
 
