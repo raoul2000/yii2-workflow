@@ -82,19 +82,18 @@ class Post extends \yii\db\ActiveRecord
         return [
         	[['col_status'],raoul2000\workflow\validation\WorkflowValidator::className()],
         	
-        	// the 'title' is always required
+        	// rule 1 :  the 'title' is always required
         	['title','required'],
         	
-        	// the 'body' is required when the post is about to enter to 'post/correction'
+        	// rule 2 : the 'body' is required when the post is about to enter to 'post/correction'
         	[['body'],'required',
         		'on' => 'enter status {post/correction}'],
         		
-        	// 'category' is set during correction. When the post has been corrected
-        	// it must include a category 
+        	// rule 3 : 'category' is set during correction and before publication
         	['category', 'required',
-        		'on' => 'leave status {post/correction}'
+        		'on' => 'from {post/correction} to {post/published}'
         		
-        	// 'tags' and 'category' are required before being published or archived.
+        	// rule 4 : 'tags' and 'category' are required before being published or archived.
         	[['tags', 'category'], 'required',
         		'on' => ['enter status {post/published}', 'enter status {post/archived}']
         	],        	
@@ -102,7 +101,21 @@ class Post extends \yii\db\ActiveRecord
     }	
 ```
 
+In the above example we have defined a *Post* model and configured validation rules to implement the following (imaginary) business rules :
+- a post must always have a title - rule n°1 : that's a standard one, no workflow magic here
+- redactors are not allowed to send a empty post to correction - rule n°2 : attribute `body` is required when the post enters into status *post/correction*
+- correctors are responsible for setting a category to all post before publishing it - rule n°3 : when a post leaves the 'post/correction* status to go to 
+*post/published* it must have the `category`attribute set.
+- it is forbidden to publish or archive a post with no tags or no category - rule n°4 : attributes `tags` and `category` cannot be empty when the post
+enter into status *post/published* or *post/archived*.
+
+
+
+## Implementation
+
+So how does this works ? As you may have guesses, the entry point is the `WorkflowValidator` validator configured for the `status` attribute.
+This validator is not actually going to validat the attribute it is configured for ! Yes, believe it or not, this validator doesn't care about the
+current status value or if the model is about to perform a transition that is not permitted : validating transitions is done by the `SimpleWorkflowBehavior` when the
+model is saved (or when you explicitely invoke `sendToStatus()` on the model). 
+
 TBC
-
-
-
