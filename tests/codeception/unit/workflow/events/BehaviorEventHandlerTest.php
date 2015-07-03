@@ -41,6 +41,60 @@ class BehaviorEventHandlerTest extends DbTestCase
         parent::tearDown();
     }
 
+    public function testLeaveWorkflowOnAssignNULL()
+    {
+    	$post = new Item06();
+    	$post->name ='post name';
+    	$post->enterWorkflow();
+    	
+    	verify($post->save())->true();
+    	verify($post->getWorkflowStatus()->getId())->equals('Item06Workflow/new');
+    	$post->status = null;
+    	
+    	Item06Behavior::$countLeaveWorkflow= 0;
+    	expect($post->save())->equals(true);
+    	verify(Item06Behavior::$countLeaveWorkflow)->equals(1);
+    	
+    	$post->enterWorkflow();
+    	verify($post->save())->true();
+    	verify($post->getWorkflowStatus()->getId())->equals('Item06Workflow/new');
+    	
+    	$post->canLeaveWorkflow(false);
+    	
+    	$post->status = null;
+    	expect_not($post->save());
+    }
+    
+    public function testLeaveWorkflowOnDelete()
+    {
+    	$post = new Item06();
+    	$post->name ='post name';
+    	$post->enterWorkflow();
+    	 
+    	verify($post->save())->true();
+    	verify($post->getWorkflowStatus()->getId())->equals('Item06Workflow/new');
+    	
+    	Item06Behavior::$countLeaveWorkflow= 0;
+    	$post->canLeaveWorkflow(true);
+    	expect_that($post->delete());
+    	verify(Item06Behavior::$countLeaveWorkflow)->equals(1);
+    	 
+    	 
+    	$post = new Item06();
+    	$post->name ='post name';
+    	$post->enterWorkflow();
+    	 
+    	verify($post->save())->true();
+    	verify($post->getWorkflowStatus()->getId())->equals('Item06Workflow/new');
+    	
+    	
+    	$post->canLeaveWorkflow(false); // refuse leave workflow
+    	
+    	// Now, the handler attached to the beforeLeaveWorkflow Event (see Item06Behavior)
+    	// will invalidate the event and return false (preventing the DELETE operation)
+    	expect_not($post->delete());
+    }
+        
     public function testEnterWorkflowSuccess()
     {
     	$post = new Item06();

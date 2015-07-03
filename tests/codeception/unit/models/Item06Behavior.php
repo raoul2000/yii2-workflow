@@ -12,10 +12,13 @@ class Item06Behavior  extends Behavior
 	public $corrected = false;
 	public $canBeArchived = false;
 
+	public $canLeaveWorkflow = true;
+	
 	public static $maxPostCount = 2;
 	public static $countPost = 0;
 	public static $countPostToCorrect = 0;
 	public static $countPostCorrected = 0;
+	public static $countLeaveWorkflow = 0;
 
 	public function events()
 	{
@@ -26,8 +29,25 @@ class Item06Behavior  extends Behavior
 			WorkflowEvent::beforeLeaveStatus('Item06Workflow/correction') => "postCorrected",
 			WorkflowEvent::beforeEnterStatus('Item06Workflow/published') => "checkCanBePublished",
 			WorkflowEvent::beforeChangeStatus('Item06Workflow/published', 'Item06Workflow/archive') => "canBeArchived",
+			WorkflowEvent::beforeLeaveWorkflow('Item06Workflow') => 'beforeLeaveWorkflow',
+			WorkflowEvent::afterLeaveWorkflow('Item06Workflow') => 'afterLeaveWorkflow',
 		];
 	}
+	public function afterLeaveWorkflow($event)
+	{
+		self::$countLeaveWorkflow++;
+	}
+	public function beforeLeaveWorkflow($event)
+	{
+		if( $this->canLeaveWorkflow == false) {
+			$event->invalidate('item cannot be deleted');
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
 	public function beforeNew($event)
 	{
 		if(self::$countPost >= self::$maxPostCount) {
@@ -73,5 +93,9 @@ class Item06Behavior  extends Behavior
 	public function markAsCandidateForArchive()
 	{
 		$this->canBeArchived = true;
+	}
+	public function canLeaveWorkflow($bool)
+	{
+		$this->canLeaveWorkflow = $bool;
 	}
 }

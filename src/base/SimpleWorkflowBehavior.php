@@ -280,6 +280,8 @@ class SimpleWorkflowBehavior extends Behavior
 			ActiveRecord::EVENT_BEFORE_UPDATE 	=> 'beforeSaveStatus',
 			ActiveRecord::EVENT_AFTER_UPDATE 	=> 'afterSaveStatus',
 			ActiveRecord::EVENT_AFTER_INSERT 	=> 'afterSaveStatus',
+			ActiveRecord::EVENT_BEFORE_DELETE 	=> 'beforeDelete',
+			ActiveRecord::EVENT_AFTER_DELETE 	=> 'afterDelete',
 		];
 	}
 	/**
@@ -377,6 +379,24 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 
 	/**
+	 * Handle the case where the owner model is leaving the workflow
+	 * @param yii\base\Event $event
+	 */
+	public function beforeDelete($event)
+	{
+		$event->isValid = $this->sendToStatusInternal(null, true);
+	}
+	
+	/**
+	 * Fires pending events, once the owner model has been successfully deleted.
+	 * 
+	 * @param yii\base\Event $event
+	 */
+	public function afterDelete($event)
+	{
+		$this->firePendingEvents();
+	}	
+	/**
 	 * Send the owner model into the status passed as argument.
 	 *
 	 * If the transition between the current status and $status can be performed,
@@ -397,20 +417,23 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Performs status change and event fire.
 	 *
-	 * This method is called when the status is changed during a save event, or directly through the sendToStatus method.
-	 * Based on the current value of the owner model status attribute, and the behavior status, it checks if a transition
+	 * This method is called when the owner model is about to change status. This occurs when it is saved, deleted, or when 
+	 * a call is done to `sendToStatus()`
+	 * 
+	 * Based on the current value of the owner model status attribute and the internal behavior status, it checks if a transition
 	 * is about to occur. If that's the case, this method fires all "before" events provided by the event sequence component
 	 * and then updates status attributes values (both internal and at the owner model level).
-	 * Finallly it fires the "after" events, or if we are in a save operation, store them for as pending events that are fired
-	 * on the *afterSave" event.
+	 * Finallly it fires the "after" events, or if we are in a save or delete operation, store them as pending events that are fired
+	 * on the *afterSave" or afterDelete event.
 	 * Note that if an event handler attached to a "before" event sets the event instance as invalid, all remaining handlers
 	 * are ingored and the method returns immediately.
 	 *
-	 * @param unknown $status
-	 * @param boolean $onSave
+	 * @param mixed $status the target status or NULL when leaving the workflow
+	 * @param boolean $delayed if TRUE, all 'after' events are not fire but stored for being fired in AfterSave or afterDelete. This occurs
+	 * when the transition is performed on a save or delete action.
 	 * @return boolean
 	 */
-	private function sendToStatusInternal($status, $onSave)
+	private function sendToStatusInternal($status, $delayed)
 	{
 		$this->_pendingEvents = [];
 
@@ -439,7 +462,7 @@ class SimpleWorkflowBehavior extends Behavior
 		$this->setStatusInternal($newStatus);
 
 		if ( ! empty($events['after']) ) {
-			if ( $onSave ) {
+			if ( $delayed ) {
 				$this->_pendingEvents = $events['after'];
 			} else {
 				foreach ($events['after'] as $eventAfter) {
