@@ -4,82 +4,30 @@ The *Workflow Source* is a Yii2 component dedicated to read the persistent repre
 *SimpleWorkflowBehavior*, its memory representation in terms of PHP objects.
 
 The main Workflow Source component included in the *SimpleWorkflow* package is `raoul2000\workflow\source\file\WorkflowFileSource`. It is designed
-to process workflow definition provided as regular PHP Arrays and stored in a file.
+to process workflow definition stored in a file as a regular PHP Array, a PHP class definition or a Graphml file ( for a detail description, refer
+to [Workflow File Source Component](source-file.md)).
 
 Note that it is possible that in the future, other workflow source component are provided like for instance a *WorkflowDbSource* that would
 read from a database. 
 
-## Workflow Objects
+## About Workflow Objects
 
 The *SimpleWorkflow* manipulates objects to manage workflows. There are 3 basic types of objects that you will meet sooner or later. They are
 all part of the `raoul2000\workflow\base` namespace:
 
-- Status 
-- Transition
-- Workflow 
+- `Status` : implements a status in a workflow
+- `Transition` : implemented a directed transition between 2 statuses
+- `Workflow` : implement a collection of statuses and transitions
 
-The main purpose of a  Workflow Source component is to turn a workflow definition into a set Status, Transition and Workflow 
-objects. 
+The main purpose of a Workflow Source component is to turn a workflow definition into a set of Status, Transition and Workflow objects. 
 
-## Configuration
 
-### Default Workflow Source : PHP class
-
-By default, the *SimpleWorkflowBehavior* reads workflow definitions from PHP class that implement the 
-`raoul2000\workflow\source\file\IWorkflowDefinitionProvider` interface. This interface is very basic, as it defines only one method, `getDefinition()` 
-that must returns the workflow definition as an associative PHP array.
-
-Here is an example of such a class :
-
-```php
-namespace app\models;
-
-class PostWorkflow implements \raoul2000\workflow\file\IWorkflowDefinitionProvider 
-{
-	public function getDefinition() {
-		return [ 
-			'initialStatusId' => 'draft',
-			'status' => [
-				'draft' => [
-					'transition' => ['correction']
-				],
-				'correction' => [
-					'transition' => ['draft','ready']
-				],
-				'ready' => [
-					'transition' => ['draft', 'correction', 'published']
-				],
-				'published' => [
-					'transition' => ['ready', 'archived']
-				],
-				'archived' => [
-					'transition' => ['ready']
-				]
-			]
-		];
-	}
-}
-``` 
-
-Note that the name of the class **must be equals to the workflow Id** (here *PostWorkflow*).
-
-By default, the workflow definition class is assumed to belong to the `app\models` namespace (i.e. it must be located in the corresponding
-folder). However it is very likely that you will want to store your workflow definitions somewhere else, and that can be easely achieved through
-the special `@workflowDefinitionNamespace` alias. 
-
-For instance, if classes holding workflow definition are located in *app\models\workflows* we just need to define the alias :
-
-```php
-Yii::setAlias('@workflowDefinitionNamespace','app\\models\\workflows');
-```
-
-See the [Workflow File Source](source-file.md) Documentation to learn more about this topic.
-
-### Component registration
+## Component registration
 
 When the *SimpleWorkflowBehavior* is initialized, it tries to get a reference to the *Workflow Source Component* to use. By default
-this component is assumed to have the id **workflowSource**. If no such component is available, the *SimpleWorkflowBehavior* will create one,
-with type `WorkflowFileSource` (default) and registers it in the Yii2 application, so to make it available to other instances of *SimpleWorkflowBehavior*.
+this component is assumed to have the id **workflowSource**. If no such component is available, the *SimpleWorkflowBehavior* will **create one**,
+with the type `raoul2000\workflow\source\file\WorkflowFileSource` (default) and registers it in the Yii2 application, so to make it 
+available to other instances of *SimpleWorkflowBehavior*.
 
 This implies that, unless specified otherwise, by default, all *SimpleWorkflowBehavior* are sharing **the same Workflow Source component**.
 
