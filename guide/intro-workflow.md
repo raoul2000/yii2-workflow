@@ -140,9 +140,10 @@ Note that a more condensed array format is also supported, but for this example 
 ## Attaching the behavior
 
 To be able to manage our Post model inside the workflow, we must take care about following points :
-- *check that our model inherits from* ActiveRecord : the *SimpleWorkflowBehavior* can only be attached to ActiveRecord objects.
-- add an attribute that will be used to store the current status of a post. We will use attribute `status` with type VARCHAR(40) for
-our example, but it can be any attribute.
+- *check that the Post inherits from* `yii\base\Model` : the *SimpleWorkflowBehavior* can only be attached to Model objects and in fact
+most of the time it will be attached to `\yii\db\ActiveRecord` Objects.
+- ensure that the Post class include an attribute (or a property) that will be used to store the current status of a post. 
+We will use attribute `status` with type VARCHAR(40) for our example, but it can be any attribute.
 
 Attaching the behavior to our model is a standard Yii2 operation. For more information on Yii2 Behaviors please 
 refer the [The Definitive Guide to Yii2.0](http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html).
@@ -265,7 +266,7 @@ $post->sendToStatus('published');	// exception is thrown here !
 ```
 
 It is important to remember that by definition, a call to `sendToStatus()` does not handle persistence of the model, and it is your responsability
-to ensure that the model is saved correctly.
+to ensure that the model is saved correctly, when needed.
 
 ### Summary
 

@@ -20,7 +20,7 @@ Not that much to say here, as there is no change in the way the *SimpleWorkflowB
 - On one side an Active Record attribute which can be viewed as the future status. 
 - On the other side, the actual status managed internally by the behavior.
 
-A transition is a link between the *current* and the *future* status.  
+A transition is a directed link between to statuses : the *start* and the *end* status.  
 
 ## Definition
 The workflow definition required by the `WorkflowFileSource` component differs from previous version : 
@@ -29,21 +29,25 @@ The workflow definition required by the `WorkflowFileSource` component differs f
 - key `node` is replaced by `status`
 - status ids are stored as keys of the *status* array (and not as value of the `id` key anymore)
 
+For more information please refer to [Workflow File Source Component](source-file.md) documentation. 
+
 ## Workflow Tasks
 
 ### Declaration
 
 Workflow Tasks are not declared anymore in the workflow definition itself. This could create a dependency between the workflow and the 
-model, in particular when the workflow tasks was using *$this*. 
+model, lie for instance when the workflow tasks was using *$this*. 
 
 ### Implementation
 
 Workflow task used to be a piece of PHP code associated with a workflow transition and evaluated when this transition was performed.
-With this new version, **Workflow Tasks should be implemented as event handler attached to a *after* event type**.
+With this new version, **Workflow Tasks should be implemented as event handler attached to a *after* event type**. 
+
+Please refer to the [Workflow Event](concept-events.md) documentation for more.
 
 ## Status Constraints
 ### Declaration
-Status Constraints are not declared anymore in the workflow definition itself. 
+Status Constraints are not declared anymore in the workflow definition itself, for the same reason as above.
 
 ### Implementation
 Status Constraints used to be a piece of PHP code associated with a status and evaluated as a logical expression *before* a model enters 
@@ -51,12 +55,19 @@ into this status. If the evaluation returned TRUE, the model can access the stat
 
 The same principles still applies but in v2.x **status constraints should be implemented as event handler attached to a *before* event type.**
 
+Please refer to the [Workflow Event](concept-events.md) documentation for more.
 
 ## Workflow Driven Validation
 
-TBD
+It is still possible to validate models attributes based on the transition that is done by the model. The principle remains the same : 
+Workflow driven validation is based on dynamic scenario names and their associated validation rules declared in the model.
+
+Please refer to the [Workflow Driven Attribute Validation](concept-validation.md) documentation for more.
 
 ## Events
 
-TBD
+There are no major changes in the way workflow events are managed although the event model has been enhanced to provide more control
+through event handlers.
+
+Please refer to the [Workflow Event](concept-events.md) documentation for more.
  
