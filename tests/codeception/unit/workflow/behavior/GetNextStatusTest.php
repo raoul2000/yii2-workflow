@@ -113,15 +113,19 @@ class GetNextStatusTest extends DbTestCase
     	$this->assertArrayHasKey('Item04Workflow/A', $report);
     	$this->assertInstanceOf('raoul2000\workflow\base\Status', $report['Item04Workflow/A']['status']);
 
-    	$this->assertCount(2, $report['Item04Workflow/A']['event']);
+    	$this->assertCount(3, $report['Item04Workflow/A']['event']);
 
     	$this->assertEquals(
     		[
-	            0 => [
+    			0 => [
+    				'name' => SimpleWorkflowBehavior::EVENT_BEFORE_CHANGE_STATUS,
+    				'success' => null
+    			],    				
+	            1 => [
 	                'name' => 'beforeEnterWorkflow{Item04Workflow}',
 	                'success' => null
 	            ],
-	            1 => [
+	            2 => [
 	                'name' => 'beforeEnterStatus{Item04Workflow/A}',
 	                'success' => false,
 	                'messages' => [

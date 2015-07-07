@@ -1,3 +1,21 @@
+#version 0.0.15
+- add *default Event*
+
+The Default event **is not related to the configured event sequence**, it's a built-in event, fired by the *SimpleWorkflowBehavior*,
+in its before and after form, whenever a model changes status.  Like any other event, it is an instance of the WorkflowEvent with a name set to :
+
+- SimpleWorkflowBehavior::EVENT_BEFORE_CHANGE_STATUS
+- SimpleWorkflowBehavior::EVENT_AFTER_CHANGE_STATUS
+
+Depending on the value returned by *getStartStatus()*, *getEndStatus()* it is possible to identify the kind of transition that is being 
+performed by the model :
+
+- *getStartStatus() == null* : the model is **entering** into the workflow through the initial status ( returned by *getEndStatus()* )
+- *getEndStatus() == null* : the model is **leaving** the workflow from status returned by *getStartStatus()*.
+
+In both cases, a call to *getTransition()* returns NULL : entering or leaving a workflow is not considered as a transition.
+ 
+
 #version 0.0.14
 - improve leave workflow management
 

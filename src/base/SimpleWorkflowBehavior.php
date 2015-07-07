@@ -15,7 +15,7 @@ use tests\unit\workflow\behavior\InitStatusTest;
 use raoul2000\workflow\events\WorkflowEvent;
 
 /**
- * SimpleWorkflowBehavior implements the behavior of db model evolving inside a simple workflow.
+ * SimpleWorkflowBehavior implements the behavior of a model evolving inside a *Simple Workflow*.
  *
  * To use *SimpleWorkflowBehavior* with the default parameters, simply attach it to the model class like you would do
  * for any standard Yii2 behavior.
@@ -78,6 +78,14 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	const DEFAULT_EVENT_SEQUENCE_CLASS = 'raoul2000\workflow\events\BasicEventSequence';
 	/**
+	 * Name of the default workflow event fired before the owner model change status.
+	 */
+	const EVENT_BEFORE_CHANGE_STATUS = 'EVENT_BEFORE_CHANGE_STATUS';
+	/**
+	 * Name of the default workflow event fired after the owner model change status.
+	 */
+	const EVENT_AFTER_CHANGE_STATUS  = 'EVENT_AFTER_CHANGE_STATUS';
+	/**
 	 * @var string name of the owner model attribute used to store the current status value. It is also possible
 	 * to use a model property but in this case you must provide a suitable status accessor component that will handle
 	 * status persistence.
@@ -88,7 +96,6 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public $source = 'workflowSource';
 	/**
-	 *
 	 * @var NULL|string|array|object The status converter component definition or NULL (default) if no
 	 * status converter is used by this behavior.<br/>
 	 * When not null, the value of this attribute can be specified in one of the following forms :
@@ -101,7 +108,6 @@ class SimpleWorkflowBehavior extends Behavior
 	 */	
 	public $statusConverter = null;
 	/**
-	 *
 	 * @var NULL|string|array|object The status accessor component definition or NULL (default) if no
 	 * status accessor is used by this behavior.<br/>
 	 * When not null, the value of this attribute can be specified in one of the following forms :
@@ -123,6 +129,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * @var bool|string if TRUE, the model is automatically inserted into the default workflow. If 
 	 * $autoInsert contains a string, it is assumed to be an initial status Id that will be used to set the 
 	 * status. If FALSE (default) the status is not modified. 
+	 * NOT_IMPLEMENTED
 	 */
 	public $autoInsert = false;
 	/**
@@ -137,6 +144,11 @@ class SimpleWorkflowBehavior extends Behavior
 	 * @see WorkflowEvent::invalidate()
 	 */
 	public $stopOnFirstInvalidEvent = true;
+	/**
+	 * @var bool When TRUE, a default event is fired on each status change, including when the model enters or leaves the
+	 * workflow and even if no event sequence is configured. When FALSE the default event is not fired.
+	 */
+	public $fireDefaultEvent = true;
 	/**
 	 * @var string Read only property that contains the id of the default workflow to use with
 	 * this behavior.
@@ -186,7 +198,6 @@ class SimpleWorkflowBehavior extends Behavior
 		}
 		parent::__construct($config);
 	}
-
 	/**
 	 * Initialize the behavior.
 	 * 
@@ -233,8 +244,8 @@ class SimpleWorkflowBehavior extends Behavior
 	 * status value. The name of this attribute or property is set to 'status' by default, but can be configured  
 	 * using the `statusAttribute` configuration parameter at construction time.<br/>
 	 * 
-	 * Note that using a property instead of a model attribute to store the status value is not recomender as it is then the developer
-	 * responsability to ensure that the workflow operations are consistent.
+	 * Note that using a property instead of a model attribute to store the status value is not recomended as it is then the developer
+	 * responsability to ensure that the workflow operations are consistent, in particular regarding persistence.
 	 *  
 	 * If previous requirements are met, the internal status value is initialized.
 	 *
@@ -266,11 +277,12 @@ class SimpleWorkflowBehavior extends Behavior
 	 * 
 	 * Following event are used : 
 	 * 
-	 * - EVENT_AFTER_FIND
-	 * - EVENT_BEFORE_INSERT
-	 * - EVENT_BEFORE_UPDATE
-	 * - EVENT_AFTER_UPDATE
-	 * - EVENT_AFTER_INSERT
+	 * - ActiveRecord::EVENT_AFTER_FIND
+	 * - ActiveRecord::EVENT_BEFORE_INSERT
+	 * - ActiveRecord::EVENT_BEFORE_UPDATE
+	 * - ActiveRecord::EVENT_AFTER_UPDATE
+	 * - ActiveRecord::EVENT_AFTER_INSERT
+	 * - ActiveRecord::EVENT_AFTER_DELETE
 	 */
 	public function events()
 	{
@@ -307,10 +319,12 @@ class SimpleWorkflowBehavior extends Behavior
 	 * Initialize the internal status value based on the owner model status attribute.
 	 *
 	 * The <b>status</b> attribute belonging to the owner model is retrieved and if not
-	 * empty, converted into the corresponding Status.
-	 * This method does not trigger any event, it is only restoring the model into its workflow.
-	 *
+	 * empty, converted into the corresponding Status object instance.
+	 * This method does not trigger any event, it is only restoring the model into its workflow. It is invoked when the behavior
+	 * is attached to the model, and on AFTER_FIND event.
+	 * 
 	 * @throws raoul2000\workflow\WorkflowException if the status attribute could not be converted into a Status object
+	 * @see \raoul2000\workflow\base\StatusInterface.
 	 */
 	public function initStatus()
 	{
@@ -332,12 +346,14 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 	
 	/**
-	 * Puts the owner model into the workflow $workflowId or into its default workflow if no
-	 * $workflowId is provided.
+	 * Puts the owner model into the workflow `$workflowId` or into its default workflow if no
+	 * argument is provided.
 	 * If the owner model is already in a workflow, an exception is thrown. If this method ends
 	 * with no error, the owner model's status is the initial status of the selected workflow.
 	 *
 	 * @param string $workflowId the ID of the workflow the owner model must be inserted to.
+	 * @return boolean TRUE if the operation succeeded, FALSE otherwise
+	 * @throws WorkflowException
 	 */
 	public function enterWorkflow($workflowId = null)
 	{
@@ -359,7 +375,7 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * After the owner model has been saved, fire pending events.
 	 *
-	 * @param unknown $insert
+	 * @param bool $insert
 	 * @return boolean
 	 */
 	public function afterSaveStatus($insert)
@@ -399,7 +415,7 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Send the owner model into the status passed as argument.
 	 *
-	 * If the transition between the current status and $status can be performed,
+	 * If the transition between the current status and `$status` can be performed,
 	 * the status attribute in the owner model is updated with the value of the new status, otherwise
 	 * it is not changed.
 	 * This method can be invoked directly but you should keep in mind that it does not handle status
@@ -438,7 +454,7 @@ class SimpleWorkflowBehavior extends Behavior
 		$this->_pendingEvents = [];
 
 		list($newStatus, , $events) = $this->createTransitionItems($status, false, true);
-
+		
 		$delayedStop = false;
 		if ( ! empty($events['before']) ) {
 			foreach ($events['before'] as $eventBefore) {
@@ -477,9 +493,11 @@ class SimpleWorkflowBehavior extends Behavior
 		return true;
 	}
 	/**
-	 * Creates and returns the list of events that will be fire when the owner model is sent from its current status to the one passed as argument.
+	 * Creates and returns the list of events that will be fire when the owner model is sent from its current 
+	 * status to the one passed as argument.
 	 *
-	 * The event list returned by this method depends on the event sequence component that was configured for this behavior at construction time.
+	 * The event list returned by this method depends on the event sequence component that was configured for 
+	 * this behavior at construction time.
 	 *
 	 * @param string $status the target status
 	 * @return WorkflowEvent[] The list of events
@@ -490,8 +508,9 @@ class SimpleWorkflowBehavior extends Behavior
 		return $events;
 	}
 	/**
-	 * Creates and returns the list of scenario names that will be used to validate the owner model when it is sent from its current
-	 * status to the one passed as argument.
+	 * Creates and returns the list of scenario names that will be used to validate the owner model when it is 
+	 * sent from its current status to the one passed as argument.
+	 * 
 	 * @param string $status the target status
 	 * @return string[] list of scenario names
 	 */
@@ -502,42 +521,34 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 
 	/**
-	 * Creates and returns workflow event sequence or scenario for the pending transition.
+	 * Creates and returns workflow event sequence and/or scenario for the pending transition.
 	 *
-	 * Being given the current status and the status value passed as argument
-	 * this method returns the event sequence that will occur in the workflow or an empty array if no event is found.<br/>
-	 * A "event sequence" is an array containing an ordered set of WorkflowEvents instances.
-	 * Possible events sequences are :
+	 * Being given the current status and the status value passed as argument this method returns the corresponding 
+	 * event sequence and the scenario names. 
 	 * 
-	 * <ul>
-	 *	<li>[enterWorkflow, enterStatus] : when the current Workflow status is null and $status contains the id of an initial status</li>
-	 *	<li>[leaveStatus,leaveWorkflow] : when the current Workflow status is not null, and $status is null</li>
-	 *	<li>[leaveStatus,changeStatus,enterStatus] : when a transition exists between the current workflow status and $status</li>
-	 * </ul>
-	 *
-	 * Note that if the current workflow status and $status are refering to the same status, then a <b>changeStatus event</b> is returned
-	 * <b>only if a reflexive transition exists</b> for this status, otherwise no event is returned.
-	 *
-	 * @param mixed | null $status a status Id or a Status instance considered as the target status to reach
-	 * @throws WorkflowException
+	 * The returned array contains up to 3 elements :
+	 * - index = 0 : the Status instance corresponding to the $status passed as argument
+	 * - index = 1 : an array of WorkflowEvents instances (the event sequence) that may contain no element if no event 
+	 * sequence component is configured or if event sequence are not requested ($withEventSequence = false)
+	 * - index = 2 : an array of scenario names (string) that may be empty if scenario names are not requested ($WithScenarioNames= false)
 	 * 
 	 * @param mixed | null $status a status Id or a Status instance considered as the target status to reach
-	 * @param boolean $scenarioNames
-	 * @param boolean $eventSequence
+	 * @param boolean $WithScenarioNames When TRUE scenario names are requested, FALSE otherwise
+	 * @param boolean $withEventSequence When TRUE the event sequence is requested, FALSE otherwise 
 	 * @throws WorkflowException
-	 * @throws Exception
-	 * @return array event sequence or an empty array if no event is found.
+	 * @return array Three elements : Status intance, scenario names, event sequence.
 	 *
 	 */
-	public function createTransitionItems($status, $scenarioNames, $eventSequence)
+	public function createTransitionItems($status, $WithScenarioNames, $withEventSequence)
 	{
 		$start = $this->getWorkflowStatus();
 		$end = $status;
 
 		$scenario = [];
-		$events = [];
+		$events = [ 'before' => [], 'after' => []];
 		$newStatus = null;
-
+		$defaultEventCfg = null;
+		
 		if ( $start === null && $end !== null) {
 
 			// (potential) entering workflow -----------------------------------
@@ -548,14 +559,20 @@ class SimpleWorkflowBehavior extends Behavior
 			if ( $end->getId() !== $initialStatusId) {
 				throw new WorkflowException('Not an initial status : '.$end->getId().' ("'.$initialStatusId.'" expected)');
 			}
-			if ($scenarioNames) {
+			if ($WithScenarioNames) {
 				$scenario = [
 					WorkflowScenario::enterWorkflow($end->getWorkflowId()),
 					WorkflowScenario::enterStatus($end->getId())
 				];
 			}
-			if ($eventSequence && $this->_eventSequence !== null) {
+			if ($withEventSequence && $this->_eventSequence !== null) {
 				$events = $this->_eventSequence->createEnterWorkflowSequence($end, $this);
+			}
+			if( $this->fireDefaultEvent ) {
+				$defaultEventCfg = [
+					'end'  		 => $end,
+					'sender'  	 => $this
+				];
 			}
 			$newStatus = $end;
 
@@ -563,15 +580,21 @@ class SimpleWorkflowBehavior extends Behavior
 
 			// leaving workflow -------------------------------------------------
 
-			if ($scenarioNames) {
+			if ($WithScenarioNames) {
 				$scenario = [
 					WorkflowScenario::leaveWorkflow($start->getWorkflowId()),
 					WorkflowScenario::leaveStatus($start->getId())
 				];
 			}
-			if ($eventSequence && $this->_eventSequence !== null) {
+			if ($withEventSequence && $this->_eventSequence !== null) {
 				$events = $this->_eventSequence->createLeaveWorkflowSequence($start, $this);
 			}
+			if( $this->fireDefaultEvent ) {
+				$defaultEventCfg = [
+						'start'      => $start,
+						'sender'  	 => $this
+				];	
+			}			
 			$newStatus = $end;
 		} elseif ( $start !== null && $end !== null ) {
 
@@ -584,22 +607,36 @@ class SimpleWorkflowBehavior extends Behavior
 			}
 			if ( $transition != null) {
 
-				if ($scenarioNames) {
+				if ($WithScenarioNames) {
 					$scenario = [
 						WorkflowScenario::leaveStatus($start->getId()),
 						WorkflowScenario::changeStatus($start->getId(), $end->getId()),
 						WorkflowScenario::enterStatus($end->getId())
 					];
 				}
-				if ($eventSequence && $this->_eventSequence !== null) {
+				if ($withEventSequence && $this->_eventSequence !== null) {
 					$events = $this->_eventSequence->createChangeStatusSequence($transition, $this);
+				}
+				if( $this->fireDefaultEvent ) {
+					$defaultEventCfg = [
+						'start'      => $transition->getStartStatus(),
+						'end'  		 => $transition->getEndStatus(),
+						'transition' => $transition,
+						'sender'  	 => $this
+					];
 				}
 			}
 			$newStatus = $end;
 		}
+		
 		if (count($events) != 0 && (! isset($events['before']) || ! isset($events['after']))) {
-			throw new Exception('Invalid event sequence format : "before" and "after" keys are mandatory');
+			throw new WorkflowException('Invalid event sequence format : "before" and "after" keys are mandatory');
 		}
+		if( $this->fireDefaultEvent && $defaultEventCfg != null) {
+			array_unshift($events['before'], new WorkflowEvent(self::EVENT_BEFORE_CHANGE_STATUS, $defaultEventCfg));
+			array_unshift($events['after'],  new WorkflowEvent(self::EVENT_AFTER_CHANGE_STATUS,  $defaultEventCfg));
+		}
+		
 		return [$newStatus, $scenario, $events];
 	}
 
