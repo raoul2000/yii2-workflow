@@ -121,7 +121,7 @@ $post1->save();							// the status change is done here
 $post2 = Post::find(['id'=>42]);
 
 // One step : call to sendToStatus()
-$post2->sendToStatus(Post/published'); 	// the status change is done here
+$post2->sendToStatus('Post/published'); 	// the status change is done here
 $post->save();
 ```
 
@@ -144,6 +144,10 @@ $post->save();
 ## Comparing Two Statuses
 
 ```php
+// the usual way : compare status ids
+$post->getWorkflowStatus()->getId() == $otherPost->getWorkflowStatus()->getId();
+
+// the lazy way
 $post->statusEquals($otherPost->getWorkflowStatus());
 ```
 
@@ -152,24 +156,36 @@ $post->statusEquals($otherPost->getWorkflowStatus());
 ```php
 $workflowSource = $post->getWorkflowSource();
 ```
+Use a reference to the Workflow Source to access the workflow directly (not through the model). 
 
 ## Looping on all Next Statuses
+
+### ask the Status Object
 
 ```php
 $post = Post::find(['id'=>42]);
 
 if( $post->hasWorkflowStatus()) {
 
-	// First solution : ask the Status object
+	// let's ask the Status object then
 	$transitions = $post
 		->getWorkflowStatus()
 		->getTransitions();
 		
 	foreach( $transitions as $transition ) {
 		echo $transition->getEndStatus()->getId();
-	}
+	}	
+}
+```
+
+### Through the Workflow Source
+
+```php
+$post = Post::find(['id'=>42]);
+
+if( $post->hasWorkflowStatus()) {
 	
-	// Second solution : ask the WorkflowSource
+	// ask the WorkflowSource
 	$transitions = $post
 		->getWorkflowSource()
 		->getTransitions($post->getWorkflowStatus()->getId());
