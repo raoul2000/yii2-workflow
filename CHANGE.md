@@ -1,3 +1,10 @@
+#version 0.0.16
+- add the configuration setting `$emptyStringAsNull` to *SimpleWorkflowBehavior*. 
+
+When TRUE, the status attribute is considered as null if it contains an empty string
+If set to FALSE this is developer responsability to nullify the status attribute value, 
+because an empty string is considered as an invalid status id.
+
 #version 0.0.15
 - add *default Event*
 
