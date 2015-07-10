@@ -63,7 +63,6 @@ use raoul2000\workflow\events\WorkflowEvent;
  * }
  * </pre>
  * 
- * Please note that the model must be an instance of yii\db\BaseActiveRecord.
  */
 class SimpleWorkflowBehavior extends Behavior
 {
@@ -126,10 +125,9 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public $eventSequence = 'eventSequence';
 	/**
-	 * @var bool|string if TRUE, the model is automatically inserted into the default workflow. If 
-	 * $autoInsert contains a string, it is assumed to be an initial status Id that will be used to set the 
+	 * @var bool|string (**not enabled**) if TRUE, the model is automatically inserted into the default workflow. If 
+	 * `$autoInsert` contains a string, it is assumed to be an initial status Id that will be used to set the 
 	 * status. If FALSE (default) the status is not modified. 
-	 * NOT_IMPLEMENTED
 	 */
 	public $autoInsert = false;
 	/**
@@ -242,15 +240,15 @@ class SimpleWorkflowBehavior extends Behavior
 	 * 
 	 * The operation is successful if the owner component has the appropriate attribute or property to store the workflow
 	 * status value. The name of this attribute or property is set to 'status' by default, but can be configured  
-	 * using the `statusAttribute` configuration parameter at construction time.<br/>
+	 * using the `statusAttribute` configuration parameter at construction time.
 	 * 
 	 * Note that using a property instead of a model attribute to store the status value is not recomended as it is then the developer
 	 * responsability to ensure that the workflow operations are consistent, in particular regarding persistence.
 	 *  
 	 * If previous requirements are met, the internal status value is initialized.
 	 *
-	 * @see \yii\base\Behavior::attach()
-	 * @see InitStatus()
+	 * @see http://www.yiiframework.com/doc-2.0/yii-base-behavior.html#attach()-detail
+	 * @see initStatus()
 	 */
 	public function attach($owner)
 	{
@@ -323,8 +321,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 * This method does not trigger any event, it is only restoring the model into its workflow. It is invoked when the behavior
 	 * is attached to the model, and on AFTER_FIND event.
 	 * 
-	 * @throws raoul2000\workflow\WorkflowException if the status attribute could not be converted into a Status object
-	 * @see \raoul2000\workflow\base\StatusInterface.
+	 * @throws \raoul2000\workflow\base\WorkflowException if the status attribute could not be converted into a Status object
 	 */
 	public function initStatus()
 	{
@@ -351,7 +348,8 @@ class SimpleWorkflowBehavior extends Behavior
 	 * If the owner model is already in a workflow, an exception is thrown. If this method ends
 	 * with no error, the owner model's status is the initial status of the selected workflow.
 	 *
-	 * @param string $workflowId the ID of the workflow the owner model must be inserted to.
+	 * @param string $workflowId the ID of the workflow the owner model must be inserted to or NULL to insert
+	 * into the model's default workflow.
 	 * @return boolean TRUE if the operation succeeded, FALSE otherwise
 	 * @throws WorkflowException
 	 */
@@ -386,7 +384,6 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Send owner model into status if needed.
 	 *
-	 * @see sendToStatusInternal()
 	 * @param yii\base\Event $event
 	 */
 	public function beforeSaveStatus($event)
@@ -528,11 +525,11 @@ class SimpleWorkflowBehavior extends Behavior
 	 * 
 	 * The returned array contains up to 3 elements :
 	 * - index = 0 : the Status instance corresponding to the $status passed as argument
-	 * - index = 1 : an array of WorkflowEvents instances (the event sequence) that may contain no element if no event 
-	 * sequence component is configured or if event sequence are not requested ($withEventSequence = false)
+	 * - index = 1 : an array of [[\raoul2000\workflow\events\WorkflowEvent]] instances (the event sequence) that 
+	 * may contain no element if no event  sequence component is configured or if event sequence are not requested ($withEventSequence = false)
 	 * - index = 2 : an array of scenario names (string) that may be empty if scenario names are not requested ($WithScenarioNames= false)
 	 * 
-	 * @param mixed | null $status a status Id or a Status instance considered as the target status to reach
+	 * @param mixed  $status a status Id or a Status instance considered as the target status to reach
 	 * @param boolean $WithScenarioNames When TRUE scenario names are requested, FALSE otherwise
 	 * @param boolean $withEventSequence When TRUE the event sequence is requested, FALSE otherwise 
 	 * @throws WorkflowException
@@ -656,27 +653,28 @@ class SimpleWorkflowBehavior extends Behavior
 	 *	[
 	 *	    targetStatusId => [
 	 *	        'status' => the status instance
+	 *      	// the 'validation' key is present only if $validate is true
+	 *	    	'validation' => [
+	 *	            0 => [
+	 *                  'scenario' => scenario name
+	 *	                'success' => true (validation success) | false (validation failure) | null (no validation for this scenario)
+	 *	            ],
+	 *			    1 => [ ... ]
+	 *		     ],
+	 *		     // the 'event' key is present only if $beforeEvent is TRUE
+	 *		     'event' => [
+	 *			    0 => [
+	 *				    'name' => event name
+	 *				    'success' => true (event handler success) | false (event handler failed : the event has been invalidated) | null (no event handler)
+	 *			    ]
+	 *			    1 => [...]
+	 *		    ],
+	 *		    // if $validate is true or if $beforeEvent is TRUE
+	 *		   'isValid' => true   (being given the verifications that were done, the target status can be reached)
+	 *			  | false (being given the verifications that were done, the target status cannot be reached)
 	 *	    ],
-	 *      // the 'validation' key is present only if $validate is true
-	 *	    'validation' => [
-	 *	        0 => [
-	 *              'scenario' => scenario name
-	 *              'success' => true (validation success) | false (validation failure) | null (no validation for this scenario)
-	 *	        ],
-	 *			1 => [ ... ]
-	 *		],
-	 *		// the 'event' key is present only if $beforeEvent is TRUE
-	 *		'event' => [
-	 *			0 => [
-	 *				'name' => event name
-	 *				'success' => true (event handler success) | false (event handler failed : the event has been invalidated) | null (no event handler)
-	 *			]
-	 *			1 => [...]
-	 *		],
-	 *		// if $validate is true or if $beforeEvent is TRUE
-	 *		'isValid' => true   (being given the verifications that were done, the target status can be reached)
-	 *					| false (being given the verifications that were done, the target status cannot be reached)
-	 *	]
+	 *      anotherStatusID => [ ...]
+	 * ]
 	 * </pre>
 	 *
 	 *
@@ -783,12 +781,12 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 	/**
 	 * Returns the id of the default workflow associated with the owner model.
-	 *
+	 * 
 	 * If no default workflow id has been configured, it is created by using the
 	 * shortname of the owner model class (i.e. the class name without the namespace part),
 	 * suffixed with 'Workflow'.
 	 *
-	 * For instance, class 'app\model\Post' has a default workflow id equals to 'PostWorkflow'.
+	 * For instance, class `app\model\Post` has a default workflow id equals to **PostWorkflow**.
 	 *
 	 * @return string id for the workflow the owner model is in.
 	 */
@@ -802,10 +800,10 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 	/**
 	 * Returns the *Workflow Source Component* used by this behavior.
-	 * This component is initialized through the [[$source]] configuration property. If not configured, the behavior creates
+	 * This component is initialized by the [[$source]] configuration property. If not configured, the behavior creates
 	 * and register its own workflow source component.
 	 * 
-	 * @return IWorkflowSource the workflow source component instance used by this behavior
+	 * @return \raoul2000\workflow\source\IWorkflowSource the workflow source component instance used by this behavior
 	 */
 	public function getWorkflowSource()
 	{
@@ -815,9 +813,11 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Returns the status accessor instance used by this behavior or NULL
 	 * if no status accessor is used.
+	 * This component is initialized by the [[$statusAccessor]] configuration property.
 	 * 
 	 * @throws InvalidConfigException
-	 * @return NULL|\raoul2000\workflow\base\IStatusAccessor
+	 * @return NULL|\raoul2000\workflow\base\IStatusAccessor the status accessor component used bu the behavior
+	 * or NULL if not configured (default)
 	 */
 	public function getStatusAccessor()
 	{
@@ -843,9 +843,11 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Returns the status converter instance used by this behavior or NULL
 	 * if no status converter is used.
+	 * This component is initialized by the [[$statusConverter]] configuration property.
 	 * 
 	 * @throws InvalidConfigException
-	 * @return NULL|\raoul2000\workflow\base\IStatusIdConverter
+	 * @return NULL|IStatusIdConverter The status Id Converter used by the behavior or
+	 * NULL if not configured (default)
 	 */
 	public function getStatusConverter()
 	{
@@ -870,16 +872,17 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Returns the current Status instance.
 	 * 
-	 * @return Status the value of the status.
+	 * @return NULL|Status The status instance or NULL if the model is not in a workflow
+	 * @see hasWorkflowStatus()
 	 */
 	public function getWorkflowStatus()
 	{
 		return $this->_status;
 	}
 	/**
-	 * Returns the current Workflow instance.
+	 * Returns the current Workflow instance the model is in or NULL if the model is not in a workflow.
 	 * 
-	 * @return \raoul2000\workflow\Workflow | null the workflow the owner model is currently in, or null if the owner
+	 * @return NULL|Workflow  the workflow the owner model is currently in, or null if the owner
 	 * model is not in a workflow
 	 */
 	public function getWorkflow()
@@ -887,7 +890,7 @@ class SimpleWorkflowBehavior extends Behavior
 		return $this->hasWorkflowStatus() ? $this->getWorkflowSource()->getWorkflow($this->getWorkflowStatus()->getWorkflowId()) : null;
 	}
 	/**
-	 * Returns a value indicating whether the owner model is currently in a workflow.
+	 * Returns a value indicating whether the owner model is currently in a workflow or not.
 	 *
 	 * @return boolean TRUE if the owner model is in a workflow, FALSE otherwise
 	 */
@@ -1036,7 +1039,7 @@ class SimpleWorkflowBehavior extends Behavior
 		}
 	}
 	/**
-	 * Tests that a SimpleWorkflowBehavior behavior is attached to the object passed as argument.
+	 * Tests that a `SimpleWorkflowBehavior` behavior is attached to the object passed as argument.
 	 *
 	 * This method returns FALSE if $model is not an instance of BaseActiveRecord (has SimpleWorkflowBehavior can only be attached
 	 * to instances of this class) or if none of its attached behaviors is a or inherit from SimpleWorkflowBehavior.

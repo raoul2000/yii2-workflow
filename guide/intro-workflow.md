@@ -7,8 +7,7 @@ as work of a person, a group of persons, an organization of staff, or one or mor
 Workflow may be seen as any abstraction of real work, segregated in workshare, work split or other types of ordering. 
 For control purposes, workflow may be a view on real work under a chosen aspect, thus serving as a virtual 
 representation of actual work. 
-
-> (*[read more on Wikipedia](http://en.wikipedia.org/wiki/Workflow)*)
+(*[read more on Wikipedia](http://en.wikipedia.org/wiki/Workflow)*)
 
 Workflows (also called Petri net) is a vast subject and the aim of this document is not to go deeply in the theorical fields. 
 As described in the next chapter, the **SimpleWorkflow** behavior only implements a simple subset of it.  if you are interested in 
@@ -88,7 +87,7 @@ That is when *SimpleWorkflow* can be useful!
 
 ### Workflow Definition
 
-So we have a nice workflow, let's see how the *SimpleWorkflow* can help in managing our Post models life-cycle inside this workflow.
+So we have a nice workflow, let's see how the *SimpleWorkflowBehavior* can help in managing our Post models life-cycle inside this workflow.
 First we must create a definition for our workflow. 
 
 A Workflow can be defined as a PHP class that contains the method `getDefinition()`. This method returns the workflow definition as 
@@ -211,7 +210,7 @@ status has been set to *published*, so, from the *SimpleWorkflowBehavior* point 
 
 	null -> 'published'
 This transition is particular as it happens **only when a model enters into a workflow**. If you remember well, the *PostWorkflow* definition 
-above contained a key called *initialStatusId*. This key is used to define the status Id that must be used by any model when entering a workflow. 
+above contained a key called `initialStatusId`. This key is used to define the status Id that must be used by any model when entering a workflow. 
 Obviously we didn't comply with this rule as we tried to enter through the *published* status and that's why we get a self explanatory
 exception advising us to use *PostWorkflow/draft* instead.
 
@@ -247,7 +246,7 @@ When you use `sendToStatus()` it is not required to save the model for the *Simp
 - if such a transition exists, ensure that it can be used and that it is valid
 - on success, apply the transition and update the `status` attribute owned by the Post model.
 
-**_sendToStatus()_ actually performs the transition : the model leaves it current status and goes to the new one.** It is equivalent
+Note that **_sendToStatus()_ actually performs the transition : the model leaves it current status and goes to the new one.** It is equivalent
 to `status` attribute assignment and model being saved.
 
 In the example below, the output is the same as before, without having to invoke *save()*.
