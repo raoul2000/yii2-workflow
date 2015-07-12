@@ -37,4 +37,9 @@ interface StatusInterface
 	 * @return Workflow the workflow instance
 	 */
 	public function getWorkflow();
+	/**
+	 * Test is this status is the initial status of the parent workflow
+	 * @return bool TRUE if this status is the initial status of its parent workflow, FALSE otherwise
+	 */
+	public function isInitialStatus();
 }

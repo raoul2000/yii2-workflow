@@ -116,4 +116,14 @@ class Status extends WorkflowBaseObject implements StatusInterface
 		}
 		return $this->getSource()->getWorkflow($this->getWorkflowId());		
 	}
+	/**
+	 * @see \raoul2000\workflow\base\StatusInterface::isInitialStatus()
+	 */	
+	public function isInitialStatus()
+	{
+		if( $this->getSource() === null) {
+			throw new WorkflowException('no workflow source component available');
+		}
+		return $this->getWorkflow()->getInitialStatusId() == $this->getId();		
+	}
 }

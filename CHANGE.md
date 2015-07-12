@@ -1,3 +1,9 @@
+#version 0.0.17
+- add method `StatusInterface->isInitialStatus()` to test if a status instance is the initial status of the workflow it belongs to.
+- add argument `$includeCurrent` in `WorkflowHelper::getNextStatusListData(...)`. When TRUE the current model status is added to the returned array. 
+When FALSE (default) only next statuses are included.
+- rollback previous change : `$emptyStringAsNull` is removed. The behavior now applies *empty()* to detect unset status 
+
 #version 0.0.16
 - add the configuration setting `$emptyStringAsNull` to *SimpleWorkflowBehavior*. 
 

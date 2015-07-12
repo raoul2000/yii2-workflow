@@ -10,25 +10,35 @@ class WorkflowHelper
 	/**
 	 * Returns an associative array containing all statuses that can be reached by model.
 	 * 
-	 * Note that the current model status is NOT included in this list.
+	 * 
 	 * @param BaseActiveRecord $model
-	 * @param boolean $validate
-	 * @param boolean $beforeEvents
+	 * @param boolean $validate when TRUE only those status with successfull attribute validation are included. When FALSE (default)
+	 * Attribute validation is done performed.
+	 * @param boolean $beforeEvents when TRUE all configured *before* events are fired : only the status that don't invalidate the
+	 * workflow event are included in the returned array, otherwise no event is fired and all next status are included 
+	 * @param boolean $includeCurrent when TRUE the current model status is added to the returned array. When FALSE (default)
+	 * only next statuses are included
 	 * @throws WorkflowException
 	 * @return array
 	 */
-	public static function getNextStatusListData($model, $validate = false, $beforeEvents = false)
+	public static function getNextStatusListData($model, $validate = false, $beforeEvents = false, $includeCurrent = false)
 	{
 		if (! SimpleWorkflowBehavior::isAttachedTo($model)) {
 			throw new WorkflowException('The model does not have a SimpleWorkflowBehavior behavior');
 		}
 		$listData = [];
+
+		if( $includeCurrent ) {
+			$currentStatus = $model->getWorkflowStatus();
+			$listData[$currentStatus->getId()] = $currentStatus->getLabel();
+		}
 		$report = $model->getNextStatuses($validate, $beforeEvents);
 		foreach ($report as $endStatusId => $info) {
 			if (! isset($info['isValid']) || $info['isValid'] === true) {
 				$listData[$endStatusId] = $info['status']->getLabel();
 			}
 		}
+
 		return $listData;
 	}
 	/**

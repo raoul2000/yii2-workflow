@@ -148,12 +148,6 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public $fireDefaultEvent = true;
 	/**
-	 * @var boolean when TRUE, the status attribute is considered as null if it contains an empty string. If set to FALSE this is
-	 * developer responsability to nullify the status attribute value, because an empty string is considered as an invalid
-	 * status id.
-	 */
-	public $emptyStringAsNull = true;
-	/**
 	 * @var string Read only property that contains the id of the default workflow to use with
 	 * this behavior.
 	 */
@@ -549,10 +543,12 @@ class SimpleWorkflowBehavior extends Behavior
 
 		$scenario = [];
 		$events = [ 'before' => [], 'after' => []];
-		$newStatus = null;
-		$defaultEventCfg = null;
+		$defaultEventCfg = $newStatus = null;		
 		
-		if ( $start === null && $end !== null) {
+		$emptyStart = empty($start);
+		$emptyEnd   = empty($end);
+		
+		if ( $emptyStart && ! $emptyEnd) {
 
 			// (potential) entering workflow -----------------------------------
 
@@ -579,7 +575,7 @@ class SimpleWorkflowBehavior extends Behavior
 			}
 			$newStatus = $end;
 
-		} elseif ( $start !== null && $end == null) {
+		} elseif ( ! $emptyStart  && $emptyEnd ) {			
 
 			// leaving workflow -------------------------------------------------
 
@@ -599,7 +595,7 @@ class SimpleWorkflowBehavior extends Behavior
 				];	
 			}			
 			$newStatus = $end;
-		} elseif ( $start !== null && $end !== null ) {
+		} elseif ( ! $emptyStart  && ! $emptyEnd ) {
 
 			// change status ---------------------------------------
 
@@ -991,7 +987,7 @@ class SimpleWorkflowBehavior extends Behavior
 		if ( $this->getStatusConverter() != null) {
 			$ownerStatus = $this->_statusConverter->toSimpleWorkflow($ownerStatus);
 		}
-		return $this->emptyStringAsNull && empty($ownerStatus) ? null : $ownerStatus;
+		return $ownerStatus;
 	}
 	/**
 	 * Set the internal status value and the owner model status attribute.

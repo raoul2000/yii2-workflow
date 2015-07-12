@@ -45,6 +45,10 @@ class MyStatus implements StatusInterface
 		// TODO: Auto-generated method stub
 
 	}
+	
+	public function isInitialStatus() {
+		
+	}
 
 
 }

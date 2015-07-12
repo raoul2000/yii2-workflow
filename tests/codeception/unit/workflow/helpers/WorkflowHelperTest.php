@@ -12,7 +12,6 @@ use raoul2000\workflow\base\Status;
 use raoul2000\workflow\base\Transition;
 use raoul2000\workflow\base\Workflow;
 
-
 class WorkflowHelperTest extends TestCase
 {
 	use \Codeception\Specify;
@@ -46,6 +45,31 @@ class WorkflowHelperTest extends TestCase
 		];
 		
 		$this->assertEquals(4, count(array_intersect_assoc($expected,$ar)));
-
+	}	
+	
+	public function testGetNextStatusListData()
+	{
+		$model = new Item04();
+		$model->enterWorkflow();
+		
+		$ar = WorkflowHelper::getNextStatusListData($model);
+		
+		$expected = [
+			'Item04Workflow/A' => 'Entry',
+			'Item04Workflow/B' => 'Published',
+		];
+		
+		$this->assertEquals( 2, count($ar));
+		$this->assertEquals(2, count(array_intersect_assoc($expected,$ar)));
+		
+		$model->sendTostatus('B');
+		$ar = WorkflowHelper::getNextStatusListData($model,false,false,true);
+		$this->assertEquals( 3, count($ar));
+		
+		$this->assertEquals(3, count(array_intersect_assoc([
+			'Item04Workflow/A' => 'Entry',
+			'Item04Workflow/B' => 'Published',
+			'Item04Workflow/C' => 'node C',
+		],$ar)));
 	}
 }

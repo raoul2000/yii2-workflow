@@ -75,6 +75,43 @@ class StatusTest extends TestCase
 			//verify('workflow does not contains status C', $this->src->getStatus('wid/C') == null)->true();
     	});
     }
+    
+    public function testAccessRelatedWorkflowObjects()
+    {
+    	$this->src->addWorkflowDefinition('wid', [
+    		'initialStatusId' => 'A',
+    		'status' => [
+    			'A' => [
+    				'transition' => 'B',
+    				'label' => 'label A'
+    			],
+    			'B' => []
+    		]
+    	]);
+    	
+    	$this->specify('isInitialStatus is ok',function() {
+    		
+    		$a = $this->src->getStatus('wid/A');    		
+    		expect($a->isInitialStatus())->true();
+
+    		$a = $this->src->getStatus('wid/B');
+    		expect($a->isInitialStatus())->false();
+    	});
+    	
+    	$this->specify('parent workflow can be obtained',function() {
+    		$a = $this->src->getStatus('wid/A');    		
+    		expect($a->getWorkflow()->getId())->equals('wid');
+    		$a = $this->src->getStatus('wid/B');
+    		expect($a->getWorkflow()->getId())->equals('wid');
+    	});
+    	    	
+    	$this->specify('transitions can be obtained',function() {
+    		$a = $this->src->getStatus('wid/A');    		
+    		expect(count($a->getTransitions()))->equals(1);
+    	});
+    	
+    }
+        
     public function testLoadStatusSuccess2()
     {
     	$this->src->addWorkflowDefinition('wid', [

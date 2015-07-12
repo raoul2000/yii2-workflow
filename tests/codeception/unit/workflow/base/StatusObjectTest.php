@@ -269,5 +269,14 @@ class StatusObjectTest extends TestCase
 			);
 			$st->getWorkflow();
 		});		
+		
+		$this->specify('Failed to call isInitialStatus when no source is configured', function () use($st)
+		{
+			$this->setExpectedException(
+				'raoul2000\workflow\base\WorkflowException',
+				'no workflow source component available'
+			);
+			$st->getWorkflow();
+		});		
 	}	
 }
