@@ -24,28 +24,38 @@ Below is a list of currently supported scenario names :
 		<td><b>Description</b></td>
 	</tr>
 	<tr>
-		<td>`from {S1} to {S2}`</td>
-		<td>the model goes from status S1 to status S2</td>
+		<td>`from {W1/S1} to {W1/S2}`</td>
+		<td>the model goes from status S1 to status S2 in workflow W1</td>
 	</tr>
 	<tr>
-		<td>`leave status {S1}`</td>
-		<td>the model leaves the status S1</td>
+		<td>`leave status {W1/S1}`</td>
+		<td>the model leaves the status S1 in workflow W1</td>
 	</tr>
 	<tr>
-		<td>`enter status {S1}`</td>
-		<td>the model enters into the status S1</td>
+		<td>`enter status {W1/S1}`</td>
+		<td>the model enters into the status S1 in workflow W1</td>
 	</tr>
 	<tr>
-		<td>`enter workflow {W}`</td>
-		<td>the model enters into workflow W</td>
+		<td>`enter workflow {W1}`</td>
+		<td>the model enters into workflow W1</td>
 	</tr>
 	<tr>
-		<td>`leave workflow {W}`</td>
-		<td>the model leaves workflow W</td>
+		<td>`leave workflow {W1}`</td>
+		<td>the model leaves workflow W1</td>
 	</tr>
 </table>
 
-As you can see, scenario names are quite self explanatory !
+As you can see, scenario names are quite self explanatory ! To assist you in using workflow scenario names, you can use the class `raoul2000\workflow\validation\WorkflowScenario`.
+
+For instance : 
+
+```php
+echo WorkflowScenario::changeStatus('W1/S1','W1/S2'); 	// "from {W1/S1} to {W1/S2}"
+echo WorkflowScenario::leaveStatus('W1/S1'); 			// "leave status {W1/S1}"
+echo WorkflowScenario::enterStatus('W1/S1'); 			// "enter status {W1/S1}"
+echo WorkflowScenario::enterWorkflow('W1'); 			// "enter workflow {W1}"
+echo WorkflowScenario::leaveWorkflow('W1'); 			// "leave workflow {W1}"
+```
 
 ## Usage example
 
@@ -102,20 +112,27 @@ class Post extends \yii\db\ActiveRecord
 ```
 
 In the above example we have defined a *Post* model and configured validation rules to implement the following (imaginary) business rules :
-- a post must always have a title - rule n°1 : that's a standard one, no workflow magic here
-- redactors are not allowed to send a empty post to correction - rule n°2 : attribute `body` is required when the post enters into status *post/correction*
-- correctors are responsible for setting a category to all post before publishing it - rule n°3 : when a post leaves the 'post/correction* status to go to 
+- **rule n°1 : a post must always have a title** : that's a standard one, no workflow magic here
+- **rule n°2 : redactors are not allowed to send a empty post to correction** : attribute `body` is required when the post enters into status *post/correction*
+- **rule n°3 : correctors are responsible for setting a category to all post before publishing it** : when a post leaves the 'post/correction* status to go to 
 *post/published* it must have the `category`attribute set.
-- it is forbidden to publish or archive a post with no tags or no category - rule n°4 : attributes `tags` and `category` cannot be empty when the post
+- **rule n°4 : it is forbidden to publish or archive a post with no tags or no category** : attributes `tags` and `category` cannot be empty when the post
 enter into status *post/published* or *post/archived*.
 
 
 
 ## Implementation
 
-So how does this works ? As you may have guesses, the entry point is the `WorkflowValidator` validator configured for the `status` attribute.
-This validator is not actually going to validat the attribute it is configured for ! Yes, believe it or not, this validator doesn't care about the
+So how does this works ? As you may have guessed, the entry point is the `WorkflowValidator` validator configured for the `status` attribute.
+This validator is not actually going to validate the attribute it is configured for ! Yes, believe it or not, this validator doesn't care about the
 current status value or if the model is about to perform a transition that is not permitted : validating transitions is done by the `SimpleWorkflowBehavior` when the
-model is saved (or when you explicitely invoke `sendToStatus()` on the model). 
+model is saved (or when you explicitely invoke `sendToStatus()` on the model) and not by the `WorkflowValidator` validator.
 
-TBC
+When a model is validated, following occurs :
+
+- `WorkflowValidator` identifies the pending transition by looking at the `status` attribute value and the current Status.
+- Based on the pending transition, get a *scenario sequence*
+- for each scenario in the scenario sequence, apply corresponding validating rules
+
+
+
