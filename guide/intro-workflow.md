@@ -47,7 +47,7 @@ Our workflow definition is:
 - initial status : draft
 
 To handle this very simple workflow, there is not much to do as the user has complete freedom to set a post status : any 
-status can be reached from any other status and in this case, *there is no need** for a dedicated extension that would 
+status can be reached from any other status and in this case, *there is no need* for a dedicated extension that would 
 handle workflow logic...because there is no workflow logic !
 
 ## Use case²: a multi-user publishing system
@@ -66,20 +66,20 @@ new organization. First of all, let's list possible post statuses :
 - **published** : the post is online, available to readers
 - **archived** : the post is not directly available to readers, but can be accessed through the archive section of the site
 
-That is not enough. Now we must define possible transitions between these statuses. These transitions strongly **depend on how 
+That is not enough, we must also define possible transitions between these statuses. These transitions strongly **depend on how 
 the work is going to be organized**, how users of our publishing system will interact with each other. For this example we 
-will abritrarly state following rules : 
+will abritrarly state the following rules : 
 
 1. A Post must always be corrected before publication
 2. the chief editor is responsible for publishing/unpublishing posts
 3. the chief editor is responsible for sending a post to archive
 
 That will be enough for this example but of course we could (and probably should) add more business rules.
-Now, based on what we have just define, here is a possible Post workflow : 
+Now, based on what we have just define, here is a possible workflow four our posts : 
 
 <img src="images/post-workflow-2.png" alt="workflow 2"/>
 
-The first version of the Post worfklow was very simple, and as each status could reach any other status, there was no need for 
+The first version of the "Post worfklow" was very simple, and as each status could reach any other status, there was no need for 
 the developer to make any tests when a Post changed status. With this new version, that's another story ! Some logic must 
 be implemented in order to prevent *Archived* post to become *Draft*, or *Published* posts to be sent to *Correction* by a redactor. 
 
@@ -90,8 +90,8 @@ That is when *SimpleWorkflow* can be useful!
 So we have a nice workflow, let's see how the *SimpleWorkflowBehavior* can help in managing our Post models life-cycle inside this workflow.
 First we must create a definition for our workflow. 
 
-A Workflow can be defined as a PHP class that contains the method `getDefinition()`. This method returns the workflow definition as 
-PHP array.
+The default workflow definition format supported by *yii2-workflow* is a PHP array. Basically, you provide a class that contains the method `getDefinition()`, and
+this method returns the workflow definition as a PHP array.
 
 The class is named **PostWorkflow** which is by convention the name of a workflow associated with the *Post* model. It is located in
 `@app/models`, the default location where workflow definitions are stored. Note that these conventions and default settings 
@@ -168,7 +168,7 @@ class Post extends \yii\db\ActiveRecord
     // ...
 ```
 
-We know have a *Post* model with workflow capabilities. Let's see how we can use it.
+We now have a *Post* model with workflow capabilities. Let's see how we can use it.
 
 ## Basic Status Usage 
  
@@ -201,7 +201,8 @@ When we run this code, we get an Exception !
 
 	Workflow Exception – raoul2000\workflow\base\WorkflowException
 	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected)	
-Could it be more clear ? Ok, maybe it could. Let's see in detail what just happened. 
+	
+Could it be more clear ? Ok, maybe it could but let's see in detail what just happened. 
 
 The *SimpleWorkflowBehavior* enters in action when the Post is saved. At this point it tests if the transitions is possible
 between the current status (managed internally by the behavior) and the final one (assigned to the `status` attribute). 
@@ -209,9 +210,12 @@ In our case, there was no current status (the object has just been created) and 
 status has been set to *published*, so, from the *SimpleWorkflowBehavior* point of view, we are dealing with the following transition : 
 
 	null -> 'published'
+	
 This transition is particular as it happens **only when a model enters into a workflow**. If you remember well, the *PostWorkflow* definition 
-above contained a key called `initialStatusId`. This key is used to define the status Id that must be used by any model when entering a workflow. 
-Obviously we didn't comply with this rule as we tried to enter through the *published* status and that's why we get a self explanatory
+above contained a key called `initialStatusId`. This key is used to define the status Id that must be used by any model when entering a workflow. This is a built-in 
+constraint : the first status assigned to a model must be the one defined in the `initialStatusId` key.
+
+Obviously we didn't comply with this rule as we tried to enter into the workflow through the *published* status and that's why we received an
 exception advising us to use *PostWorkflow/draft* instead.
 
 Let's follow this wise advice :
@@ -237,7 +241,7 @@ For the moment just remember that these 2 forms of writing a status are equivale
 
 ### sendToStatus
 
-Another way of assigning a status to our Post model is by using the method `sendToStatus()` provided by the *SimpleWorkflowBehavrior*. 
+Another way of assigning a status to our Post model is by using the method `sendToStatus()` defined in the *SimpleWorkflowBehavrior* behavior. 
 When you use `sendToStatus()` it is not required to save the model for the *SimpleWorkflowBehavrior* to enter in action. A call to
 `sendToStatus()` will perform following tasks :
 
@@ -269,7 +273,7 @@ to ensure that the model is saved correctly, when needed.
 
 ### Summary
 
-The *SimpleWorkflowBehavior* maintains internally the *real* value of the current post status.
+The *SimpleWorkflowBehavior* maintains internally the *real* value of the current model status.
 To actually change the status of a model you have two options :
 
 - assign a value to the `status` attribute and save (or update) it : the value assigned to the `status` attribute
@@ -282,7 +286,7 @@ is committed immediately.
 
 If status assignment can be done by assigning a value to the `status` attribute, getting the status value of a model should not involve
 accessing this attribute directly but use the method `getWorkflowStatus()` instead. However in certain circumstances, reading the status 
-attribute value is acceptable but then it is your responsibility to ensure that both values are synchronized.
+attribute value is acceptable, but then it is your responsibility to ensure that both values are synchronized.
 
 ### getWorkflowStatus() vs attribute
 
@@ -307,6 +311,7 @@ The output is :
 
 	(1) the status is : PostWorkflow/draft 
 	(2) the status is : PostWorkflow/draft 
+
 Seeing at this result, it is not obvious why we should use the `getWorkflowStatus()` method instead of direct attribute access to get
 the status of a model. Ok but remember that the `status` attribute may not contain the actual value of the model's status, until this model is 
 saved (or updated). 
@@ -339,7 +344,7 @@ $post->save();	// keep the faith
 Can you guess what happens when the model is saved ?  Well, that's when the *SimpleWorkflowBehavior* enter into action, but that's too late... 
 The value of the `status` attribute is *correction* and the *real* status value stored internally by the behavior is NULL. From the 
 *SimpleWorkflowBehavior* point of view, this post object is trying to enter into a workflow through the *correction* status 
-and we know this is not permitted : bang ! Same exception again ! 
+and we already know this is not permitted : bang ! Same exception again ! 
 
 	Workflow Exception – raoul2000\workflow\base\WorkflowException
 	Not an initial status : PostWorkflow/published ("PostWorkflow/draft" expected) 
@@ -460,7 +465,7 @@ $this->on(
 ```
 
 The *AfterEnterStatus* event is fired each time a models enters into a status, no matter what is its start status. The *sendMail()* method 
-will be invoked each time a post model enter into the status *correction*, and **no matters where it comes from**. 
+will be invoked each time a post model enters into the status *correction*, **no matters where it comes from**. 
 
 Ok, next requirement ! .. yes, we have some business rules to implement in our super great multi-user publishing system ! (I hope you didn't 
 forgot it). One of our rule was :
@@ -506,7 +511,7 @@ attributes validation can quickly become a nightmare to handle
 Again, let's see that on an example.
 
 > In our publishing System, a Post has various attributes : *category*, *tags*, *priority*, etc... These attributes are not set at the Post creation 
-but at different moment of its lif-cycle in the workflow. For instance, we decide that the author must give a category to the Post, 
+but at different moment of its life-cycle in the workflow. For instance, we decide that the author must give a category to the Post, 
 the correction team is in charge of adding tags, and at last the chief editor is responsible for setting a priority to the Post. 
 
 In terms of validation rules for the Post model, this new requirement can be defined by 3 statements :
@@ -582,7 +587,7 @@ As you can see *SimpleWorkflow* allows to validate model attributes at different
 for instance validate that the attribute `tags` is not empty when the post model *enter status {Post3Workflow/ready}*, or 
 as soon as the post *enter workflow {Post3Workflow}*.
 
-The helper class *WorkflowScenario* is here tp assist you with scenario names, and if you favorite IDE includes a nice auto-completion feature
+The helper class *WorkflowScenario* is here to assist you with scenario names, and if you favorite IDE includes a nice auto-completion feature
 writting scenario name may become a real pleasure (more or less).
 
 Let's rewrite our validation rules using the *WorkflowScenario* helper:
