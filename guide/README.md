@@ -19,8 +19,8 @@ Key Concepts
 
 * [Overview](concept-overview.md)
 * [Workflow Source](concept-source.md)
-* [Events](concept-events.md)
-* [Attribute Validation](concept-validation.md)
+* [Workflow Events](concept-events.md)
+* [Workflow Driven Attribute Validation](concept-validation.md)
 
 Workflow Components
 -------------------

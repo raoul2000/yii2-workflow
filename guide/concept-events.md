@@ -1,4 +1,4 @@
-# Events
+# Workflow Events
 
 *SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow customization
 of model behavior.  
