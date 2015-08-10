@@ -142,9 +142,13 @@ class Post extends \yii\db\ActiveRecord
 }
 ```
 
+
 ## Event Object
 
-TBD
+All events fired are instances of the `raoul2000\workflow\events\WorkflowEvent` class. It provides all the method needed to get informations
+on the event that just occured.
+
+TBC
 
 ## Event Handler
 
@@ -328,4 +332,34 @@ public function createEnterWorkflowSequence($initalStatus, $sender)
 }
 ```
 
+## Generic Events
+
+We have seen in the previous chapters that using an *Event Sequence* you can easely implement a custom behavior for your model evolving into a workflow, by installing
+the appropriate event handlers: an *Event Sequence* allows you to react to the exact event you need with a thin control. However, if you don't need such precision, you can 
+also use so called *generic events*.
+
+Two *Generic Events* are always fired by the *SimpleWorkflowBehavior* as soon as a model changes status, and this, no matter what *Event Sequence* is configured. In fact
+even if you choose to not use *Event Sequence*, the *Generic Events* are fired, because they are fired by the *SimpleWorkflowBehavior* itself, and not by another component (like
+the event sequence component).
+
+The names of the 2 *Generic Events* are :
+
+- EVENT_BEFORE_CHANGE_STATUS : fired each time **before** a model changes status
+- EVENT_AFTER_CHANGE_STATUS : fired each time **after** a model changes status
+
+The *before* and *after* event type follow the same rules as with *Event Sequence* and in particular you can block a transition by invalidating the *before* event.
+
+In order to identify exactly what just happened to your model inside the workflow, you must test what are the values of the *startStatus* and *endStatus* by calling the
+corresponding `WorkflowEvent` methods.
+
+- `getStartStatus() == null && getEndStatus() != null` : the model is **entering** into the workflow
+- `getStartStatus() =! null && getEndStatus() != null` : the model is **changing** status
+- `getStartStatus() == null && getEndStatus() == null` : the model is **leaving** into the workflow
+
+
+
+
+
   
+
+

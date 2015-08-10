@@ -16,13 +16,13 @@ class WorkflowEvent extends ModelEvent
 	private $_start;
 	private $_end;
 	private $_transition;
-
 	private $_errorMessage = [];
 
 	/**
 	 * Create a WorkflowEvent instance.
 	 *
-	 * @param $name string name of the event.
+	 * @param string $name name of the event.
+	 * @param array $config configuration array that may contain following keys : 'start', 'end', 'transition'
 	 */
 	public function __construct($name, array $config = [])
 	{
@@ -47,6 +47,9 @@ class WorkflowEvent extends ModelEvent
 		parent::__construct($config);
 	}
 	/**
+	 * Get the status the model what into before this event occured.
+	 * In case the model is entering the workflow, this method returns NULL.
+	 * 
 	 * @return \raoul2000\workflow\base\Status the start status involved in this event
 	 */
 	public function getStartStatus()
@@ -54,6 +57,9 @@ class WorkflowEvent extends ModelEvent
 		return $this->_start;
 	}
 	/**
+	 * Get the final status reached by the model when this event occured.
+	 * In case the model is leaving the workflow, this method returns NULL.
+	 * 
 	 * @return \raoul2000\workflow\base\Status the end status involved in this event
 	 */
 	public function getEndStatus()
@@ -61,6 +67,8 @@ class WorkflowEvent extends ModelEvent
 		return $this->_end;
 	}
 	/**
+	 * Get the transition concerned by this event.
+	 * 
 	 * @return \raoul2000\workflow\Transition the transition involved in this event or NULL if no
 	 * transition is available (e.g. EnterWorkflow, LeaveWorkflow)
 	 * @see \raoul2000\workflow\base\Transition
@@ -73,7 +81,7 @@ class WorkflowEvent extends ModelEvent
 	/**
 	 * Invalidate this event.
 	 * 
-	 * Calling this methid is equivalent to setting the *isValid* property to false. Additionnally an
+	 * Calling this method is equivalent to setting the *isValid* property to false. Additionnally a
 	 * message can be added to the internal error message queue.
 	 * If $handled is set to true, following event handlers that may be installed for this event
 	 * will not be invoked.
@@ -94,7 +102,7 @@ class WorkflowEvent extends ModelEvent
 	}
 	/**
 	 * Returns an array containg all error messages.
-	 * An error message can be set when calling the *invalidate()* method.
+	 * An error message can be set by calling the *invalidate()* method.
 	 *
 	 * @return string[] the list of error messages
 	 */
@@ -105,7 +113,8 @@ class WorkflowEvent extends ModelEvent
 	///////// CHANGE STATUS /////////////////////////////////////////////////////
 
 	/**
-	 *
+	 * Create name for  a *before change status* event.
+	 * 
 	 * @param string $start ID of the status which is at the start of the transition (the status that is left)
 	 * @param string $end ID of the status which is at the end of the transition (the status that is reached)
 	 * @return string name of the event
@@ -119,7 +128,8 @@ class WorkflowEvent extends ModelEvent
 	}
 
 	/**
-	 *
+	 * Create name for  a *after change status* event.
+	 * 
 	 * @param string $start ID of the status which is at the start of the transition (the status that is left)
 	 * @param string $end ID of the status which is at the end of the transition (the status that is reached)
 	 * @return string name of the event
@@ -134,6 +144,12 @@ class WorkflowEvent extends ModelEvent
 
 	///////// LEAVE STATUS /////////////////////////////////////////////////////
 
+	/**
+	 * Create name for  a *before leave status* event.
+	 * 
+	 * @param string $status
+	 * @return string name of the event
+	 */
 	public static function beforeLeaveStatus($status = self::ANY_STATUS)
 	{
 		self::_checkNonEmptyString('status', $status);
