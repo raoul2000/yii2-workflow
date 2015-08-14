@@ -9,7 +9,7 @@
 	"type" : "yii2-extension",
 	"license" : "BSD-3-Clause",
 	"support" : {
-		"issues" : "https://github.com/raoul2000/yii2-guiders-widget/issues",
+		"issues" : "https://github.com/raoul2000/yii2-workflow/issues",
 		"source" : "https://github.com/raoul2000/yii2-workflow",
 		"email" : "raoul.boulard@gmail.com"
 	},
