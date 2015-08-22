@@ -6,7 +6,8 @@ use yii\base\Object;
 use yii\base\InvalidConfigException;
 /**
  * Implements the Workflow as an object having an `$id` and an `initialStatus`.
- * The Workflow class inherits from [[WorkflowBaseObject]] that provides support for **metadata** attributes.
+ * The Workflow class inherits from [[WorkflowBaseObject]] that provides support for **metadata** attributes and workflow
+ * source access.
  * 
  * @see WorkflowBaseObject
  */
@@ -59,10 +60,19 @@ class Workflow extends WorkflowBaseObject implements WorkflowInterface
 	 * @see \raoul2000\workflow\base\WorkflowInterface::getInitialStatus()
 	 */
 	public function getInitialStatus() {
-		if( $this->getSource() === null) {
+		if ( $this->getSource() === null) {
 			throw new WorkflowException('no workflow source component available');
 		}
 		return $this->getSource()->getStatus($this->getInitialStatusId());		
 	}
-
+	
+	/**
+	 * @see \raoul2000\workflow\base\WorkflowInterface::getAllStatuses()
+	 */
+	public function getAllStatuses() {
+		if ( $this->getSource() === null) {
+			throw new WorkflowException('no workflow source component available');
+		}
+		return $this->getSource()->getAllStatuses($this->getId());		
+	}
 }

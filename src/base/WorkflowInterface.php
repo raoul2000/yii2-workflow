@@ -24,6 +24,13 @@ interface WorkflowInterface
 	/**
 	 * Returns the initial status instance for this workflow
 	 * @return StatusInterface the initial status instance
+	 * @throws raoul2000\workflow\base\WorkflowException when no source component is available
 	 */
 	public function getInitialStatus();
+	/**
+	 * Returns an array containing all Status instances belonging to this workflow.
+	 * @return Status[]  status list belonging to this workflow
+	 * @throws raoul2000\workflow\base\WorkflowException when no source component is available
+	 */
+	public function getAllStatuses();	
 }

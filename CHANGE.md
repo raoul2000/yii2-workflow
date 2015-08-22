@@ -1,3 +1,15 @@
+#version 0.0.18
+- add method `WorkflowInterface->getAllStatuses()` allowing to get a list of all statuses belonging to a workflow, 
+using the workflow instance.
+
+You can now write : 
+
+```php
+// assuming our $post has a status let's get a list of all statuses in the current workflow
+$allStatuses = $post->getWorkflow()->getAllStatuses();
+```
+*This feature extends the one implemented in version 0.0.11*
+
 #version 0.0.17
 - add method `StatusInterface->isInitialStatus()` to test if a status instance is the initial status of the workflow it belongs to.
 - add argument `$includeCurrent` in `WorkflowHelper::getNextStatusListData(...)`. When TRUE the current model status is added to the returned array. 
@@ -28,11 +40,10 @@ performed by the model :
 
 In both cases, a call to *getTransition()* returns NULL : entering or leaving a workflow is not considered as a transition.
  
-
 #version 0.0.14
 - improve leave workflow management
 
-The action to **delete** the owner model is now considered as *leaving the workflow* : the leave workflow event
+The action to **delete** the owner model is now considered as *leaving the workflow* : the *leave workflow* event
 sequence is fired. Previously, the only way for a model to leave a workflow was by assigning NULL to the status attribute and saving
 the model (or by calling `sendToStatus(null)`); 
 
@@ -41,8 +52,7 @@ the model (or by calling `sendToStatus(null)`);
 
 **warning** : The *SimpleWorkflowBehavior* has been first designed to be attached to an `ActiveRecord` instance and thus integrates in the life cycle
 of such objects. By installing event handlers on various `ActiveRecord` events, it automatically handles status persistence. If the behavior
-is attached to another type of object, the developer must understand and (possibly) implement all the features that otherwise would be already available.
-
+is attached to another type of object, the developer must understand and (possibly) implement all the features that otherwise would be available by default.
 
 #version 0.0.12
 - **add status conversion map setter** to the class `raoul2000\workflow\base\StatusIdConverter`. The map is still required by the constructor
@@ -66,10 +76,10 @@ class Post extends \yii\db\ActiveRecord
     }
 }
 ```
-In the previous version it was only possible to initialize the 'statusConverter' parameter to a string, representing the id of 
+In the previous version it was only possible to initialize the `statusConverter` parameter to a string, representing the id of 
 a component registered in `Yii::$app`.
 
-This also applies to 'statusAccessor' parameter.
+This also applies to `statusAccessor` parameter.
 
 - **lazy component initialization** for status converter and status accessor. If configured, these component are actually initialized (assigned)
 and validated when accessed for the first time.
@@ -91,10 +101,10 @@ $config = [
 - update unit tests
 - check interface implemented instead of class
 - remove *StatusInterface.addTransition()* method
-- add workflow source component to WorkflowBaseObject constructor. Update Status and Workflow interface to enable accessing 
-workflow items from Status or Workflow.
+- add workflow source component to WorkflowBaseObject constructor. Update Status and WorkflowInterface to enable accessing 
+workflow items from Status or Workflow instances.
 
-For instance it is now possible to do the following : 
+For example it is now possible to do the following : 
 
 ```php
 // let's get a status instance from our Post model

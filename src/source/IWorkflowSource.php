@@ -18,7 +18,7 @@ interface IWorkflowSource
 	 * whose id is passed as argument.
 	 * 
 	 * @param string $id workflow Id
-	 * @return array Status instances 
+	 * @return StatusInterface[] list of status. The array key is the status ID
 	 * @throws WorkflowException no workflow is found with this Id
 	 */
 	public function getAllStatuses($id);
