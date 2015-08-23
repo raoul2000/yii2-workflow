@@ -13,23 +13,25 @@ class Post extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            'class'                    => '\raoul2000\workflow\base\SimpleWorkflowBehavior',
-            
-            // model attribute to store status 
-            'statusAttribute'          => 'col_status',
-            
-            // workflow source component name 
-            'source'                   => 'my_workflow_source',
-            
-            'defaultWorkflowId'        => 'MyWorkflow',
-            'statusConverter'          => null,
-            'statusAccessor'           => null,
-            
-            // Event Sequence Component Name
-            'eventSequence'            => 'eventSequence',
-            
-            'propagateErrorsToModel'   => false,
-            'stopOnFirstInvalidEvent'  => true,
+        	[
+	            'class'                    => '\raoul2000\workflow\base\SimpleWorkflowBehavior',
+	            
+	            // model attribute to store status 
+	            'statusAttribute'          => 'col_status',
+	            
+	            // workflow source component name 
+	            'source'                   => 'my_workflow_source',
+	            
+	            'defaultWorkflowId'        => 'MyWorkflow',
+	            'statusConverter'          => null,
+	            'statusAccessor'           => null,
+	            
+	            // Event Sequence Component Name
+	            'eventSequence'            => 'eventSequence',
+	            
+	            'propagateErrorsToModel'   => false,
+	            'stopOnFirstInvalidEvent'  => true,
+			]
         ];
     }
 }

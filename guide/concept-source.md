@@ -81,10 +81,12 @@ class SpaceShip extends \yii\db\ActiveRecord
     public function behaviors()
     {
     	return [
-			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-			// SpaceShip will use a specific Workflow Source Component
-			// All other models are using the default one
-			'source' => 'mySpaceSource'
+			[
+				'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+				// SpaceShip will use a specific Workflow Source Component
+				// All other models are using the default one
+				'source' => 'mySpaceSource'
+			]
     	];
     }
 }

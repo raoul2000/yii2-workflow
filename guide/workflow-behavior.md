@@ -17,7 +17,7 @@ class Post extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-        	'workflow' => [
+        	[
         		'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
         		'defaultWorkflowId'      => 'post',
         		'statusAttribute'        => 'my_status',

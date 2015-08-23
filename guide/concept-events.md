@@ -115,8 +115,10 @@ class Post extends \yii\db\ActiveRecord
     public function behaviors()
     {
     	return [
-			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-			'eventSequence' => 'myReducedEventSequence'
+    		[
+				'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+				'eventSequence' => 'myReducedEventSequence'
+			]
     	];
     }
 }
@@ -135,8 +137,10 @@ class Post extends \yii\db\ActiveRecord
     public function behaviors()
     {
     	return [
-			'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
-			'eventSequence' => null	// disable all SimpleWorkflow Events for Post instances
+			[
+				'class' => \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+				'eventSequence' => null	// disable all SimpleWorkflow Events for Post instances
+			]
     	];
     }
 }
