@@ -1047,8 +1047,8 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Tests that a `SimpleWorkflowBehavior` behavior is attached to the object passed as argument.
 	 *
-	 * This method returns FALSE if $model is not an instance of BaseActiveRecord (has SimpleWorkflowBehavior can only be attached
-	 * to instances of this class) or if none of its attached behaviors is a or inherit from SimpleWorkflowBehavior.
+	 * This method returns FALSE if $model is not an instance of yii\base\Component  or if none of its 
+	 * attached behaviors is a or inherit from SimpleWorkflowBehavior.
 	 *
 	 * @param BaseActiveRecord $model the model to test.
 	 * @return boolean TRUE if at least one SimpleWorkflowBehavior behavior is attached to $model, FALSE otherwise

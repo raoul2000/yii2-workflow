@@ -86,6 +86,7 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 		$nodes = $this->collectNodes();
 		$edges = $this->collectTransitions();
 		
+		//return ['nodes'=> $nodes, 'edges' => $edges];
 		return $this->createWorkflowDefinition($workflow, $nodes, $edges);
 	}
 
@@ -135,13 +136,11 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 	{
 		foreach ($this->_mapper as $attrName => $xp) {
 			$nodeList = $this->_xp->query($xp);
-			if ($nodeList->length != 1) {
-				throw new WorkflowException("failed to extract id for attribute $attrName");
+			if ($nodeList->length != 0) {
+				$this->_yedProperties[$attrName] = $nodeList->item(0)->value;
 			}
-			$this->_yedProperties[$attrName] = $nodeList->item(0)->value;
 		}
 	}
-
 	/**
 	 *
 	 * @throws WorkflowException
@@ -229,7 +228,7 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 			
 			// extract mandatory properties ////////////////////////////////////////////////////////////
 			
-			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-graphics'] . '"]/y:ShapeNode/y:NodeLabel', $currentNode);
+			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-graphics'] . '"]/*/y:NodeLabel', $currentNode);
 			if ($nl2->length != 1) {
 				continue;
 			}
@@ -239,17 +238,19 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 			
 			// extract custom properties /////////////////////////////////////////////////////////////////
 			
-			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-label'] . '"]', $currentNode);
-			if ($nl2->length == 1) {
-				$result[$yNodeId]['label'] = trim($nl2->item(0)->nodeValue);
+			if (isset($this->_yedProperties['n-label'])) {
+				$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-label'] . '"]', $currentNode);
+				if ($nl2->length == 1) {
+					$result[$yNodeId]['label'] = trim($nl2->item(0)->nodeValue);
+				}
 			}
 			
-			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-graphics'] . '"]/y:ShapeNode/y:Fill/@color', $currentNode);
+			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-graphics'] . '"]/*/y:Fill/@color', $currentNode);
 			if ($nl2->length == 1) {
 				$result[$yNodeId]['background-color'] = trim($nl2->item(0)->nodeValue);
 			}
 			
-			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-graphics'] . '"]/y:ShapeNode/y:NodeLabel/@textColor', $currentNode);
+			$nl2 = $this->_xp->query('ns:data[@key="' . $this->_yedProperties['n-graphics'] . '"]/*/y:NodeLabel/@textColor', $currentNode);
 			if ($nl2->length == 1) {
 				$result[$yNodeId]['color'] = trim($nl2->item(0)->nodeValue);
 			}
