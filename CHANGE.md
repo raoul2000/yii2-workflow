@@ -1,3 +1,6 @@
+#version 0.0.19
+- fix GraphmlLoader to not only process ShapeNode elements, and use node label in yEd as Status Id.
+
 #version 0.0.18
 - add method `WorkflowInterface->getAllStatuses()` allowing to get a list of all statuses belonging to a workflow, 
 using the workflow instance.
