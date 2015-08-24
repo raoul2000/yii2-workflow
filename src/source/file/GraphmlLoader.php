@@ -82,6 +82,9 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 		$this->_xp->registerNamespace('y', 'http://www.yworks.com/xml/graphml');
 		
 		$this->extractYedProperties();
+		if(!isset($this->_yedProperties['w-intial-node-id'])) {
+			throw new WorkflowException("Missing custom workflow property : 'initialStatusId'");
+		}
 		$workflow = $this->collectWorkflowProperties();
 		$nodes = $this->collectNodes();
 		$edges = $this->collectTransitions();
