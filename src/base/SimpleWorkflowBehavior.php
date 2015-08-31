@@ -11,7 +11,6 @@ use yii\base\InvalidConfigException;
 use yii\base\Exception;
 use raoul2000\workflow\events\IEventSequence;
 use raoul2000\workflow\validation\WorkflowScenario;
-use tests\unit\workflow\behavior\InitStatusTest;
 use raoul2000\workflow\events\WorkflowEvent;
 
 /**
@@ -961,7 +960,7 @@ class SimpleWorkflowBehavior extends Behavior
 			} else {
 				return null;
 			}
-		}elseif ( $mixed instanceof Status ) {
+		}elseif ( $mixed instanceof StatusInterface ) {
 			return $mixed;
 		} else {
 			$status = $this->_wfSource->getStatus($mixed, $this->selectDefaultWorkflowId());
@@ -996,7 +995,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	private function setStatusInternal($status)
 	{
-		if ( $status !== null && ! $status instanceof Status) {
+		if ( $status !== null && ! $status instanceof StatusInterface) {
 			throw new WorkflowException('Status instance expected');
 		}
 

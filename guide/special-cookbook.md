@@ -7,6 +7,7 @@ Don't be scared ! most of the time you will not have to use **all** the configur
 on the following example.
 
 `@app/models/Post.php`
+
 ```php
 class Post extends \yii\db\ActiveRecord
 {
@@ -43,6 +44,7 @@ Again, no worries ! Usually the default Workflow Source component will be just f
 never have to create such a component.
 
 `@app/config/web.php`
+
 ```php
 $config = [
     'components' => [
