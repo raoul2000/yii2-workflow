@@ -417,12 +417,14 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * containing the workflow ID and status local ID.
 	 *
 	 * If $val does not include the workflow ID part (i.e it is not in formated like "workflowID/statusID")
-	 * this method uses $model and $defaultWorkflowId to get it.
+	 * this method uses $helper applying following rules :
+	 * - if $helper is a string it is considered as the workflow Id
+	 * - if $helper is an ActiveRecord instance and it is in a workflow, use it. If it is not in a workflow
+	 * use its default workflow Id.
 	 *
 	 * @param string $val the status ID to parse. If it is not an absolute ID, $helper is used to get the
 	 * workflow ID.
-	 * @param Model|string $model model used as workflow ID provider if needed
-	 * @param string|null $defaultWorkflowId a default workflow ID value
+	 * @param Model|string $helper workflow Id or ActiveRecord instance used to get the workflow id if not present in $val
 	 * @return string[] array containing the workflow ID in its first index, and the status Local ID
 	 * in the second
 	 * @throws WorkflowException Exception thrown if the method was not able to parse $val.
@@ -442,8 +444,10 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 			if ( !empty($helper)) {
 				if (  is_string($helper)){
 					$tokens[0] = $helper;
-				} elseif (  $helper instanceof yii\db\BaseActiveRecord && $helper->hasWorkflowStatus()) {
-					$tokens[0] = $helper->getWorkflowStatus()->getWorkflowId();
+				} elseif (  $helper instanceof yii\db\BaseActiveRecord ) {
+					$tokens[0] = $helper->hasWorkflowStatus()
+						? $helper->getWorkflowStatus()->getWorkflowId()
+						: $helper->getDefaultWorkflowId();
 				}
 			}
 			if ( $tokens[0] === null ) {

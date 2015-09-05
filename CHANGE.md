@@ -2,6 +2,7 @@
 - remove unnecessary use in SimpleWorkflowBehavior
 - test against StatusInterface and not anymore Status
 - update doc
+- minor change in the `WorkflowFileSource->parseStatusId()` method
 
 #version 0.0.19
 - fix GraphmlLoader to not only process ShapeNode elements, and use node label in yEd as Status Id.
