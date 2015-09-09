@@ -3,6 +3,20 @@
 - test against StatusInterface and not anymore Status
 - update doc
 - minor change in the `WorkflowFileSource->parseStatusId()` method
+- fix : restore model errors after `getNextStatuses()`
+
+**important notice**
+Because Yii2 ActiveRecord implementation does not fire any event when the method [refresh()](http://www.yiiframework.com/doc-2.0/yii-db-baseactiverecord.html#refresh%28%29-detail) 
+is called, the attached `SimpleWorkflowBehavior` has no
+way to know that the status attribute may have change and that the actual model status maintained internally by the behavior, needs to be updated.
+A [feature request](https://github.com/yiisoft/yii2/issues/9604) has been created but until it gets accepted and implemented you must
+call `initStatus()` after each call to `refresh()`. For example : 
+
+```php
+$post->refresh();
+$post->initStatus();
+```
+Note that calling `initStatus()` is usually never done by the developer but by the behavior itself when specific `ActiveRecords` event are fired.
 
 #version 0.0.19
 - fix GraphmlLoader to not only process ShapeNode elements, and use node label in yEd as Status Id.
