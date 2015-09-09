@@ -773,9 +773,7 @@ class SimpleWorkflowBehavior extends Behavior
 				// restore scenario name and errors
 				$this->owner->setScenario($saveScenario);
 				$this->owner->clearErrors();
-				foreach ($saveErrors as $attributeName => $errorMessage) {
-					$this->owner->addError($attributeName, $errorMessage);
-				}
+				$this->owner->addErrors($saveErrors);
 			}
 		}
 		return $nextStatus;
