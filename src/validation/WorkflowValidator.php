@@ -22,13 +22,6 @@ class WorkflowValidator extends Validator
 	 */
 	public $skipOnEmpty = false;
 
-	public function init()
-	{
-		parent::init();
-		if ($this->message === null) {
-			$this->message = Yii::t('app', 'Error on {attribute}.');
-		}
-	}
 	/**
 	 * Apply active validators for the current workflow event sequence.
 	 *

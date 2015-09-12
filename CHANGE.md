@@ -18,6 +18,8 @@ $post->initStatus();
 ```
 Note that calling `initStatus()` is usually never done by the developer but by the behavior itself when specific `ActiveRecords` event are fired.
 
+- remove custom validation error message in `WorkflowValidator->init()` (not needed) 
+
 #version 0.0.19
 - fix GraphmlLoader to not only process ShapeNode elements, and use node label in yEd as Status Id.
 
