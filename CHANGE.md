@@ -1,8 +1,8 @@
 #version 0.0.20
-- remove unnecessary use in SimpleWorkflowBehavior
-- test against StatusInterface and not anymore Status
+- remove unnecessary `use` statement in `SimpleWorkflowBehavior`
+- test against `StatusInterface` and not anymore `Status`
 - update doc
-- minor change in the `WorkflowFileSource->parseStatusId()` method
+- minor change in the `WorkflowFileSource->parseStatusId()`
 - fix : restore model errors after `getNextStatuses()`
 
 **important notice**
@@ -18,7 +18,9 @@ $post->initStatus();
 ```
 Note that calling `initStatus()` is usually never done by the developer but by the behavior itself when specific `ActiveRecords` event are fired.
 
-- remove custom validation error message in `WorkflowValidator->init()` (not needed) 
+- remove custom validation error message in `WorkflowValidator->init()` (not needed)
+- when a model changes status, all `WorkflowEvent` events fired now include the **start** status, the **end** status and the **transitions**. This change has been applied
+to all Event sequences in `raoul2000\workflow\events`.
 
 #version 0.0.19
 - fix GraphmlLoader to not only process ShapeNode elements, and use node label in yEd as Status Id.

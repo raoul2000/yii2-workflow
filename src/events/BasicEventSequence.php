@@ -24,37 +24,29 @@ class BasicEventSequence extends Object implements IEventSequence
 	 */
 	public function createEnterWorkflowSequence($initalStatus, $sender)
 	{
+		$config = [
+			'end'        => $initalStatus,
+			'sender'  	 => $sender
+		];
 		return [
 			'before' => [
 				new WorkflowEvent(
 					WorkflowEvent::beforeEnterWorkflow($initalStatus->getWorkflowId()),
-					[
-						'end'        => $initalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::beforeEnterStatus($initalStatus->getId()),
-					[
-						'end'        => $initalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				)
 			],
 			'after' => [
 				new WorkflowEvent(
 					WorkflowEvent::afterEnterWorkflow($initalStatus->getWorkflowId()),
-					[
-						'end'        => $initalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::afterEnterStatus($initalStatus->getId()),
-					[
-						'end'        => $initalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				)
 			]
 		];
@@ -73,37 +65,30 @@ class BasicEventSequence extends Object implements IEventSequence
 	 */
 	public function createLeaveWorkflowSequence($finalStatus, $sender)
 	{
+		$config = [
+			'start'      => $finalStatus,
+			'sender'  	 => $sender
+		];
+		
 		return [
 			'before' => [
 				new WorkflowEvent(
 					WorkflowEvent::beforeLeaveStatus($finalStatus->getId()),
-					[
-						'start'      => $finalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::beforeLeaveWorkflow($finalStatus->getWorkflowId()),
-					[
-						'start'      => $finalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				)
 			],
 			'after' => [
 				new WorkflowEvent(
 					WorkflowEvent::afterLeaveStatus($finalStatus->getId()),
-					[
-						'start'      => $finalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::afterLeaveWorkflow($finalStatus->getWorkflowId()),
-					[
-						'start'      => $finalStatus,
-						'sender'  	 => $sender
-					]
+					$config
 				)
 			]
 		];
@@ -124,55 +109,39 @@ class BasicEventSequence extends Object implements IEventSequence
 	 */
 	public function createChangeStatusSequence($transition, $sender)
 	{
+		$config = [
+			'start'      => $transition->getStartStatus(),
+			'end'  		 => $transition->getEndStatus(),
+			'transition' => $transition,
+			'sender'  	 => $sender			
+		];
 		return [
 			'before' => [
 				new WorkflowEvent(
 					WorkflowEvent::beforeLeaveStatus($transition->getStartStatus()->getId()),
-					[
-						'start'      => $transition->getStartStatus(),
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::beforeChangeStatus($transition->getStartStatus()->getId(), $transition->getEndStatus()->getId()),
-					[
-						'start'      => $transition->getStartStatus(),
-						'end'  		 => $transition->getEndStatus(),
-						'transition' => $transition,
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::beforeEnterStatus($transition->getEndStatus()->getId()),
-					[
-						'end'  		 => $transition->getEndStatus(),
-						'sender'  	 => $sender
-					]
+					$config
 				)
 			],
 			'after' => [
 				new WorkflowEvent(
 					WorkflowEvent::afterLeaveStatus($transition->getStartStatus()->getId()),
-					[
-						'start'      => $transition->getStartStatus(),
-						'sender'  	 => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::afterChangeStatus($transition->getStartStatus()->getId(), $transition->getEndStatus()->getId()),
-					[
-						'start'  	 => $transition->getStartStatus(),
-						'end'  		 => $transition->getEndStatus(),
-						'transition' => $transition,
-						'sender'     => $sender
-					]
+					$config
 				),
 				new WorkflowEvent(
 					WorkflowEvent::afterEnterStatus($transition->getEndStatus()->getId()),
-					[
-						'end'  		 => $transition->getEndStatus(),
-						'sender'  	 => $sender
-					]
+					$config
 				)
 			]
 		];

@@ -146,17 +146,21 @@ class Post extends \yii\db\ActiveRecord
 }
 ```
 
-
 ## Event Object
 
-All events fired are instances of the `raoul2000\workflow\events\WorkflowEvent` class. It provides all the method needed to get informations
+All events fired are instances of the `raoul2000\workflow\events\WorkflowEvent` class which provides all the method needed to get informations
 on the event that just occured.
 
-TBC
+- `getStartStatus()` : returns the Status instance that the model is leaving. If the WorkflowEvent is fired because the model *enters* into a workflow, this method returns `null`.
+- `getEndStatus()` : returns the Status instance that the model is reaching. If the WorkflowEvent is fired because the model *leaves* a workflow, this method returns `null`.
+- `getTransition()` : returns the Transition instance that the model is performing. Note that if the WorkflowEvent is fired because the model *enters* or *leaves* the
+workflow, this method returns `null`.
+
+Remember that a `WorkflowEvent` object is passed to all attached handlers(see next chapter).
 
 ## Event Handler
 
-A event handler is used to implement specific process on any of the events in the event sequence. Installing an event handler is
+A event handler is used to implement a specific process on any of the events in the event sequence. Installing an event handler is
 a standard operation described in the [Yii2 Definitive Guide](http://www.yiiframework.com/doc-2.0/guide-concept-events.html#attaching-event-handlers). 
 
 In the example below, we are attaching an handler for the event that is fired when a Post instance goes from the status *draft* to the
@@ -174,7 +178,7 @@ class Post extends \yii\db\ActiveRecord
 			[$this, 'sendMail']
 		);
 	}	
-	
+	// $event is an instance of raoul2000\workflow\events\WorkflowEvent
 	public function sendMail($event) 
 	{
 		MailingService::sendMailToCorrector(
@@ -183,6 +187,7 @@ class Post extends \yii\db\ActiveRecord
 		);		
 	}
 ```
+ 
 
 ## before vs after
 
