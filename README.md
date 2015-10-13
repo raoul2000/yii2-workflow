@@ -33,7 +33,7 @@ flexible so to adapt to a lot of execution contexts... well at least that was my
 
 ## Create A Workflow
  
-A workflow is defined as a PHP class that implements the `\raoul2000\workflow\base\IWorkflowDefinitionProvider` interface. This interface
+A workflow is defined as a PHP class that implements the `\raoul2000\workflow\source\file\IWorkflowDefinitionProvider ` interface. This interface
 declares the *getDefinition()* method that must return an array representing the workflow. 
 
 Let's define a very *simple workflow* that will be used to manage posts in a basic blog system.
