@@ -104,7 +104,7 @@ Let's see how our workflow definition looks like :
 ```php
 namespace app\models;
 
-class PostWorkflow implements \raoul2000\workflow\base\IWorkflowDefinitionProvider 
+class PostWorkflow implements \raoul2000\workflow\source\file\IWorkflowDefinitionProvider 
 {
 	public function getDefinition() {
 		return [ 
