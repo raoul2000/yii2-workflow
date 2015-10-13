@@ -46,7 +46,7 @@ Here is the PHP class that implements the definition for our workflow :
 ```php
 namespace app\models;
 
-class PostWorkflow implements \raoul2000\workflow\base\IWorkflowDefinitionProvider 
+class PostWorkflow implements \raoul2000\workflow\source\file\IWorkflowDefinitionProvider 
 {
 	public function getDefinition() {
 		return [
