@@ -1,3 +1,6 @@
+#version 0.0.21
+- fix CI failure : deep-copy 1.4.0 caused error `Maximum function nesting level of '200' reached, aborting!`. Version 1.3.1 is ok
+
 #version 0.0.20
 - remove unnecessary `use` statement in `SimpleWorkflowBehavior`
 - test against `StatusInterface` and not anymore `Status`
