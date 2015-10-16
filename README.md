@@ -28,13 +28,13 @@ to the require section of your `composer.json` file.
 
 ## Configuration
 
-For this "*Quick start Guide*" we will be using default configuration settings, but note that *yii2-workflow* is designed to be highly
+For this "*Quick start Guide*" we will be using default configuration settings, but remember that *yii2-workflow* is designed to be highly
 flexible so to adapt to a lot of execution contexts... well at least that was my goal.
 
 ## Create A Workflow
  
 A workflow is defined as a PHP class that implements the `\raoul2000\workflow\source\file\IWorkflowDefinitionProvider ` interface. This interface
-declares the *getDefinition()* method that must return an array representing the workflow. 
+declares the *getDefinition()* method that must return an array representing the workflow itself. 
 
 Let's define a very *simple workflow* that will be used to manage posts in a basic blog system.
 
@@ -99,7 +99,7 @@ That's it ! We are ready to play with *SimpleWorkflowBehavior*.
 ## Use It !
 
 Now that we are all setup, we can use the *SimpleWorkflowBehavior* methods to set/get the status of our posts : the *SimpleWorkflowBehavior* will 
-take care that the post doesn't reach a status where it is not supposed to go, depending on the workflow definition that we have created.
+take care that the post doesn't reach a status where it is not supposed to go, depending on the workflow definition that we have provided.
 
 ```php
 $post = new Post();
@@ -141,8 +141,12 @@ Yes, that's severe, but there was many ways to avoid this exception like for ins
 This is just one way of using the *SimpleWorkflowBehavior* but there's much more and hopefully enough to assist you
 in your workflow management inside your Yii2 web app.
 
-In the meantime you can have a look to the [Usage Guide](guide) (still under dev) and send any feedback. 
+In the meantime you can have a look to :
 
+- [yii2-workflow Usage Guide](http://raoul2000.github.io/yii2-workflow/guide-README.html) 
+- [yii2-workflow API Documentation](http://raoul2000.github.io/yii2-workflow/index.html)
+
+Please note thate this extension is still under development and that any feedback is welcome.
 
 License
 -------
