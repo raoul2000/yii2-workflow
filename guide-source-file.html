@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="language" content="en" />
+        <link href="./assets/ca9878b0/css/bootstrap.css" rel="stylesheet">
+<link href="./assets/e4a78afa/style.css" rel="stylesheet">
+<script src="./assets/dac0333d/jquery.js"></script>
+<script src="./assets/ca9878b0/js/bootstrap.js"></script>
+<script src="./assets/23719cdf/jssearch.js"></script>    <title>File Source - Workflow Components - Yii2-Workflow Guide</title>
+</head>
+<body>
+
+<div class="wrap">
+    <nav id="w52" class="navbar-inverse navbar-fixed-top navbar" role="navigation"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#w52-collapse"><span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span></button><a class="navbar-brand" href="./index.html">Yii2-Workflow Guide</a></div><div id="w52-collapse" class="collapse navbar-collapse"><ul id="w53" class="navbar-nav nav"><li><a href="./index.html">Class reference</a></li>
+<li><a href="./guide-README.html">Guide</a></li></ul><div class="navbar-form navbar-left" role="search">
+  <div class="form-group">
+    <input id="searchbox" type="text" class="form-control" placeholder="Search">
+  </div>
+</div>
+</div></nav>
+    <div id="search-resultbox" style="display: none;" class="modal-content">
+        <ul id="search-results">
+        </ul>
+    </div>
+
+    
+<div class="row">
+    <div class="col-md-2">
+                <div id="navigation" class="list-group"><a class="list-group-item" href="#navigation-48" data-toggle="collapse" data-parent="#navigation">Introduction <b class="caret"></b></a><div id="navigation-48" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-intro-workflow.html">About Workflows</a>
+<a class="list-group-item" href="./guide-intro-installation.html">Installing yii2-workflow</a>
+<a class="list-group-item" href="./guide-intro-upgrade-from-v1.html">Upgrading from Version 1.x</a></div>
+<a class="list-group-item" href="#navigation-49" data-toggle="collapse" data-parent="#navigation">Key Concepts <b class="caret"></b></a><div id="navigation-49" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-concept-overview.html">Overview</a>
+<a class="list-group-item" href="./guide-concept-source.html">Workflow Source</a>
+<a class="list-group-item" href="./guide-concept-events.html">Workflow Events</a>
+<a class="list-group-item" href="./guide-concept-validation.html">Workflow Driven Attribute Validation</a></div>
+<a class="list-group-item active" href="#navigation-50" data-toggle="collapse" data-parent="#navigation">Workflow Components <b class="caret"></b></a><div id="navigation-50" class="submenu panel-collapse collapse in"><a class="list-group-item" href="./guide-workflow-behavior.html">Behavior</a>
+<a class="list-group-item active" href="./guide-source-file.html">File Source</a></div>
+<a class="list-group-item" href="#navigation-51" data-toggle="collapse" data-parent="#navigation">Special topics <b class="caret"></b></a><div id="navigation-51" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-special-cookbook.html">Cookbook</a></div></div>    </div>
+    <div class="col-md-9 guide-content" role="main">
+        <h1>Workflow File Source Component <a href="#workflow-file-source-component" id="workflow-file-source-component" class="hashlink">&para;</a></h1><p>The workflow file source component reads workflow definitions from files, and provide Status, Workflow and Transition object.
+It is not usually accessed directly but though the <em>SimpleWorkflowBehavior</em> who loads it by default.</p>
+<p>To be able to handle various file formats, the <em>WorkflowFileSource</em> component relies on a modulable architecture where the task of
+locating and loading a file is delegated to a class implementing the <code>WorkflowDefinitionLoader</code> interface. There are currently 3 types
+of workflow definition loader available with yii2-workflow:</p>
+<ul>
+<li><code>PhpClassLoader</code> : loads the workflow definition from a class that implements the <code>IWorkflowDefinitionProvider</code> interface. This is
+<strong>the default loader</strong> used by the file source component.</li>
+<li><code>PhpArrayLoader</code> : loads the workflow definition from a PHP file that must returns a PHP array representing the workflow definition.</li>
+<li><code>GraphmlLoader</code> : loads the workflow definition from a Graphml file.</li>
+</ul>
+<p>The two first loader are somewhat equivalent in the way they expect to read workflow definition: they both expected to get a PHP array.
+On the other side, the GraphmlLoader expects to read an XML file.</p>
+<h2>Workflow definition as PHP Array <a href="#workflow-definition-as-php-array" id="workflow-definition-as-php-array" class="hashlink">&para;</a></h2><p>Both <code>PhpClassLoader</code> (default loader) and <code>PhpArrayLoader</code> expect to read workflow definition as PHP array. In this chapter we are going
+to describe the structure of this array.</p>
+<h3>Array Structure <a href="#array-structure" id="array-structure" class="hashlink">&para;</a></h3><h4>The Workflow <a href="#the-workflow" id="the-workflow" class="hashlink">&para;</a></h4><p>The PHP array defining a workflow is an associative array that must contains 2 keys : <strong>initialStatusId</strong> and <strong>status</strong>.</p>
+<ul>
+<li><em>initialStatusId</em> : <code>string</code> that represents the ID of the initial status</li>
+<li><em>status</em> : <code>array</code> associative array defining each status that belonging to the workflow.</li>
+</ul>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initialStatusId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'status'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;definition&nbsp;of&nbsp;statuses<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />]</span></code></pre>
+<h4>Status List Definition <a href="#status-list-definition" id="status-list-definition" class="hashlink">&para;</a></h4><p>The status list definition is an associative array where keys are status Ids and values are status definitions.
+If a status doesn't need any particular definition, it can be defined directly as a string value.</p>
+<p>In the example below, both <em>draft</em> and <em>pusblised</em> have a specific definition, but <em>archived</em> doesn't.</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initialStatusId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'status'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'draft'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[&nbsp;</span><span style="color: #FF8000">//&nbsp;single&nbsp;status&nbsp;definition&nbsp;]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'published'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[&nbsp;</span><span style="color: #FF8000">//&nbsp;single&nbsp;status&nbsp;definition&nbsp;]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archived'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />]</span></code></pre>
+<h4>Single Status Definition <a href="#single-status-definition" id="single-status-definition" class="hashlink">&para;</a></h4><p>A Single Status Definition is an associative array that may contains 2 specific keys : <strong>transition</strong> and <strong>label</strong></p>
+<ul>
+<li><em>transition</em> : <code>array|string</code> list of ids for all statuses that can be reached.</li>
+<li><em>label</em> : <code>string</code> user friendly name. If not set, the label is automatically created from the status Id.</li>
+</ul>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initialStatusId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'status'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'draft'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'label'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Draft&nbsp;State'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #FF8000">//&nbsp;transitions&nbsp;definition<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;]<br />]</span></code></pre>
+<h4>Transition Definition <a href="#transition-definition" id="transition-definition" class="hashlink">&para;</a></h4><p>A Transition Definition is an array or a string defining the list of status that can be reached from the current status.
+In the example below, we are defining a workflow with following transitions:</p>
+<ul>
+<li>draft -&gt; published</li>
+<li>published -&gt; draft</li>
+<li>published -&gt; archived</li>
+</ul>
+<p>As you can see, there is no transition that leaves the status <em>archived</em>. Once an item reaches this status it will never
+move to another status again: <em>archived</em> is called a <strong>final status</strong>.</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initialStatusId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'status'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'draft'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'label'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Draft&nbsp;State'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'published'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'published'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,</span><span style="color: #DD0000">'published'</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archived'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />]</span></code></pre>
+<p>Alternatively you can also use a comma separated list of status Id to define a transition. For example, transitions for the <em>published</em> status above ,
+could also be written this way :</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #DD0000">'published'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft,&nbsp;published'<br /></span><span style="color: #007700">]</span></code></pre>
+<h4>Metadata <a href="#metadata" id="metadata" class="hashlink">&para;</a></h4><p>Ok, we are now able to create workflows ! We can define statuses and transitions between them. As you you can see, the minimum attributes for a status is
+its <em>id</em> and optionally we can set a <em>label</em>, but that's all. Well, that's not a lot. What if we need to add more properties to our statuses ? Like for instance
+it could be nice to associate a color with each status, and display this color to the user (users like colors). The solution is <em>metadata</em>.</p>
+<p>The <em>metadata</em> allows you to add almost any attribute not only to statuses, but also to workflow and transition. Let's see that on an example where we are
+going to add a <em>color</em> and an <em>icon</em> metadata to the <em>published</em> status.</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #DD0000">'published'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'metadata'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'color'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'green'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'icon'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'glyphicon&nbsp;glyphicon-pencil'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />]</span></code></pre>
+<p>Later on we will be able to retrieve these value of course, and use them the way we want (for instance with a nice and colorful display).</p>
+<h4>Example <a href="#example" id="example" class="hashlink">&para;</a></h4><p>As an example we will use our Post workflow desinged earlier to manage our publishing plateform web app.</p>
+<p><img src="images/post-workflow-2.png" alt="post workflow"/></p>
+<p>Below is the definition of this workflow ready to be used by the <em>SimpleWorkflow</em> behavior.</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">app</span><span style="color: #007700">\</span><span style="color: #0000BB">models</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">PostWorkflow&nbsp;</span><span style="color: #007700">implements&nbsp;</span><span style="color: #0000BB">raoul2000</span><span style="color: #007700">\</span><span style="color: #0000BB">workflow</span><span style="color: #007700">\</span><span style="color: #0000BB">base</span><span style="color: #007700">\</span><span style="color: #0000BB">IWorkflowDefinitionProvider<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">getDefinition</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initialStatusId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'status'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'draft'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'label'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Draft&nbsp;Document'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'correction'</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'metadata'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'color'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'yellow'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'correction'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,</span><span style="color: #DD0000">'ready'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'metadata'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'color'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'grey'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ready'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'correction'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'published'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'metadata'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'color'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'blue'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'published'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'ready'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'archived'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'metadata'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'color'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'green'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archived'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'ready'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'metadata'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'color'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'black'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}</span></code></pre>
+<h3>Loader components <a href="#loader-components" id="loader-components" class="hashlink">&para;</a></h3><h4>PHP class Loader <a href="#php-class-loader" id="php-class-loader" class="hashlink">&para;</a></h4><p><em>Loading workflow definitions from a PHP class.</em></p>
+<h5>Namespace : workflow location <a href="#namespace-workflow-location" id="namespace-workflow-location" class="hashlink">&para;</a></h5><p>By default the <code>PhpClassLoader</code>component loads workflows from the <code>app\models</code> namespace.
+So for example in the following delcaration, the default workflow associated with the <em>Post</em> model will be loaded from
+the class <code>app\models\MyWorkflow</code> :</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">app</span><span style="color: #007700">\</span><span style="color: #0000BB">models</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">Post&nbsp;</span><span style="color: #007700">extends&nbsp;\</span><span style="color: #0000BB">yii</span><span style="color: #007700">\</span><span style="color: #0000BB">db</span><span style="color: #007700">\</span><span style="color: #0000BB">ActiveRecord<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">behaviors</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'\raoul2000\workflow\base\SimpleWorkflowBehavior'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'defaultWorkflowId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'MyWorkflow'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}</span></code></pre>
+<p>If you need to change the default namespace value you have two options : the fast one and the not so fast one.</p>
+<h5>Standard <a href="#standard" id="standard" class="hashlink">&para;</a></h5><p>In general if you need to change any configuration setting, you must explicitely declare it as a Yii2 application component and not rely
+on <em>SimpleworkflowBehavior</em> to do it for you.
+In the example below, we are defining the source component using the default Id (<em>workflowSource</em>)
+and set the namespace used by <code>PhpClassLoader</code> to the location where workflow definitions are supposed to be located (here <em>@app/models/workflows</em>).</p>
+<pre><code class="language-php"><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'components'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'workflowSource'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\WorkflowFileSource'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'definitionLoader'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\PhpClassLoader'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'namespace'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'@app/models/workflows'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],</span></code></pre>
+<p>As you may have guessed, there is only one namespace per workflow source component so you are encouraged to locate all your workflows in the
+same namespace. In the case you must load workflows from various location, you should declare another workflow source component (one per namespace) but
+remember that each workflow source component serves workflows from only one namespace (folder).</p>
+<h5>The magic alias <a href="#the-magic-alias" id="the-magic-alias" class="hashlink">&para;</a></h5><p>As the <em>PhpClassLoader</em> is the default loader used with the default source component, it is a common task to change the namespace value
+used to load PHP classes. Consequently having to explicitely declare component just to change one configuration setting is too much work (and
+we know good developpers are lazy). For this purpose the alias <code>@workflowDefinitionNamespace</code> is available to define globally the namespace value.</p>
+<p>For instance, in you <code>index.php</code> file, declare this alias :</p>
+<pre><code class="language-php"><span style="color: #0000BB">Yii</span><span style="color: #007700">::</span><span style="color: #0000BB">setAlias</span><span style="color: #007700">(</span><span style="color: #DD0000">'@workflowDefinitionNamespace'</span><span style="color: #007700">,</span><span style="color: #DD0000">'app\\models\\workflows'</span><span style="color: #007700">);</span></code></pre>
+<p>By doing so, <strong>all workflow definition classes</strong> will be loaded from the <code>app\models\workflows</code> namespace. Note that this alias overrides any specific
+namespace configuration that you may have defined the <em>standard ways</em>.</p>
+<h4>PHP array Loader <a href="#php-array-loader" id="php-array-loader" class="hashlink">&para;</a></h4><p><strong>Loading workflow definitions for a PHP array stored in a file.</strong></p>
+<p>First configure the workflow file source component to use the <code>PHPArrayLoader</code> class. In this example, workflow definition files are assumed
+to be located in <code>@app/models/workflows</code>.</p>
+<pre><code class="language-php"><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'components'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'workflowSource'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\WorkflowFileSource'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'definitionLoader'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\PhpArrayLoader'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'path'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'@app/models/workflows'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],</span></code></pre>
+<p>Now if we want to create the definition for the workflow <em>post</em>, we just create the file <em>post.php</em> in the folder <code>@app/models/workflows</code>.</p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">return&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initialStatusId'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'status'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'draft'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'publish'</span><span style="color: #007700">,</span><span style="color: #DD0000">'deleted'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'publish'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">,</span><span style="color: #DD0000">'deleted'</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'deleted'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'transition'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'draft'</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br />&nbsp;&nbsp;&nbsp;&nbsp;]<br />];</span></code></pre>
+<h2>Workflow definition as Graphml file <a href="#workflow-definition-as-graphml-file" id="workflow-definition-as-graphml-file" class="hashlink">&para;</a></h2><p><em>Loading workflow definition from  </em>graphml<em> files.</em></p>
+<p>From the <a href="http://graphml.graphdrawing.org/">The GraphML File Format</a> web site :</p>
+<blockquote><p>GraphML is a comprehensive and easy-to-use file format for graphs. It consists of a language core to describe the structural
+properties of a graph and a flexible extension mechanism to add application-specific data.</p>
+</blockquote>
+<p>Graphml file can be generated by various graph design applications like <a href="https://www.yworks.com/en/products_yed_download.html">yEd</a> (that I use).</p>
+<p>Before being able to load a Graphml file, you must ensure that following requirements are met :</p>
+<ul>
+<li>nodes labels are assigned to status Id and all nodes must have a label (i.e. all status must have an id)</li>
+<li>a custom property called <em>initialStatusId</em> must be added to the workflow and assigned with a valid status Id</li>
+</ul>
+<pre><code class="language-php"><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'components'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'workflowSource'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\WorkflowFileSource'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'definitionLoader'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\GraphmlLoader'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'path'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'@app/models/workflows'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],</span></code></pre>
+<h3>Using yEd <a href="#using-yed" id="using-yed" class="hashlink">&para;</a></h3><blockquote><p>yEd is a powerful desktop application that can be used to quickly and effectively generate high-quality diagrams.</p>
+</blockquote>
+<p>With this (free) application you can create a workflow and save it as a <em>graphml</em> file that can be used as a source for <em>SimpleWorkflow</em>.
+This is interesting in particular if you have to deal with big workflows made of more than 10 status, with plenty of transitions that make it
+look like a plate of spaghetti.</p>
+<p>The only tricky thing is that you must define the <em>custom</em> property initialStatusId that is required
+by <em>SimpleWorkflow</em>. This can be done easily :</p>
+<ul>
+<li>create a new empty document</li>
+<li>click <code>Edit &gt; Manage Custom Properties ...</code></li>
+<li>in the "Graph Properties" table, click on the "Add a New property" button (green plus sign)</li>
+<li>set <strong>initialStatusId</strong> as name and leave type as default (text)</li>
+<li>close the dialog box</li>
+</ul>
+<p>You're ready to go ! Once your workflow is ready to be used with <em>SimpleWorkflow</em> make sure that you have assigned the correct value
+to the  <strong>initialStatusId</strong> custom property. To do so, unselect any item and press <em>F6</em> key (or select <code>Edit &gt; Property...</code> from the menu).
+In the property dialog box, select the <em>data</em> panel, and enter the value of the <strong>initialStatusId</strong> in the appropriate text control. Validate
+with ok.</p>
+<p><img src="images/yed-view.png"/></p>
+<p>Your workflow is now ready to be used as a workflow source by <em>SimpleWorkflow</em></p>
+<h2>Cache <a href="#cache" id="cache" class="hashlink">&para;</a></h2><p>The <code>WorkflowFileSource</code> is able to use a cache component to optimize the workflow definition loading task, that can be significant, in particular with
+workflows containing a lot of status. Another opportunity to use a cache component is if the workflow definition is provided as a Graphml file. In this such a case,
+if no cache is used, the <code>WorkflowFileSource</code> component needs to read and parse the Graphml file quite often (at least once per request).</p>
+<p>To configure a cache component you must use the <code>definitionCache</code> parameter. For example :</p>
+<pre><code class="language-php"><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'components'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'workflowSource'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'raoul2000\workflow\source\file\WorkflowFileSource'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'definitionCache'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'yii\caching\FileCache'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],</span></code></pre>
+        <div class="toplink"><a href="#" class="h1" title="go to top"><span class="glyphicon glyphicon-arrow-up"></a></div>
+    </div>
+</div>
+
+
+</div>
+
+<footer class="footer">
+        <p class="pull-right"><small>Page generated on Fri, 16 Oct 2015 20:07:31 +0000</small></p>
+    Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
+
+<script type="text/javascript">jQuery(document).ready(function () {
+    var shiftWindow = function () { scrollBy(0, -50) };
+    if (location.hash) shiftWindow();
+    window.addEventListener("hashchange", shiftWindow);
+var element = document.createElement("script");
+element.src = "./jssearch.index.js";
+document.body.appendChild(element);
+
+var searchBox = $('#searchbox');
+
+// search when typing in search field
+searchBox.on("keyup", function(event) {
+    var query = $(this).val();
+
+    if (query == '' || event.which == 27) {
+        $('#search-resultbox').hide();
+        return;
+    } else if (event.which == 13) {
+        var selectedLink = $('#search-resultbox a.selected');
+        if (selectedLink.length != 0) {
+            document.location = selectedLink.attr('href');
+            return;
+        }
+    } else if (event.which == 38 || event.which == 40) {
+        $('#search-resultbox').show();
+
+        var selected = $('#search-resultbox a.selected');
+        if (selected.length == 0) {
+            $('#search-results').find('a').first().addClass('selected');
+        } else {
+            var next;
+            if (event.which == 40) {
+                next = selected.parent().next().find('a').first();
+            } else {
+                next = selected.parent().prev().find('a').first();
+            }
+            if (next.length != 0) {
+                var resultbox = $('#search-results');
+                var position = next.position();
+
+//              TODO scrolling is buggy and jumps around
+//                resultbox.scrollTop(Math.floor(position.top));
+//                console.log(position.top);
+
+                selected.removeClass('selected');
+                next.addClass('selected');
+            }
+        }
+
+        return;
+    }
+    $('#search-resultbox').show();
+    $('#search-results').html('<li><span class="no-results">No results</span></li>');
+
+    var result = jssearch.search(query);
+
+    if (result.length > 0) {
+        var i = 0;
+        var resHtml = '';
+
+        for (var key in result) {
+            if (i++ > 20) {
+                break;
+            }
+            resHtml = resHtml +
+            '<li><a href="' + result[key].file.u.substr(3) +'"><span class="title">' + result[key].file.t + '</span>' +
+            '<span class="description">' + result[key].file.d + '</span></a></li>';
+        }
+        $('#search-results').html(resHtml);
+    }
+});
+
+// hide the search results on ESC
+$(document).on("keyup", function(event) { if (event.which == 27) { $('#search-resultbox').hide(); } });
+// hide search results on click to document
+$(document).bind('click', function (e) { $('#search-resultbox').hide(); });
+// except the following:
+searchBox.bind('click', function(e) { e.stopPropagation(); });
+$('#search-resultbox').bind('click', function(e) { e.stopPropagation(); });
+
+});</script></body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="language" content="en" />
+        <link href="./assets/ca9878b0/css/bootstrap.css" rel="stylesheet">
+<link href="./assets/e4a78afa/style.css" rel="stylesheet">
+<script src="./assets/dac0333d/jquery.js"></script>
+<script src="./assets/ca9878b0/js/bootstrap.js"></script>
+<script src="./assets/23719cdf/jssearch.js"></script>    <title>Workflow Driven Attribute Validation - Key Concepts - Yii2-Workflow Guide</title>
+</head>
+<body>
+
+<div class="wrap">
+    <nav id="w22" class="navbar-inverse navbar-fixed-top navbar" role="navigation"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#w22-collapse"><span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span></button><a class="navbar-brand" href="./index.html">Yii2-Workflow Guide</a></div><div id="w22-collapse" class="collapse navbar-collapse"><ul id="w23" class="navbar-nav nav"><li><a href="./index.html">Class reference</a></li>
+<li><a href="./guide-README.html">Guide</a></li></ul><div class="navbar-form navbar-left" role="search">
+  <div class="form-group">
+    <input id="searchbox" type="text" class="form-control" placeholder="Search">
+  </div>
+</div>
+</div></nav>
+    <div id="search-resultbox" style="display: none;" class="modal-content">
+        <ul id="search-results">
+        </ul>
+    </div>
+
+    
+<div class="row">
+    <div class="col-md-2">
+                <div id="navigation" class="list-group"><a class="list-group-item" href="#navigation-18" data-toggle="collapse" data-parent="#navigation">Introduction <b class="caret"></b></a><div id="navigation-18" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-intro-workflow.html">About Workflows</a>
+<a class="list-group-item" href="./guide-intro-installation.html">Installing yii2-workflow</a>
+<a class="list-group-item" href="./guide-intro-upgrade-from-v1.html">Upgrading from Version 1.x</a></div>
+<a class="list-group-item active" href="#navigation-19" data-toggle="collapse" data-parent="#navigation">Key Concepts <b class="caret"></b></a><div id="navigation-19" class="submenu panel-collapse collapse in"><a class="list-group-item" href="./guide-concept-overview.html">Overview</a>
+<a class="list-group-item" href="./guide-concept-source.html">Workflow Source</a>
+<a class="list-group-item" href="./guide-concept-events.html">Workflow Events</a>
+<a class="list-group-item active" href="./guide-concept-validation.html">Workflow Driven Attribute Validation</a></div>
+<a class="list-group-item" href="#navigation-20" data-toggle="collapse" data-parent="#navigation">Workflow Components <b class="caret"></b></a><div id="navigation-20" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-workflow-behavior.html">Behavior</a>
+<a class="list-group-item" href="./guide-source-file.html">File Source</a></div>
+<a class="list-group-item" href="#navigation-21" data-toggle="collapse" data-parent="#navigation">Special topics <b class="caret"></b></a><div id="navigation-21" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-special-cookbook.html">Cookbook</a></div></div>    </div>
+    <div class="col-md-9 guide-content" role="main">
+        <h1>Workflow Driven Attribute Validation <a href="#workflow-driven-attribute-validation" id="workflow-driven-attribute-validation" class="hashlink">&para;</a></h1><p>The <em>SimpleWorkflow</em> behavior provides a way to apply a specific set of validation rules to model attributes, depending on the 
+way the model is <em>moving</em> inside a workflow. This allows you for instance to apply a set of validation rules only when the model 
+goes from a specific status to another one.</p>
+<h2>Principles <a href="#principles" id="principles" class="hashlink">&para;</a></h2><p>The <em>Workflow Driven Attribute Validation</em> is making use of standard Yii2 features : "<a href="http://www.yiiframework.com/doc-2.0/guide-input-validation.html">User Input Validation</a>"
+and "<a href="http://www.yiiframework.com/doc-2.0/guide-structure-models.html#scenarios">Scenario</a>.</p>
+<p>To implement <em>Workflow Driven Attribute Validation</em> you must :</p>
+<ol>
+<li>declare the <code>WorkflowValidator</code> validation rule for the attribute used to store the status (by default <em>status</em>)</li>
+<li>declare the validation rules you need and set the <em>workflow scenario name</em> for which they should be applied.</li>
+</ol>
+<p>The <em>Workflow Scenario Name</em> is a formatted string identitying the event that occurs on the model inside its workflow.
+Below is a list of currently supported scenario names :</p>
+<table width="100%">
+	<tr>
+		<td><b>Scenario name template</b></td>
+		<td><b>Description</b></td>
+	</tr>
+	<tr>
+		<td>`from {W1/S1} to {W1/S2}`</td>
+		<td>the model goes from status S1 to status S2 in workflow W1</td>
+	</tr>
+	<tr>
+		<td>`leave status {W1/S1}`</td>
+		<td>the model leaves the status S1 in workflow W1</td>
+	</tr>
+	<tr>
+		<td>`enter status {W1/S1}`</td>
+		<td>the model enters into the status S1 in workflow W1</td>
+	</tr>
+	<tr>
+		<td>`enter workflow {W1}`</td>
+		<td>the model enters into workflow W1</td>
+	</tr>
+	<tr>
+		<td>`leave workflow {W1}`</td>
+		<td>the model leaves workflow W1</td>
+	</tr>
+</table>
+<p>As you can see, scenario names are quite self explanatory ! To assist you in using workflow scenario names, you can use the class <code>raoul2000\workflow\validation\WorkflowScenario</code>.</p>
+<p>For instance : </p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">WorkflowScenario</span><span style="color: #007700">::</span><span style="color: #0000BB">changeStatus</span><span style="color: #007700">(</span><span style="color: #DD0000">'W1/S1'</span><span style="color: #007700">,</span><span style="color: #DD0000">'W1/S2'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;"from&nbsp;{W1/S1}&nbsp;to&nbsp;{W1/S2}"<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">WorkflowScenario</span><span style="color: #007700">::</span><span style="color: #0000BB">leaveStatus</span><span style="color: #007700">(</span><span style="color: #DD0000">'W1/S1'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;"leave&nbsp;status&nbsp;{W1/S1}"<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">WorkflowScenario</span><span style="color: #007700">::</span><span style="color: #0000BB">enterStatus</span><span style="color: #007700">(</span><span style="color: #DD0000">'W1/S1'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;"enter&nbsp;status&nbsp;{W1/S1}"<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">WorkflowScenario</span><span style="color: #007700">::</span><span style="color: #0000BB">enterWorkflow</span><span style="color: #007700">(</span><span style="color: #DD0000">'W1'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;"enter&nbsp;workflow&nbsp;{W1}"<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">WorkflowScenario</span><span style="color: #007700">::</span><span style="color: #0000BB">leaveWorkflow</span><span style="color: #007700">(</span><span style="color: #DD0000">'W1'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;"leave&nbsp;workflow&nbsp;{W1}"</span></code></pre>
+<h2>Usage example <a href="#usage-example" id="usage-example" class="hashlink">&para;</a></h2><p>In the example below we are defining several validation rules applied to the model during its life-cycle through the workflow 
+it is assigned to. </p>
+<pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">use&nbsp;</span><span style="color: #0000BB">raoul2000</span><span style="color: #007700">\</span><span style="color: #0000BB">workflow</span><span style="color: #007700">\</span><span style="color: #0000BB">validation</span><span style="color: #007700">\</span><span style="color: #0000BB">WorkflowValidator</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;@property&nbsp;integer&nbsp;$id<br />&nbsp;*&nbsp;@property&nbsp;string&nbsp;$col_status<br />&nbsp;*&nbsp;@property&nbsp;string&nbsp;$title<br />&nbsp;*&nbsp;@property&nbsp;string&nbsp;$body<br />&nbsp;*&nbsp;@property&nbsp;string&nbsp;$category<br />&nbsp;*&nbsp;@property&nbsp;string&nbsp;$tags<br />&nbsp;*/<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Post&nbsp;</span><span style="color: #007700">extends&nbsp;\</span><span style="color: #0000BB">yii</span><span style="color: #007700">\</span><span style="color: #0000BB">db</span><span style="color: #007700">\</span><span style="color: #0000BB">ActiveRecord<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">behaviors</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;declare&nbsp;the&nbsp;SimpleWorkflowBehavior.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'workflow'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;\</span><span style="color: #0000BB">raoul2000</span><span style="color: #007700">\</span><span style="color: #0000BB">workflow</span><span style="color: #007700">\</span><span style="color: #0000BB">base</span><span style="color: #007700">\</span><span style="color: #0000BB">SimpleWorkflowBehavior</span><span style="color: #007700">::</span><span style="color: #0000BB">className</span><span style="color: #007700">(),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'defaultWorkflowId'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'post'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'statusAttribute'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'col_status'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'propagateErrorsToModel'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">rules</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;[<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[</span><span style="color: #DD0000">'col_status'</span><span style="color: #007700">],</span><span style="color: #0000BB">raoul2000</span><span style="color: #007700">\</span><span style="color: #0000BB">workflow</span><span style="color: #007700">\</span><span style="color: #0000BB">validation</span><span style="color: #007700">\</span><span style="color: #0000BB">WorkflowValidator</span><span style="color: #007700">::</span><span style="color: #0000BB">className</span><span style="color: #007700">()],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;rule&nbsp;1&nbsp;:&nbsp;&nbsp;the&nbsp;'title'&nbsp;is&nbsp;always&nbsp;required<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'title'</span><span style="color: #007700">,</span><span style="color: #DD0000">'required'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;rule&nbsp;2&nbsp;:&nbsp;the&nbsp;'body'&nbsp;is&nbsp;required&nbsp;when&nbsp;the&nbsp;post&nbsp;is&nbsp;about&nbsp;to&nbsp;enter&nbsp;to&nbsp;'post/correction'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[[</span><span style="color: #DD0000">'body'</span><span style="color: #007700">],</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'on'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'enter&nbsp;status&nbsp;{post/correction}'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;rule&nbsp;3&nbsp;:&nbsp;'category'&nbsp;is&nbsp;set&nbsp;during&nbsp;correction&nbsp;and&nbsp;before&nbsp;publication<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'category'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'on'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'from&nbsp;{post/correction}&nbsp;to&nbsp;{post/published}'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;rule&nbsp;4&nbsp;:&nbsp;'tags'&nbsp;and&nbsp;'category'&nbsp;are&nbsp;required&nbsp;before&nbsp;being&nbsp;published&nbsp;or&nbsp;archived.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[[</span><span style="color: #DD0000">'tags'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'category'</span><span style="color: #007700">],&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'on'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #DD0000">'enter&nbsp;status&nbsp;{post/published}'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'enter&nbsp;status&nbsp;{post/archived}'</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];<br />&nbsp;&nbsp;&nbsp;&nbsp;}</span></code></pre>
+<p>In the above example we have defined a <em>Post</em> model and configured validation rules to implement the following (imaginary) business rules :</p>
+<ul>
+<li><strong>rule n°1 : a post must always have a title</strong> : that's a standard one, no workflow magic here</li>
+<li><strong>rule n°2 : redactors are not allowed to send a empty post to correction</strong> : attribute <code>body</code> is required when the post enters into status <em>post/correction</em></li>
+<li><strong>rule n°3 : correctors are responsible for setting a category to all post before publishing it</strong> : when a post leaves the 'post/correction<em> status to go to 
+</em>post/published* it must have the <code>category</code>attribute set.</li>
+<li><strong>rule n°4 : it is forbidden to publish or archive a post with no tags or no category</strong> : attributes <code>tags</code> and <code>category</code> cannot be empty when the post
+enter into status <em>post/published</em> or <em>post/archived</em>.</li>
+</ul>
+<h2>Implementation <a href="#implementation" id="implementation" class="hashlink">&para;</a></h2><p>So how does this works ? As you may have guessed, the entry point is the <code>WorkflowValidator</code> validator configured for the <code>status</code> attribute.
+This validator is not actually going to validate the attribute it is configured for ! Yes, believe it or not, this validator doesn't care about the
+current status value or if the model is about to perform a transition that is not permitted : validating transitions is done by the <code>SimpleWorkflowBehavior</code> when the
+model is saved (or when you explicitely invoke <code>sendToStatus()</code> on the model) and not by the <code>WorkflowValidator</code> validator.</p>
+<p>When a model is validated, following occurs :</p>
+<ul>
+<li><code>WorkflowValidator</code> identifies the pending transition by looking at the <code>status</code> attribute value and the current Status.</li>
+<li>Based on the pending transition, get a <em>scenario sequence</em></li>
+<li>for each scenario in the scenario sequence, apply corresponding validating rules</li>
+</ul>
+        <div class="toplink"><a href="#" class="h1" title="go to top"><span class="glyphicon glyphicon-arrow-up"></a></div>
+    </div>
+</div>
+
+
+</div>
+
+<footer class="footer">
+        <p class="pull-right"><small>Page generated on Fri, 16 Oct 2015 20:07:31 +0000</small></p>
+    Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
+
+<script type="text/javascript">jQuery(document).ready(function () {
+    var shiftWindow = function () { scrollBy(0, -50) };
+    if (location.hash) shiftWindow();
+    window.addEventListener("hashchange", shiftWindow);
+var element = document.createElement("script");
+element.src = "./jssearch.index.js";
+document.body.appendChild(element);
+
+var searchBox = $('#searchbox');
+
+// search when typing in search field
+searchBox.on("keyup", function(event) {
+    var query = $(this).val();
+
+    if (query == '' || event.which == 27) {
+        $('#search-resultbox').hide();
+        return;
+    } else if (event.which == 13) {
+        var selectedLink = $('#search-resultbox a.selected');
+        if (selectedLink.length != 0) {
+            document.location = selectedLink.attr('href');
+            return;
+        }
+    } else if (event.which == 38 || event.which == 40) {
+        $('#search-resultbox').show();
+
+        var selected = $('#search-resultbox a.selected');
+        if (selected.length == 0) {
+            $('#search-results').find('a').first().addClass('selected');
+        } else {
+            var next;
+            if (event.which == 40) {
+                next = selected.parent().next().find('a').first();
+            } else {
+                next = selected.parent().prev().find('a').first();
+            }
+            if (next.length != 0) {
+                var resultbox = $('#search-results');
+                var position = next.position();
+
+//              TODO scrolling is buggy and jumps around
+//                resultbox.scrollTop(Math.floor(position.top));
+//                console.log(position.top);
+
+                selected.removeClass('selected');
+                next.addClass('selected');
+            }
+        }
+
+        return;
+    }
+    $('#search-resultbox').show();
+    $('#search-results').html('<li><span class="no-results">No results</span></li>');
+
+    var result = jssearch.search(query);
+
+    if (result.length > 0) {
+        var i = 0;
+        var resHtml = '';
+
+        for (var key in result) {
+            if (i++ > 20) {
+                break;
+            }
+            resHtml = resHtml +
+            '<li><a href="' + result[key].file.u.substr(3) +'"><span class="title">' + result[key].file.t + '</span>' +
+            '<span class="description">' + result[key].file.d + '</span></a></li>';
+        }
+        $('#search-results').html(resHtml);
+    }
+});
+
+// hide the search results on ESC
+$(document).on("keyup", function(event) { if (event.which == 27) { $('#search-resultbox').hide(); } });
+// hide search results on click to document
+$(document).bind('click', function (e) { $('#search-resultbox').hide(); });
+// except the following:
+searchBox.bind('click', function(e) { e.stopPropagation(); });
+$('#search-resultbox').bind('click', function(e) { e.stopPropagation(); });
+
+});</script></body>
+</html>
