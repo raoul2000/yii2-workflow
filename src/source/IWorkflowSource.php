@@ -1,6 +1,12 @@
 <?php
 namespace raoul2000\workflow\source;
 
+/**
+ * Interface that must be implemented by WorkflowSource components.
+ * 
+ * This interface defines basic methods aimed to provide status, workflow and transitions
+ * to the SimpleStatusBehavior.
+ */
 interface IWorkflowSource
 {
 	/**
@@ -37,8 +43,10 @@ interface IWorkflowSource
 	 */
 	public function getTransitions($statusId, $model = null);
 	/**
-	 *
-	 * @param unknown $startId
+	 * Returns the transitions that leaves status with id $startId and reaches status with id $endId.
+	 * 
+	 * @param string $startId
+	 * @param string $endId
 	 * @param unknown $endId
 	 */
 	public function getTransition($startId, $endId, $model = null);

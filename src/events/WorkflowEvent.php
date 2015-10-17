@@ -145,9 +145,9 @@ class WorkflowEvent extends ModelEvent
 	///////// LEAVE STATUS /////////////////////////////////////////////////////
 
 	/**
-	 * Create name for  a *before leave status* event.
+	 * Create name for a *before leave status* event.
 	 * 
-	 * @param string $status
+	 * @param string $status the status name or any status if not set
 	 * @return string name of the event
 	 */
 	public static function beforeLeaveStatus($status = self::ANY_STATUS)
@@ -155,6 +155,12 @@ class WorkflowEvent extends ModelEvent
 		self::_checkNonEmptyString('status', $status);
 		return 'beforeLeaveStatus{'.$status.'}';
 	}
+	/**
+	 * Create name for a *after leave status* event.
+	 * 
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */
 	public static function afterLeaveStatus($status = self::ANY_STATUS)
 	{
 		self::_checkNonEmptyString('status', $status);
@@ -162,12 +168,23 @@ class WorkflowEvent extends ModelEvent
 	}
 
 	///////// ENTER STATUS /////////////////////////////////////////////////////
-
+	/**
+	 * Create name for a *before enter status* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */
 	public static function beforeEnterStatus($status = self::ANY_STATUS)
 	{
 		self::_checkNonEmptyString('status', $status);
 		return 'beforeEnterStatus{'.$status.'}';
 	}
+	/**
+	 * Create name for a *after enter status* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */	
 	public static function afterEnterStatus($status = self::ANY_STATUS)
 	{
 		self::_checkNonEmptyString('status', $status);
@@ -176,11 +193,23 @@ class WorkflowEvent extends ModelEvent
 
 	///////// ENTER WORKFLOW /////////////////////////////////////////////////////
 
+	/**
+	 * Create name for a *before enter workflow* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */
 	public static function beforeEnterWorkflow($workflowId = self::ANY_WORKFLOW)
 	{
 		self::_checkNonEmptyString('workflowId', $workflowId);
 		return 'beforeEnterWorkflow{'.$workflowId.'}';
 	}
+	/**
+	 * Create name for a *after enter workflow* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */	
 	public static function afterEnterWorkflow($workflowId = self::ANY_WORKFLOW)
 	{
 		self::_checkNonEmptyString('workflowId', $workflowId);
@@ -189,17 +218,34 @@ class WorkflowEvent extends ModelEvent
 
 	///////// LEAVE WORKFLOW /////////////////////////////////////////////////////
 
+	/**
+	 * Create name for a *before leave workflow* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */
 	public static function beforeLeaveWorkflow($workflowId = self::ANY_WORKFLOW)
 	{
 		self::_checkNonEmptyString('workflowId', $workflowId);
 		return 'beforeLeaveWorkflow{'.$workflowId.'}';
 	}
+	/**
+	 * Create name for a *after leave workflow* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */	
 	public static function afterLeaveWorkflow($workflowId = self::ANY_WORKFLOW)
 	{
 		self::_checkNonEmptyString('workflowId', $workflowId);
 		return 'afterLeaveWorkflow{'.$workflowId.'}';
 	}
-
+	/**
+	 * Create name for a *before leave status* event.
+	 *
+	 * @param string $status the status name or any status if not set
+	 * @return string name of the event
+	 */
 	private static function _checkNonEmptyString($argName, $argValue)
 	{
 		if ( empty($argValue) || ! is_string($argValue)) {

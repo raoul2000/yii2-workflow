@@ -5,6 +5,10 @@ use yii\db\BaseActiveRecord;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
 use raoul2000\workflow\base\WorkflowException;
 
+/**
+ * Helper class for yii2-workflow.
+ *
+ */
 class WorkflowHelper
 {
 	/**
