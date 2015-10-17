@@ -18,7 +18,7 @@ better understanding theorical basis on the subject, you'll find some [reference
 
 To demonstrate how the workflow concept can be used in a valuable way, let's consider a real life example : a Blog. 
 In a typical blog, you would find a model for Post with a *status* attribute that accept 3 values defined
-as class constants (this is how status were implemented on the "old" [yii 1.x demo blog](https://github.com/yiisoft/yii/tree/master/demos/blog)). 
+as class constants (this is how status were implemented on the "old" [yii 1.x demo blog](https://github.com/yiisoft/yii/blob/master/demos/blog/protected/models/Post.php#L15)). 
 
 `models/Post.php`	
 
