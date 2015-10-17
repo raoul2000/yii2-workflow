@@ -55,7 +55,7 @@ As described in the next chapter, the <strong>SimpleWorkflow</strong> behavior o
 better understanding theorical basis on the subject, you'll find some <a href="#references">references</a> at the end of this page. </p>
 <h2>Use case : a blog <a href="#use-case-a-blog" id="use-case-a-blog" class="hashlink">&para;</a></h2><p>To demonstrate how the workflow concept can be used in a valuable way, let's consider a real life example : a Blog. 
 In a typical blog, you would find a model for Post with a <em>status</em> attribute that accept 3 values defined
-as class constants (this is how status were implemented on the "old" <a href="https://github.com/yiisoft/yii/tree/master/demos/blog">yii 1.x demo blog</a>). </p>
+as class constants (this is how status were implemented on the "old" <a href="https://github.com/yiisoft/yii/blob/master/demos/blog/protected/models/Post.php#L15">yii 1.x demo blog</a>). </p>
 <p><code>models/Post.php</code>	</p>
 <pre><code class="language-php"><span style="color: #0000BB"></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Post&nbsp;</span><span style="color: #007700">extends&nbsp;\</span><span style="color: #0000BB">yii</span><span style="color: #007700">\</span><span style="color: #0000BB">db</span><span style="color: #007700">\</span><span style="color: #0000BB">ActiveRecord<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;</span><span style="color: #0000BB">STATUS_DRAFT</span><span style="color: #007700">=</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;</span><span style="color: #0000BB">STATUS_PUBLISHED</span><span style="color: #007700">=</span><span style="color: #0000BB">2</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;</span><span style="color: #0000BB">STATUS_ARCHIVED</span><span style="color: #007700">=</span><span style="color: #0000BB">3</span><span style="color: #007700">;</span></code></pre>
 <p>It is quite obvious that theses values define possible states of a Post instance. Moreover, a set of rules are used to 
@@ -343,7 +343,7 @@ intresting links.</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Fri, 16 Oct 2015 20:07:31 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Sat, 17 Oct 2015 14:40:02 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {
