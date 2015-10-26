@@ -81,7 +81,7 @@ yii\base\Object</td></tr>
                                         </table>
 
 <div id="classDescription">
-    <p><strong></strong></p>
+    <p><strong>Parser for workflow definition stored as graphml file.</strong></p>
     
     </div>
 
@@ -141,7 +141,7 @@ object.</td>
     </tr>
             <tr id="createFilename()">
         <td><a href="raoul2000-workflow-source-file-graphmlloader.html#createFilename()-detail">createFilename()</a></td>
-        <td></td>
+        <td>Creates and returns the filename where the workflow <code>$workflowId</code> is stored.</td>
         <td><a href="raoul2000-workflow-source-file-graphmlloader.html">raoul2000\workflow\source\file\GraphmlLoader</a></td>
     </tr>
             <tr class="inherited" id="getParser()">
@@ -234,19 +234,27 @@ object.</strong></p>
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Creates and returns the filename where the workflow <code>$workflowId</code> is stored.</strong></p>
 
-        
+        <p>The filename is built using the <a href="raoul2000-workflow-source-file-graphmlloader.html#$path-detail">$path</a> property, the workflow id itself, and <em>graphml</em> extension.</p>
+
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-source-file-graphmlloader.html#createFilename()-detail">createFilename</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$workflowId&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-source-file-graphmlloader.html#createFilename()-detail">createFilename</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$workflowId&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$workflowId</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The workflow id</p>
+</td>
                 </tr>
-                                                </table>
+                                        <tr>
+                  <th class="param-name-col">return</th>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The filename</p>
+</td>
+                </tr>
+                                    </table>
 
 <!--	-->
 
@@ -275,8 +283,9 @@ object.</strong></p>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$source</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col">\raoul2000\workflow\source\file\IWorkflowSource</td>
+                  <td class="param-desc-col"><p>The workflow source component</p>
+</td>
                 </tr>
                                         <tr>
                   <th class="param-name-col">return</th>
@@ -331,7 +340,7 @@ object.</strong></p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Sat, 17 Oct 2015 14:40:04 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

@@ -90,7 +90,6 @@ as expected by the WorkflowFileSource class.</strong></p>
 and each value is the status configuration</li>
 <li>all status Ids are absolute</li>
 </ul>
-<p>TBD</p>
 <p>example :
 [
   'initialStatusId' =&gt; 'WID/A'
@@ -158,7 +157,7 @@ and each value is the status configuration</li>
     </tr>
             <tr id="validate()">
         <td><a href="raoul2000-workflow-source-file-workflowarrayparser.html#validate()-detail">validate()</a></td>
-        <td>Validates the array containing the workflow definition.</td>
+        <td>Validates an array that contains a workflow definition.</td>
         <td><a href="raoul2000-workflow-source-file-workflowarrayparser.html">raoul2000\workflow\source\file\WorkflowArrayParser</a></td>
     </tr>
     </table>
@@ -252,7 +251,7 @@ used by the WorkflowFileSource components.</p>
     </div>
 
     <div class="doc-description">
-        <p><strong>Validates the array containing the workflow definition.</strong></p>
+        <p><strong>Validates an array that contains a workflow definition.</strong></p>
 
         
             </div>
@@ -261,30 +260,35 @@ used by the WorkflowFileSource components.</p>
         <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-source-file-workflowarrayparser.html#validate()-detail">validate</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$wId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$source</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$initialStatusId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$startStatusIdIndex</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$endStatusIdIndex&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$wId</span></td>
-                  <td class="param-type-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$source</span></td>
-                  <td class="param-type-col"></td>
+                  <td class="param-type-col">\raoul2000\workflow\source\file\IWorkflowSource</td>
                   <td class="param-desc-col"></td>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$initialStatusId</span></td>
-                  <td class="param-type-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$startStatusIdIndex</span></td>
-                  <td class="param-type-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.array">array</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$endStatusIdIndex</span></td>
-                  <td class="param-type-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.array">array</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
-                                                </table>
+                                                    <tr>
+                  <th class="param-name-col">throws</th>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowvalidationexception.html">raoul2000\workflow\base\WorkflowValidationException</a></td>
+                  <td class="param-desc-col"></td>
+                </tr>
+                        </table>
 
 <!--	-->
 </div>
@@ -326,7 +330,7 @@ used by the WorkflowFileSource components.</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Sat, 17 Oct 2015 14:40:04 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

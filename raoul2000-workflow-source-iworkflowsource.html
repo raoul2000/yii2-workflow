@@ -78,8 +78,10 @@
                     </table>
 
 <div id="classDescription">
-    <p><strong></strong></p>
-    
+    <p><strong>Interface that must be implemented by WorkflowSource components.</strong></p>
+    <p>This interface defines basic methods aimed to provide status, workflow and transitions
+to the SimpleStatusBehavior.</p>
+
     </div>
 
 <a id="properties"></a>
@@ -113,7 +115,7 @@ whose id is passed as argument.</td>
     </tr>
             <tr id="getTransition()">
         <td><a href="raoul2000-workflow-source-iworkflowsource.html#getTransition()-detail">getTransition()</a></td>
-        <td></td>
+        <td>Returns the transitions that leaves status with id $startId and reaches status with id $endId.</td>
         <td><a href="raoul2000-workflow-source-iworkflowsource.html">raoul2000\workflow\source\IWorkflowSource</a></td>
     </tr>
             <tr id="getTransitions()">
@@ -193,7 +195,7 @@ whose id is passed as argument.</strong></p>
 
         <p>In case of unexpected error the implementation must return a WorkflowException.</p>
 
-        <p>See also <span class="broken-link">\Status</span>.</p>    </div>
+        <p>See also <a href="raoul2000-workflow-base-status.html">raoul2000\workflow\base\Status</a>.</p>    </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature">\raoul2000\workflow\source\Status <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getStatus()-detail">getStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -235,7 +237,7 @@ whose id is passed as argument.</strong></p>
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the transitions that leaves status with id $startId and reaches status with id $endId.</strong></p>
 
         
             </div>
@@ -244,7 +246,7 @@ whose id is passed as argument.</strong></p>
         <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getTransition()-detail">getTransition</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$startId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$endId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$startId</span></td>
-                  <td class="param-type-col">\raoul2000\workflow\source\unknown</td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
                             <tr>
@@ -278,7 +280,7 @@ whose id is passed as argument.</strong></p>
 If not outgoing transition exists for the status, an empty array must be returned.
 The array returned must be indexed by ....</p>
 
-        <p>See also <span class="broken-link">\Transition</span>.</p>    </div>
+        <p>See also <a href="raoul2000-workflow-base-transition.html">raoul2000\workflow\base\Transition</a>.</p>    </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature">\raoul2000\workflow\source\Transition <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getTransitions()-detail">getTransitions</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$statusId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -324,7 +326,7 @@ transition exist, this method returns an empty array.</p>
 
         <p>In case of unexpected error the implementation must return a WorkflowException.</p>
 
-        <p>See also <span class="broken-link">\Workflow</span>.</p>    </div>
+        <p>See also <a href="raoul2000-workflow-base-workflow.html">raoul2000\workflow\base\Workflow</a>.</p>    </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature">\raoul2000\workflow\source\Workflow <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getWorkflow()-detail">getWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -382,7 +384,7 @@ transition exist, this method returns an empty array.</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Sat, 17 Oct 2015 14:40:04 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

@@ -79,7 +79,7 @@
                                         </table>
 
 <div id="classDescription">
-    <p><strong></strong></p>
+    <p><strong>Helper class to create workflow scenario names.</strong></p>
     
     </div>
 
@@ -103,32 +103,32 @@
 </tr>
         <tr id="changeStatus()">
         <td><a href="raoul2000-workflow-validation-workflowscenario.html#changeStatus()-detail">changeStatus()</a></td>
-        <td></td>
+        <td>Returns the scenario name for a change status action.</td>
         <td><a href="raoul2000-workflow-validation-workflowscenario.html">raoul2000\workflow\validation\WorkflowScenario</a></td>
     </tr>
             <tr id="enterStatus()">
         <td><a href="raoul2000-workflow-validation-workflowscenario.html#enterStatus()-detail">enterStatus()</a></td>
-        <td></td>
+        <td>Returns the scenario name for a enter status action.</td>
         <td><a href="raoul2000-workflow-validation-workflowscenario.html">raoul2000\workflow\validation\WorkflowScenario</a></td>
     </tr>
             <tr id="enterWorkflow()">
         <td><a href="raoul2000-workflow-validation-workflowscenario.html#enterWorkflow()-detail">enterWorkflow()</a></td>
-        <td></td>
+        <td>Returns the scenario name for a enter workflow action.</td>
         <td><a href="raoul2000-workflow-validation-workflowscenario.html">raoul2000\workflow\validation\WorkflowScenario</a></td>
     </tr>
             <tr id="leaveStatus()">
         <td><a href="raoul2000-workflow-validation-workflowscenario.html#leaveStatus()-detail">leaveStatus()</a></td>
-        <td></td>
+        <td>Returns the scenario name for a leave status action.</td>
         <td><a href="raoul2000-workflow-validation-workflowscenario.html">raoul2000\workflow\validation\WorkflowScenario</a></td>
     </tr>
             <tr id="leaveWorkflow()">
         <td><a href="raoul2000-workflow-validation-workflowscenario.html#leaveWorkflow()-detail">leaveWorkflow()</a></td>
-        <td></td>
+        <td>Returns the scenario name for a leave workflow action.</td>
         <td><a href="raoul2000-workflow-validation-workflowscenario.html">raoul2000\workflow\validation\WorkflowScenario</a></td>
     </tr>
             <tr id="match()">
         <td><a href="raoul2000-workflow-validation-workflowscenario.html#match()-detail">match()</a></td>
-        <td></td>
+        <td>Test if 2 scenario match.</td>
         <td><a href="raoul2000-workflow-validation-workflowscenario.html">raoul2000\workflow\validation\WorkflowScenario</a></td>
     </tr>
     </table>
@@ -184,24 +184,37 @@
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the scenario name for a change status action.</strong></p>
 
         
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-validation-workflowscenario.html#changeStatus()-detail">changeStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$start</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$end&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-validation-workflowscenario.html#changeStatus()-detail">changeStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$start</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$end&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$start</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The absolute start status Id</p>
+</td>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$end</span></td>
-                  <td class="param-type-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The absolute end status Id</p>
+</td>
+                </tr>
+                                        <tr>
+                  <th class="param-name-col">return</th>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The scenario name</p>
+</td>
+                </tr>
+                                        <tr>
+                  <th class="param-name-col">throws</th>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowexception.html">raoul2000\workflow\base\WorkflowException</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
-                                                </table>
+                        </table>
 
 <!--	-->
 
@@ -216,17 +229,18 @@
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the scenario name for a enter status action.</strong></p>
 
         
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-validation-workflowscenario.html#enterStatus()-detail">enterStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$status&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_STATUS&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-validation-workflowscenario.html#enterStatus()-detail">enterStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$status&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_STATUS&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$status</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The aboslute id of the entered status</p>
+</td>
                 </tr>
                                                 </table>
 
@@ -243,17 +257,18 @@
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the scenario name for a enter workflow action.</strong></p>
 
         
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-validation-workflowscenario.html#enterWorkflow()-detail">enterWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$workflowId&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_WORKFLOW&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-validation-workflowscenario.html#enterWorkflow()-detail">enterWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$workflowId&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_WORKFLOW&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$workflowId</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The workflow id</p>
+</td>
                 </tr>
                                                 </table>
 
@@ -270,17 +285,18 @@
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the scenario name for a leave status action.</strong></p>
 
         
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-validation-workflowscenario.html#leaveStatus()-detail">leaveStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$status&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_STATUS&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-validation-workflowscenario.html#leaveStatus()-detail">leaveStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$status&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_STATUS&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$status</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The aboslute id of the status that is left</p>
+</td>
                 </tr>
                                                 </table>
 
@@ -297,17 +313,18 @@
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the scenario name for a leave workflow action.</strong></p>
 
         
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-validation-workflowscenario.html#leaveWorkflow()-detail">leaveWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$workflowId&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_WORKFLOW&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-validation-workflowscenario.html#leaveWorkflow()-detail">leaveWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$workflowId&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">ANY_WORKFLOW&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$workflowId</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The workflow id</p>
+</td>
                 </tr>
                                                 </table>
 
@@ -324,7 +341,7 @@
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Test if 2 scenario match.</strong></p>
 
         
             </div>
@@ -389,7 +406,7 @@
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Sat, 17 Oct 2015 14:40:04 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

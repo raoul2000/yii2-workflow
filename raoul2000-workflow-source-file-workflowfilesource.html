@@ -615,7 +615,7 @@ if no cvache is used.</strong></p>
 <p>If a $model is provided, it must be a BaseActiveRecord instance with a SimpleWorkflowBehavior attached. This model
 is used to complete the status ID if the one defined by the $id argument is not complete (e.g. 'draft' instead of 'post/draft').</p>
 
-        <p>See also <span class="broken-link">\raoul2000\workflow\source\file\raoul2000\workflow\source\IWorkflowSource::getStatus()</span>.</p>    </div>
+        <p>See also <a href="raoul2000-workflow-source-iworkflowsource.html#getStatus()-detail">raoul2000\workflow\source\IWorkflowSource::getStatus()</a>.</p>    </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature"><a href="raoul2000-workflow-base-status.html">raoul2000\workflow\base\Status</a> <strong><a href="raoul2000-workflow-source-file-workflowfilesource.html#getStatus()-detail">getStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$defaultWorkflowId&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -627,8 +627,9 @@ is used to complete the status ID if the one defined by the $id argument is not 
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$defaultWorkflowId</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col">mixed</td>
+                  <td class="param-desc-col"><p>Model instance used to resolve the status ID or workflow ID</p>
+</td>
                 </tr>
                                         <tr>
                   <th class="param-name-col">return</th>
@@ -654,7 +655,7 @@ is used to complete the status ID if the one defined by the $id argument is not 
         <p><strong>Returns the transition between $startId and $endId statuses.</strong></p>
 
         
-        <p>See also [[<a href="raoul2000-workflow-source-iworkflowsource.html#getTransition()-detail">raoul2000\workflow\source\IWorkflowSource::getTransition()</a>]].</p>    </div>
+        <p>See also <a href="raoul2000-workflow-source-iworkflowsource.html#getTransition()-detail">raoul2000\workflow\source\IWorkflowSource::getTransition()</a>.</p>    </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-source-file-workflowfilesource.html#getTransition()-detail">getTransition</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$startId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$endId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$defaultWorkflowId&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -725,7 +726,7 @@ reached from it.</p>
         <p><strong>Returns the Workflow instance whose id is passed as argument.</strong></p>
 
         
-        <p>See also [[<a href="raoul2000-workflow-source-iworkflowsource.html#getTransition()-detail">raoul2000\workflow\source\IWorkflowSource::getTransition()</a>]].</p>    </div>
+        <p>See also <a href="raoul2000-workflow-source-iworkflowsource.html#getTransition()-detail">raoul2000\workflow\source\IWorkflowSource::getTransition()</a>.</p>    </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature">\raoul2000\workflow\source\file\raoul2000\workflow\base\Workflow|<a href="http://www.php.net/language.types.null">null</a> <strong><a href="raoul2000-workflow-source-file-workflowfilesource.html#getWorkflow()-detail">getWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -771,7 +772,7 @@ that holds the workflow definition.</p>
                 </tr>
                                                     <tr>
                   <th class="param-name-col">throws</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\file\raoul2000\workflow\base\WorkflowException</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowexception.html">raoul2000\workflow\base\WorkflowException</a></td>
                   <td class="param-desc-col"><p>the definition could not be loaded</p>
 </td>
                 </tr>
@@ -898,7 +899,7 @@ this method uses $helper applying following rules :</p>
 use its default workflow Id.</li>
 </ul>
 
-        <p>See also <span class="broken-link">raoul2000\workflow\source\file\WorkflowFileSource::evaluateWorkflowId()</span>.</p>    </div>
+            </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
         <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a>[] <strong><a href="raoul2000-workflow-source-file-workflowfilesource.html#parseStatusId()-detail">parseStatusId</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$val</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$helper&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
@@ -1012,7 +1013,7 @@ have been provided by the configured workflow definition provider component.</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Sat, 17 Oct 2015 14:40:04 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {
