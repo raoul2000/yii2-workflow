@@ -8,6 +8,27 @@ use yii\helpers\ArrayHelper;
 use raoul2000\workflow\base\WorkflowValidationException;
 use yii\helpers\VarDumper;
 
+/**
+ * Implements a parser for default PHP array formatted workflow.
+ * Example : 
+ * 
+ * ~~~
+ * [
+ *   'initialStatusId' => 'draft',
+ *   'status' => [
+ *       'draft'     => [
+ *           'label'      => 'Draft State'
+ *           'transition' => 'published'
+ *       ],
+ *       'published' => [
+ *           'transition' => ['draft','published']
+ *       ],
+ *       'archived'
+ *   ]
+ * ]
+ * ~~~
+ * 
+ */
 class DefaultArrayParser extends WorkflowArrayParser {
 	
 	/**

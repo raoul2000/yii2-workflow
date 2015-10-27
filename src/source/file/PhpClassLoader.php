@@ -7,6 +7,10 @@ use yii\base\Object;
 use raoul2000\workflow\base\WorkflowException;
 use yii\base\InvalidConfigException;
 
+/**
+ * This classe is responsible for locating and loading a workflow definition stored as a PHP class.
+ *
+ */
 class PhpClassLoader extends WorkflowDefinitionLoader {
 	/**
 	 * yii2 alias name containing the namespace value to use to load definition provider class.
@@ -20,7 +24,7 @@ class PhpClassLoader extends WorkflowDefinitionLoader {
 
 	/**
 	 * 
-	 * @param unknown $workflowId
+	 * @param string $workflowId
 	 * @param unknown $source
 	 * @throws WorkflowException
 	 */

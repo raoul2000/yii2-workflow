@@ -16,7 +16,6 @@ use raoul2000\workflow\base\WorkflowValidationException;
  * and each value is the status configuration
  * - all status Ids are absolute
  * 
- * TBD
  * 
  * example : 
  * [
@@ -52,15 +51,16 @@ abstract class WorkflowArrayParser  extends Object {
 	 * @throws WorkflowValidationException
 	 */
 	abstract public function parse($wId, $definition, $source);	
-	
+
 	/**
-	 * Validates the array containing the workflow definition.
+	 * Validates an array that contains a workflow definition.
 	 * 
-	 * @param wId
-	 * @param source
-	 * @param initialStatusId
-	 * @param startStatusIdIndex
-	 * @param endStatusIdIndex
+	 * @param string $wId
+	 * @param IWorkflowSource $source
+	 * @param string $initialStatusId
+	 * @param array $startStatusIdIndex
+	 * @param array $endStatusIdIndex
+	 * @throws WorkflowValidationException
 	 */
 	public function validate($wId, $source, $initialStatusId, $startStatusIdIndex, $endStatusIdIndex )
 	{

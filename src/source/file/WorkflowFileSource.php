@@ -219,10 +219,10 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * is used to complete the status ID if the one defined by the $id argument is not complete (e.g. 'draft' instead of 'post/draft').
 	 *
 	 * @param string $id ID of the status to get
-	 * @param ActiveBaseRecord $model model instance used to resolve the status ID
+	 * @param mixed $defaultWorkflowId model instance used to resolve the status ID or workflow ID
 	 * @return Status the status instance
 	 *
-	 * @see raoul2000\workflow\source\IWorkflowSource::getStatus()
+	 * @see \raoul2000\workflow\source\IWorkflowSource::getStatus
 	 */
 	public function getStatus($id, $defaultWorkflowId = null)
 	{
@@ -304,7 +304,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	/**
 	 * Returns the transition between $startId and $endId statuses.
 	 * 
-	 * @see [[IWorkflowSource::getTransition()]]
+	 * @see IWorkflowSource::getTransition()
 	 */
 	public function getTransition($startId, $endId, $defaultWorkflowId = null)
 	{
@@ -322,7 +322,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * Returns the Workflow instance whose id is passed as argument.
 	 *
 	 * @return raoul2000\workflow\base\Workflow|null The workflow instance or NULL if no workflow could be found
-	 * @see [[IWorkflowSource::getTransition()]]
+	 * @see IWorkflowSource::getTransition()
 	 */
 	public function getWorkflow($id)
 	{
@@ -357,8 +357,7 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * that holds the workflow definition.
 	 *
 	 * @param string $id
-	 * @param object $model
-	 * @throws raoul2000\workflow\base\WorkflowException the definition could not be loaded
+	 * @throws \raoul2000\workflow\base\WorkflowException the definition could not be loaded
 	 */
 	public function getWorkflowDefinition($id)
 	{
@@ -386,7 +385,6 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	/**
 	 * Returns the class map array for this Workflow source instance.
 	 *
-	 * @param string $type
 	 * @return string[]
 	 */
 	public function getClassMap()
@@ -428,7 +426,6 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 * @return string[] array containing the workflow ID in its first index, and the status Local ID
 	 * in the second
 	 * @throws WorkflowException Exception thrown if the method was not able to parse $val.
-	 * @see WorkflowFileSource::evaluateWorkflowId()
 	 */
 	public function parseStatusId($val, $helper = null)
 	{

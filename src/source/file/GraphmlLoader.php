@@ -5,6 +5,9 @@ use Yii;
 use yii\base\Object;
 use raoul2000\workflow\base\WorkflowException;
 
+/**
+ * Parser for workflow definition stored as graphml file.
+ */
 class GraphmlLoader extends WorkflowDefinitionLoader
 {
 
@@ -49,7 +52,7 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 	 * Loads the definition of the workflow whose id is passed as argument.
 	 * 
 	 * @param string $workflowId
-	 * @param IWorkflowSource the workflow source component
+	 * @param IWorkflowSource $source the workflow source component
 	 * @throws WorkflowException
 	 * @return array the workflow definition
 	 */
@@ -61,6 +64,14 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 		 return $this->parse($workflowId, $wd, $source);
 	}
 	
+	/**
+	 * creates and returns the filename where the workflow `$workflowId` is stored.
+	 * 
+	 * The filename is built using the [[path]] property, the workflow id itself, and *graphml* extension.
+	 * 
+	 * @param string $workflowId the workflow id
+	 * @return string the filename
+	 */
 	public function createFilename($workflowId)
 	{
 		return Yii::getAlias($this->path) . '/' . $workflowId . '.graphml';

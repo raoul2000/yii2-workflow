@@ -13,7 +13,7 @@ interface IWorkflowSource
 	 * Returns the Status instance with id $id.
 	 * In case of unexpected error the implementation must return a WorkflowException.
 	 *
-	 * @see Status
+	 * @see \raoul2000\workflow\base\Status
 	 * @param mixed $id the status id
 	 * @return Status the status instance or NULL if no status could be found for this id.
 	 * @throws WorkflowException unexpected error
@@ -35,7 +35,7 @@ interface IWorkflowSource
 	 * If not outgoing transition exists for the status, an empty array must be returned.
 	 * The array returned must be indexed by ....
 	 *
-	 * @see Transition
+	 * @see \raoul2000\workflow\base\Transition
 	 * @param mixed $statusId
 	 * @return Transition[] an array containing all out going transition from $statusId. If no such
 	 * transition exist, this method returns an empty array.
@@ -54,7 +54,7 @@ interface IWorkflowSource
 	 * Returns the workflow instance whose id is passed as argument.
 	 * In case of unexpected error the implementation must return a WorkflowException.
 	 *
-	 * @see Workflow
+	 * @see \raoul2000\workflow\base\Workflow
 	 * @param mixed $id the workflow id
 	 * @return Workflow the workflow instance or NULL if no workflow could be found.
 	 */

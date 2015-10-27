@@ -19,6 +19,12 @@ abstract class WorkflowDefinitionLoader extends Object
 	
 	private $_p;
 	
+	/**
+	 * Loads the definition oa a workflow.
+	 * 
+	 * @param string $workflowId
+	 * @param IWorkflowSource $source
+	 */
 	abstract public function loadDefinition($workflowId, $source);
 	
 	/**

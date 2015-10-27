@@ -196,7 +196,7 @@ class WorkflowEvent extends ModelEvent
 	/**
 	 * Create name for a *before enter workflow* event.
 	 *
-	 * @param string $status the status name or any status if not set
+	 * @param string $workflowId the workflow id or any workflow id if not set
 	 * @return string name of the event
 	 */
 	public static function beforeEnterWorkflow($workflowId = self::ANY_WORKFLOW)
@@ -207,7 +207,7 @@ class WorkflowEvent extends ModelEvent
 	/**
 	 * Create name for a *after enter workflow* event.
 	 *
-	 * @param string $status the status name or any status if not set
+	 * @param string $workflowId the workflow id or any workflow id if not set
 	 * @return string name of the event
 	 */	
 	public static function afterEnterWorkflow($workflowId = self::ANY_WORKFLOW)
@@ -221,7 +221,7 @@ class WorkflowEvent extends ModelEvent
 	/**
 	 * Create name for a *before leave workflow* event.
 	 *
-	 * @param string $status the status name or any status if not set
+	 * @param string $workflowId the workflow id or any workflow id if not set
 	 * @return string name of the event
 	 */
 	public static function beforeLeaveWorkflow($workflowId = self::ANY_WORKFLOW)
@@ -232,7 +232,7 @@ class WorkflowEvent extends ModelEvent
 	/**
 	 * Create name for a *after leave workflow* event.
 	 *
-	 * @param string $status the status name or any status if not set
+	 * @param string $workflowId the workflow id or any workflow id if not set
 	 * @return string name of the event
 	 */	
 	public static function afterLeaveWorkflow($workflowId = self::ANY_WORKFLOW)
@@ -245,6 +245,14 @@ class WorkflowEvent extends ModelEvent
 	 *
 	 * @param string $status the status name or any status if not set
 	 * @return string name of the event
+	 */
+	
+	/**
+	 * Test if $argValue is empty.
+	 * 
+	 * @param mixed $argName
+	 * @param mixed $argValue
+	 * @throws WorkflowException
 	 */
 	private static function _checkNonEmptyString($argName, $argValue)
 	{
