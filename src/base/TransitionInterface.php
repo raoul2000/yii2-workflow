@@ -18,15 +18,15 @@ interface TransitionInterface
 	 */
 	public function getId();
 	/**
-	 * Returns the Status instance representing the destination status.
+	 * Returns the Status instance that is the destination status.
 	 *
-	 * @return Status the Status instance this transition ends
+	 * @return \raoul2000\workflow\base\StatusInterface the Status instance this transition ends to
 	 */
 	public function getEndStatus();
 	/**
-	 * Returns the Status instance representing the starting point fo the transition.
+	 * Returns the Status instance that is the starting point fo the transition.
 	 *
-	 * @return Status the Status instance this transition ends
+	 * @return \raoul2000\workflow\base\StatusInterface the Status instance this transition starts from
 	 */
 	public function getStartStatus();
 }

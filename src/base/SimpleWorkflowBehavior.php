@@ -361,8 +361,7 @@ class SimpleWorkflowBehavior extends Behavior
 		$wId = ( $workflowId === null ? $this->getDefaultWorkflowId() : $workflowId);
 		$workflow = $this->_wfSource->getWorkflow($wId);
 		if ($workflow !== null) {
-			$initialStatusId = $workflow->getInitialStatusId();
-			$result = $this->sendToStatusInternal($initialStatusId, false);
+			$result = $this->sendToStatusInternal($workflow->getInitialStatusId(), false);
 		} else {
 			throw new WorkflowException("No workflow found for id : ".$wId);
 		}
@@ -371,18 +370,17 @@ class SimpleWorkflowBehavior extends Behavior
 
 	/**
 	 * After the owner model has been saved, fire pending events.
-	 *
-	 * @param bool $insert
-	 * @return boolean
+	 * This is the event handler for both ActiveRecord::EVENT_AFTER_UPDATE and ActiveRecord::EVENT_AFTER_INSERT events
+	 * @param yii\base\Event $event
 	 */
-	public function afterSaveStatus($insert)
+	public function afterSaveStatus($event)
 	{
 		$this->firePendingEvents();
 	}
 
 	/**
 	 * Send owner model into status if needed.
-	 *
+	 * This is the event handler for both ActiveRecord::EVENT_BEFORE_INSERT and ActiveRecord::EVENT_BEFORE_UPDATE events
 	 * @param yii\base\Event $event
 	 */
 	public function beforeSaveStatus($event)
@@ -391,7 +389,8 @@ class SimpleWorkflowBehavior extends Behavior
 	}
 
 	/**
-	 * Handle the case where the owner model is leaving the workflow
+	 * Handle the case where the owner model is leaving the workflow.
+	 * This is the event handler for ActiveRecord::EVENT_BEFORE_DELETE
 	 * @param yii\base\Event $event
 	 */
 	public function beforeDelete($event)
@@ -401,7 +400,7 @@ class SimpleWorkflowBehavior extends Behavior
 	
 	/**
 	 * Fires pending events, once the owner model has been successfully deleted.
-	 * 
+	 * This is the event handler for ActiveRecord::EVENT_AFTER_DELETE
 	 * @param yii\base\Event $event
 	 */
 	public function afterDelete($event)
@@ -467,7 +466,7 @@ class SimpleWorkflowBehavior extends Behavior
 				}
 			}
 		}
-		if( $delayedStop == true) {
+		if( $delayedStop ) {
 			return false;
 		}
 
@@ -1009,7 +1008,7 @@ class SimpleWorkflowBehavior extends Behavior
 	/**
 	 * Send pending events.
 	 *
-	 * When the status is changed during a save operation, all the "after" events must be sent after the owner model is actually saved.
+	 * When the status is changed during a save operation, all the "after" events must be sent after the owner model has been saved.
 	 * This method is invoked on events ActiveRecord::EVENT_AFTER_UPDATE and ActiveRecord::EVENT_AFTER_INSERT.
 	 */
 	private function firePendingEvents()

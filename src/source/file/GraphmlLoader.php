@@ -31,13 +31,13 @@ class GraphmlLoader extends WorkflowDefinitionLoader
 
 	/**
 	 *
-	 * @var DOMDocument XML DOM parser
+	 * @var \DOMDocument XML DOM parser
 	 */
 	private $_dom;
 
 	/**
 	 *
-	 * @var DOMXPath The XPath object used to evaluate all xpath expressions
+	 * @var \DOMXPath The XPath object used to evaluate all xpath expressions
 	 */
 	private $_xp;
 

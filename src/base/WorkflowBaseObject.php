@@ -12,10 +12,9 @@ use raoul2000\workflow\source\IWorkflowSource;
 /**
  * This class is the base class for Workflow, Transition and Status objects.
  *
- * It mainly provides a way to store additional class properties without the need to
- * declare them in the class definition. Theses properties are called metadata and stored into
+ * It mainly provides a way to store additional properties without the need to
+ * declare them in the class definition. Theses properties are called **metadata** and stored into
  * an array. They can be accessed like regular class properties.
- *
  */
 abstract class WorkflowBaseObject extends Object
 {
@@ -67,12 +66,14 @@ abstract class WorkflowBaseObject extends Object
 	 */
 	abstract public function getId();
 	/**
-	 *
+	 * Returns the value of the metadata with namer `$paramName`.
+	 * If no `$paramName`is provided, this method returns an array containing all metadata parameters.
+	 * 
 	 * @param string $paramName when null the method returns the complet metadata array, otherwise it returns the
 	 * value of the correponding metadata.
-	 * @param string $defaultValue
-	 * @throws InvalidConfigException
-	 * @return string
+	 * @param mixed $defaultValue
+	 * @throws \yii\base\InvalidConfigException
+	 * @return mixed
 	 */
 	public function getMetadata($paramName = null, $defaultValue = null)
 	{
@@ -85,10 +86,11 @@ abstract class WorkflowBaseObject extends Object
 		}
 	}
 	/**
-	 *
-	 * @param unknown $paramName
-	 * @throws InvalidCallException
-	 * @return boolean
+	 * Test if a metadata parameter is defined.
+	 * 
+	 * @param string $paramName the metadata parameter name
+	 * @throws \raoul2000\workflow\base\WorkflowException
+	 * @return boolean TRUE if the metadata parameter exists, FALSE otherwise
 	 */
 	public function hasMetadata($paramName)
 	{
@@ -100,7 +102,7 @@ abstract class WorkflowBaseObject extends Object
 	/**
 	 * Returns the source workflow component used to create this instance.
 	 * 
-	 * @return \raoul2000\workflow\base\IWorkflowSource the source instance or null if no 
+	 * @return \raoul2000\workflow\source\IWorkflowSource the source instance or null if no 
 	 * source was been provided
 	 */
 	public function getSource()

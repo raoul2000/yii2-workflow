@@ -9,7 +9,7 @@ use yii\base\InvalidConfigException;
  * The Workflow class inherits from [[WorkflowBaseObject]] that provides support for **metadata** attributes and workflow
  * source access.
  * 
- * @see WorkflowBaseObject
+ * @see \raoul2000\workflow\base\WorkflowBaseObject
  */
 class Workflow extends WorkflowBaseObject implements WorkflowInterface
 {

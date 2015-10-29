@@ -63,6 +63,7 @@ class MinimalArrayParser extends WorkflowArrayParser {
 			throw new WorkflowValidationException("Workflow definition must be provided as associative array");
 		}
 		
+		$initialStatusId    = null;
 		$normalized 		= [];
 		$startStatusIdIndex = [];
 		$endStatusIdIndex   = [];

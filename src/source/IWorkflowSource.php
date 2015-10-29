@@ -13,10 +13,9 @@ interface IWorkflowSource
 	 * Returns the Status instance with id $id.
 	 * In case of unexpected error the implementation must return a WorkflowException.
 	 *
-	 * @see \raoul2000\workflow\base\Status
 	 * @param mixed $id the status id
-	 * @return Status the status instance or NULL if no status could be found for this id.
-	 * @throws WorkflowException unexpected error
+	 * @return \raoul2000\workflow\base\StatusInterface the status instance or NULL if no status could be found for this id.
+	 * @throws \raoul2000\workflow\base\WorkflowException unexpected error
 	 */
 	public function getStatus($id, $model = null);
 	/**
@@ -24,8 +23,8 @@ interface IWorkflowSource
 	 * whose id is passed as argument.
 	 * 
 	 * @param string $id workflow Id
-	 * @return StatusInterface[] list of status. The array key is the status ID
-	 * @throws WorkflowException no workflow is found with this Id
+	 * @return \raoul2000\workflow\base\StatusInterface[] list of status. The array key is the status ID
+	 * @throws \raoul2000\workflow\base\WorkflowException no workflow is found with this Id
 	 */
 	public function getAllStatuses($id);
 	/**
@@ -35,11 +34,10 @@ interface IWorkflowSource
 	 * If not outgoing transition exists for the status, an empty array must be returned.
 	 * The array returned must be indexed by ....
 	 *
-	 * @see \raoul2000\workflow\base\Transition
 	 * @param mixed $statusId
-	 * @return Transition[] an array containing all out going transition from $statusId. If no such
+	 * @return \raoul2000\workflow\base\TransitionInterface[] an array containing all out going transition from $statusId. If no such
 	 * transition exist, this method returns an empty array.
-	 * @throws WorkflowException unexpected error
+	 * @throws \raoul2000\workflow\base\WorkflowException unexpected error
 	 */
 	public function getTransitions($statusId, $model = null);
 	/**
@@ -47,16 +45,16 @@ interface IWorkflowSource
 	 * 
 	 * @param string $startId
 	 * @param string $endId
-	 * @param unknown $endId
+	 * @param mixed $model
+	 *  @return \raoul2000\workflow\base\TransitionInterface the transition between start and end status
 	 */
 	public function getTransition($startId, $endId, $model = null);
 	/**
 	 * Returns the workflow instance whose id is passed as argument.
 	 * In case of unexpected error the implementation must return a WorkflowException.
 	 *
-	 * @see \raoul2000\workflow\base\Workflow
 	 * @param mixed $id the workflow id
-	 * @return Workflow the workflow instance or NULL if no workflow could be found.
+	 * @return \raoul2000\workflow\base\WorkflowInterface the workflow instance or NULL if no workflow could be found.
 	 */
 	public function getWorkflow($id);
 }

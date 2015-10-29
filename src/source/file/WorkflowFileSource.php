@@ -83,15 +83,15 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 */
 	private $_workflowDef = [];
 	/**
-	 * @var Workflow[] list of workflow instances indexed by workflow id
+	 * @var \raoul2000\workflow\base\WorkflowInterface[] list of workflow instances indexed by workflow id
 	 */
 	private $_w = [];
 	/**
-	 * @var Status[] list status instances indexed by their id
+	 * @var \raoul2000\workflow\base\StatusInterface[] list status instances indexed by their id
 	 */
 	private $_s = [];
 	/**
-	 * @var Transition[] list of out-going Transition instances indexed by the start status id
+	 * @var \raoul2000\workflow\base\TransitionInterface[] list of out-going Transition instances indexed by the start status id
 	 */
 	private $_t = [];
 	/**
