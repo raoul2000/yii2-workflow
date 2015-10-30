@@ -4,7 +4,9 @@
 [![Latest Stable Version](https://poser.pugx.org/raoul2000/yii2-workflow/v/stable)](https://packagist.org/packages/raoul2000/yii2-workflow)
 [![Total Downloads](https://poser.pugx.org/raoul2000/yii2-workflow/downloads)](https://packagist.org/packages/raoul2000/yii2-workflow)
 [![License](https://poser.pugx.org/raoul2000/yii2-workflow/license)](https://packagist.org/packages/raoul2000/yii2-workflow)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/raoul2000/yii2-workflow/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/raoul2000/yii2-workflow/?branch=master)
 
+*Please note thate this extension is still under development and that any help/feedback is welcome.*
 
 ## Installation
 
@@ -146,7 +148,10 @@ In the meantime you can have a look to :
 - [yii2-workflow Usage Guide](http://raoul2000.github.io/yii2-workflow/guide-README.html) 
 - [yii2-workflow API Documentation](http://raoul2000.github.io/yii2-workflow/index.html)
 
-Please note thate this extension is still under development and that any feedback is welcome.
+You may also be intrested in the following project developped around yii2-workflow : 
+
+- [yii2-workflow-view](https://github.com/raoul2000/yii2-workflow-view) : A Widget to display workflows
+- ..and more to come
 
 License
 -------
