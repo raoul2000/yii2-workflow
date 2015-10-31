@@ -157,7 +157,7 @@ whose id is passed as argument.</strong></p>
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\source\StatusInterface <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getAllStatuses()-detail">getAllStatuses</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="raoul2000-workflow-base-statusinterface.html">raoul2000\workflow\base\StatusInterface</a>[] <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getAllStatuses()-detail">getAllStatuses</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$id</span></td>
                   <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
@@ -166,13 +166,13 @@ whose id is passed as argument.</strong></p>
                 </tr>
                                         <tr>
                   <th class="param-name-col">return</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\StatusInterface</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-statusinterface.html">raoul2000\workflow\base\StatusInterface</a>[]</td>
                   <td class="param-desc-col"><p>List of status. The array key is the status ID</p>
 </td>
                 </tr>
                                         <tr>
                   <th class="param-name-col">throws</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\WorkflowException</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowexception.html">raoul2000\workflow\base\WorkflowException</a></td>
                   <td class="param-desc-col"><p>no workflow is found with this Id</p>
 </td>
                 </tr>
@@ -195,10 +195,10 @@ whose id is passed as argument.</strong></p>
 
         <p>In case of unexpected error the implementation must return a WorkflowException.</p>
 
-        <p>See also <a href="raoul2000-workflow-base-status.html">raoul2000\workflow\base\Status</a>.</p>    </div>
+            </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\source\Status <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getStatus()-detail">getStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="raoul2000-workflow-base-statusinterface.html">raoul2000\workflow\base\StatusInterface</a> <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getStatus()-detail">getStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$id</span></td>
                   <td class="param-type-col">mixed</td>
@@ -212,13 +212,13 @@ whose id is passed as argument.</strong></p>
                 </tr>
                                         <tr>
                   <th class="param-name-col">return</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\Status</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-statusinterface.html">raoul2000\workflow\base\StatusInterface</a></td>
                   <td class="param-desc-col"><p>The status instance or NULL if no status could be found for this id.</p>
 </td>
                 </tr>
                                         <tr>
                   <th class="param-name-col">throws</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\WorkflowException</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowexception.html">raoul2000\workflow\base\WorkflowException</a></td>
                   <td class="param-desc-col"><p>unexpected error</p>
 </td>
                 </tr>
@@ -251,13 +251,14 @@ whose id is passed as argument.</strong></p>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$endId</span></td>
-                  <td class="param-type-col">\raoul2000\workflow\source\unknown</td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$model</span></td>
-                  <td class="param-type-col"></td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col">mixed</td>
+                  <td class="param-desc-col"><p>@return \raoul2000\workflow\base\TransitionInterface the transition between start and end status</p>
+</td>
                 </tr>
                                                 </table>
 
@@ -280,10 +281,10 @@ whose id is passed as argument.</strong></p>
 If not outgoing transition exists for the status, an empty array must be returned.
 The array returned must be indexed by ....</p>
 
-        <p>See also <a href="raoul2000-workflow-base-transition.html">raoul2000\workflow\base\Transition</a>.</p>    </div>
+            </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\source\Transition <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getTransitions()-detail">getTransitions</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$statusId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="raoul2000-workflow-base-transitioninterface.html">raoul2000\workflow\base\TransitionInterface</a>[] <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getTransitions()-detail">getTransitions</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$statusId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$statusId</span></td>
                   <td class="param-type-col">mixed</td>
@@ -296,14 +297,14 @@ The array returned must be indexed by ....</p>
                 </tr>
                                         <tr>
                   <th class="param-name-col">return</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\Transition</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-transitioninterface.html">raoul2000\workflow\base\TransitionInterface</a>[]</td>
                   <td class="param-desc-col"><p>An array containing all out going transition from $statusId. If no such
 transition exist, this method returns an empty array.</p>
 </td>
                 </tr>
                                         <tr>
                   <th class="param-name-col">throws</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\WorkflowException</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowexception.html">raoul2000\workflow\base\WorkflowException</a></td>
                   <td class="param-desc-col"><p>unexpected error</p>
 </td>
                 </tr>
@@ -326,10 +327,10 @@ transition exist, this method returns an empty array.</p>
 
         <p>In case of unexpected error the implementation must return a WorkflowException.</p>
 
-        <p>See also <a href="raoul2000-workflow-base-workflow.html">raoul2000\workflow\base\Workflow</a>.</p>    </div>
+            </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\source\Workflow <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getWorkflow()-detail">getWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="raoul2000-workflow-base-workflowinterface.html">raoul2000\workflow\base\WorkflowInterface</a> <strong><a href="raoul2000-workflow-source-iworkflowsource.html#getWorkflow()-detail">getWorkflow</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$id</span></td>
                   <td class="param-type-col">mixed</td>
@@ -338,7 +339,7 @@ transition exist, this method returns an empty array.</p>
                 </tr>
                                         <tr>
                   <th class="param-name-col">return</th>
-                  <td class="param-type-col">\raoul2000\workflow\source\Workflow</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowinterface.html">raoul2000\workflow\base\WorkflowInterface</a></td>
                   <td class="param-desc-col"><p>The workflow instance or NULL if no workflow could be found.</p>
 </td>
                 </tr>
@@ -384,7 +385,7 @@ transition exist, this method returns an empty array.</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Sat, 31 Oct 2015 20:41:46 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

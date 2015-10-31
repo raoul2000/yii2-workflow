@@ -32,8 +32,7 @@
 <div class="row">
     <div class="col-md-2">
                 <div id="navigation" class="list-group"><a class="list-group-item active" href="#navigation-24" data-toggle="collapse" data-parent="#navigation">Introduction <b class="caret"></b></a><div id="navigation-24" class="submenu panel-collapse collapse in"><a class="list-group-item" href="./guide-intro-workflow.html">About Workflows</a>
-<a class="list-group-item active" href="./guide-intro-installation.html">Installing yii2-workflow</a>
-<a class="list-group-item" href="./guide-intro-upgrade-from-v1.html">Upgrading from Version 1.x</a></div>
+<a class="list-group-item active" href="./guide-intro-installation.html">Installing yii2-workflow</a></div>
 <a class="list-group-item" href="#navigation-25" data-toggle="collapse" data-parent="#navigation">Key Concepts <b class="caret"></b></a><div id="navigation-25" class="submenu panel-collapse collapse"><a class="list-group-item" href="./guide-concept-overview.html">Overview</a>
 <a class="list-group-item" href="./guide-concept-source.html">Workflow Source</a>
 <a class="list-group-item" href="./guide-concept-events.html">Workflow Events</a>
@@ -50,6 +49,44 @@
 <pre><code>"raoul2000/yii2-workflow": "*"
 </code></pre>
 <p>to the require section of your <code>composer.json</code> file.</p>
+<h2>Upgrading From <em>SimpleWorkflow</em> 1.x <a href="#upgrading-from-simpleworkflow-1x" id="upgrading-from-simpleworkflow-1x" class="hashlink">&para;</a></h2><p>If you have been using the <a href="http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&amp;view=home">previous version of <em>SimpleWorkflow</em></a> 
+together with Yii 1.x and now want to migrate to Yii2, this chapter is for you. We will focus on the main differences between the
+previous version of <em>SimpleWorkflow</em> (v1.x) and this one (v2.x).</p>
+<p>Main improvements in v2.x aimed to clearly separate the workflow definition in terms of status and transition, from the business logic
+that implements the way a model is going to behave inside a workflow. By doing so, the same workflow can be easily used by models of different
+types, each one having its own behavior.  </p>
+<p>Another goal was to provide maximum flexibility in the way the developer is going to setup its app architecture. For instance the workflow definition
+can be embeded in any PHP class that implements the appropriate interface (<code>raoul2000\workflow\source\file\IWorkflowDefinitionProvider</code>). Moreover almost
+all classes can be overloaded and new ones created to implements specific needs not covered by the current version. </p>
+<h3>Principles <a href="#principles" id="principles" class="hashlink">&para;</a></h3><p>Not that much to say here, as there is no change in the way the <em>SimpleWorkflowBehavior</em> detects status changes :</p>
+<ul>
+<li>On one side an ActiveRecord's attribute which can be viewed as the future status. </li>
+<li>On the other side, the actual status managed internally by the behavior.</li>
+</ul>
+<p>A transition is a directed link between to statuses : the <em>start</em> and the <em>end</em> status.  </p>
+<h3>Definition <a href="#definition" id="definition" class="hashlink">&para;</a></h3><p>The workflow definition required by the <a href="./raoul2000-workflow-source-file-workflowfilesource.html">WorkflowFileSource</a> component differs from previous version : </p>
+<ul>
+<li>key <code>initial</code> is replaced by <code>initialStatusId</code></li>
+<li>key <code>node</code> is replaced by <code>status</code></li>
+<li>status ids are stored as keys of the <em>status</em> array (and not as value of the <code>id</code> key anymore)</li>
+</ul>
+<p>For more information please refer to <a href="guide-source-file.html">Workflow File Source Component</a> documentation. </p>
+<h3>Workflow Tasks <a href="#workflow-tasks" id="workflow-tasks" class="hashlink">&para;</a></h3><h4>Declaration <a href="#declaration" id="declaration" class="hashlink">&para;</a></h4><p>Workflow Tasks are not declared anymore in the workflow definition itself. This could create a dependency between the workflow and the 
+model, lie for instance when the workflow tasks was using <em>$this</em>. </p>
+<h4>Implementation <a href="#implementation" id="implementation" class="hashlink">&para;</a></h4><p>Workflow task used to be a piece of PHP code associated with a workflow transition and evaluated when this transition was performed.
+With this new version, <strong>Workflow Tasks should be implemented as event handler attached to a <em>after</em> event type</strong>. </p>
+<p>Please refer to the <a href="guide-concept-events.html">Workflow Event</a> documentation for more.</p>
+<h3>Status Constraints <a href="#status-constraints" id="status-constraints" class="hashlink">&para;</a></h3><h4>Declaration <a href="#declaration" id="declaration" class="hashlink">&para;</a></h4><p>Status Constraints are not declared anymore in the workflow definition itself, for the same reason as above.</p>
+<h4>Implementation <a href="#implementation" id="implementation" class="hashlink">&para;</a></h4><p>Status Constraints used to be a piece of PHP code associated with a status and evaluated as a logical expression <em>before</em> a model enters 
+into this status. If the evaluation returned TRUE, the model can access the status, otherwise the transition is blocked.</p>
+<p>The same principles still applies but in v2.x <strong>status constraints should be implemented as event handler attached to a <em>before</em> event type.</strong></p>
+<p>Please refer to the <a href="guide-concept-events.html">Workflow Event</a> documentation for more.</p>
+<h3>Workflow Driven Validation <a href="#workflow-driven-validation" id="workflow-driven-validation" class="hashlink">&para;</a></h3><p>It is still possible to validate models attributes based on the transition that is done by the model. The principle remains the same : 
+Workflow driven validation is based on dynamic scenario names and their associated validation rules declared in the model.</p>
+<p>Please refer to the <a href="guide-concept-validation.html">Workflow Driven Attribute Validation</a> documentation for more.</p>
+<h3>Events <a href="#events" id="events" class="hashlink">&para;</a></h3><p>There are no major changes in the way workflow events are managed although the event model has been enhanced to provide more control
+through event handlers.</p>
+<p>Please refer to the <a href="guide-concept-events.html">Workflow Event</a> documentation for more.</p>
         <div class="toplink"><a href="#" class="h1" title="go to top"><span class="glyphicon glyphicon-arrow-up"></a></div>
     </div>
 </div>
@@ -58,7 +95,7 @@
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:20 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Sat, 31 Oct 2015 20:41:43 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

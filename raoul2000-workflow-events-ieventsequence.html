@@ -79,19 +79,22 @@
 
 <div id="classDescription">
     <p><strong>Defines the interface that must be implemented by all Event sequence.</strong></p>
-    <p>An <b>event sequence</b> is an array of workflow events that occur on three circumstances
-for which a method is called :
+    <p>An <b>event sequence</b> is an array of workflow events that occurs on three occasions :
 <ul>
 <li><b>createEnterWorkflowSequence</b> : when a model enters into a workflow</li>
 <li><b>createChangeStatusSequence</b> : when a model status change from a non empty status to another one</li>
 <li><b>createLeaveWorkflowSequence</b> : when a model leaves a workflow</li>
 </ul></p>
-<p>For each one of these method, the implementation must returns an array of Workflow events that extend
-\raoul2000\workflow\events\WorkflowEvent.</p>
-<p>Two event sequence implementations are provided : {@link \raoul2000\workflow\events\BasicEventSequence} and
-{@link \raoul2000\workflow\events\ExtendedEventSequence}</p>
+<p>For each one of these methods, the implementation must returns with 2 keys : <strong>before</strong> and <strong>after</strong>. For each
+key, the value is an array of <code>\raoul2000\workflow\events\WorkflowEvent</code> representing the sequence of event
+to fire <em>before</em> or <em>after</em> the workflow event occurs.</p>
+<p>Two event sequences implementations are provided :</p>
+<ul>
+<li>{@link \raoul2000\workflow\events\BasicEventSequence} and</li>
+<li>{@link \raoul2000\workflow\events\ExtendedEventSequence}</li>
+</ul>
 
-    <p>See also <a href="raoul2000-workflow-events-workflowevent.html">raoul2000\workflow\events\WorkflowEvent</a>.</p></div>
+    </div>
 
 <a id="properties"></a>
 
@@ -156,10 +159,10 @@ from an existing status to another existing status.</strong></p>
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\events\Event <strong><a href="raoul2000-workflow-events-ieventsequence.html#createChangeStatusSequence()-detail">createChangeStatusSequence</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$transition</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sender&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.array">array</a> <strong><a href="raoul2000-workflow-events-ieventsequence.html#createChangeStatusSequence()-detail">createChangeStatusSequence</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$transition</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sender&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$transition</span></td>
-                  <td class="param-type-col">\raoul2000\workflow\Transition</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-transitioninterface.html">raoul2000\workflow\base\TransitionInterface</a></td>
                   <td class="param-desc-col"><p>The transition representing the status
 change</p>
 </td>
@@ -190,10 +193,10 @@ change</p>
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\events\Event <strong><a href="raoul2000-workflow-events-ieventsequence.html#createEnterWorkflowSequence()-detail">createEnterWorkflowSequence</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$initalStatus</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sender&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.array">array</a> <strong><a href="raoul2000-workflow-events-ieventsequence.html#createEnterWorkflowSequence()-detail">createEnterWorkflowSequence</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$initalStatus</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sender&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$initalStatus</span></td>
-                  <td class="param-type-col"><a href="raoul2000-workflow-base-status.html">raoul2000\workflow\base\Status</a></td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-statusinterface.html">raoul2000\workflow\base\StatusInterface</a></td>
                   <td class="param-desc-col"><p>The status used to enter into the workflow (the <i>initial status</i>)</p>
 </td>
                 </tr>
@@ -223,10 +226,10 @@ change</p>
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\events\Event <strong><a href="raoul2000-workflow-events-ieventsequence.html#createLeaveWorkflowSequence()-detail">createLeaveWorkflowSequence</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$finalStatus</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sender&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.array">array</a> <strong><a href="raoul2000-workflow-events-ieventsequence.html#createLeaveWorkflowSequence()-detail">createLeaveWorkflowSequence</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$finalStatus</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sender&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$finalStatus</span></td>
-                  <td class="param-type-col"><a href="raoul2000-workflow-base-status.html">raoul2000\workflow\base\Status</a></td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-statusinterface.html">raoul2000\workflow\base\StatusInterface</a></td>
                   <td class="param-desc-col"><p>The status that the model last visited in the workflow it is leaving
 (the <i>final status</i>)</p>
 </td>
@@ -278,7 +281,7 @@ change</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:22 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Sat, 31 Oct 2015 20:41:46 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

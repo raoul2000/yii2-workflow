@@ -242,7 +242,7 @@ status converter is used by this behavior.</td>
     </tr>
             <tr id="beforeDelete()">
         <td><a href="raoul2000-workflow-base-simpleworkflowbehavior.html#beforeDelete()-detail">beforeDelete()</a></td>
-        <td>Handle the case where the owner model is leaving the workflow</td>
+        <td>Handle the case where the owner model is leaving the workflow.</td>
         <td><a href="raoul2000-workflow-base-simpleworkflowbehavior.html">raoul2000\workflow\base\SimpleWorkflowBehavior</a></td>
     </tr>
             <tr id="beforeSaveStatus()">
@@ -608,7 +608,8 @@ several handlers, they will all be invoked unless the event is invalidated and m
     <div class="doc-description">
         <p><strong>Fires pending events, once the owner model has been successfully deleted.</strong></p>
 
-        
+        <p>This is the event handler for ActiveRecord::EVENT_AFTER_DELETE</p>
+
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
@@ -635,14 +636,15 @@ several handlers, they will all be invoked unless the event is invalidated and m
     <div class="doc-description">
         <p><strong>After the owner model has been saved, fire pending events.</strong></p>
 
-        
+        <p>This is the event handler for both ActiveRecord::EVENT_AFTER_UPDATE and ActiveRecord::EVENT_AFTER_INSERT events</p>
+
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.boolean">boolean</a> <strong><a href="raoul2000-workflow-base-simpleworkflowbehavior.html#afterSaveStatus()-detail">afterSaveStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$insert&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature">void <strong><a href="raoul2000-workflow-base-simpleworkflowbehavior.html#afterSaveStatus()-detail">afterSaveStatus</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$event&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
-                  <td class="param-name-col"><span style="color: #0000BB">$insert</span></td>
-                  <td class="param-type-col">bool</td>
+                  <td class="param-name-col"><span style="color: #0000BB">$event</span></td>
+                  <td class="param-type-col">\raoul2000\workflow\base\yii\base\Event</td>
                   <td class="param-desc-col"></td>
                 </tr>
                                                 </table>
@@ -693,9 +695,10 @@ responsability to ensure that the workflow operations are consistent, in particu
     </div>
 
     <div class="doc-description">
-        <p><strong>Handle the case where the owner model is leaving the workflow</strong></p>
+        <p><strong>Handle the case where the owner model is leaving the workflow.</strong></p>
 
-        
+        <p>This is the event handler for ActiveRecord::EVENT_BEFORE_DELETE</p>
+
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
@@ -722,7 +725,8 @@ responsability to ensure that the workflow operations are consistent, in particu
     <div class="doc-description">
         <p><strong>Send owner model into status if needed.</strong></p>
 
-        
+        <p>This is the event handler for both ActiveRecord::EVENT_BEFORE_INSERT and ActiveRecord::EVENT_BEFORE_UPDATE events</p>
+
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
@@ -1453,7 +1457,7 @@ is going to leave its current workflow.</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:21 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Sat, 31 Oct 2015 20:41:45 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {

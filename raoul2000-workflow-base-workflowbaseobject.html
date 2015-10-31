@@ -81,8 +81,8 @@ yii\base\Object</td></tr>
 
 <div id="classDescription">
     <p><strong>This class is the base class for Workflow, Transition and Status objects.</strong></p>
-    <p>It mainly provides a way to store additional class properties without the need to
-declare them in the class definition. Theses properties are called metadata and stored into
+    <p>It mainly provides a way to store additional properties without the need to
+declare them in the class definition. Theses properties are called <strong>metadata</strong> and stored into
 an array. They can be accessed like regular class properties.</p>
 
     </div>
@@ -122,7 +122,7 @@ an array. They can be accessed like regular class properties.</p>
     </tr>
             <tr id="getMetadata()">
         <td><a href="raoul2000-workflow-base-workflowbaseobject.html#getMetadata()-detail">getMetadata()</a></td>
-        <td></td>
+        <td>Returns the value of the metadata with namer <code>$paramName</code>.</td>
         <td><a href="raoul2000-workflow-base-workflowbaseobject.html">raoul2000\workflow\base\WorkflowBaseObject</a></td>
     </tr>
             <tr id="getSource()">
@@ -132,7 +132,7 @@ an array. They can be accessed like regular class properties.</p>
     </tr>
             <tr id="hasMetadata()">
         <td><a href="raoul2000-workflow-base-workflowbaseobject.html#hasMetadata()-detail">hasMetadata()</a></td>
-        <td></td>
+        <td>Test if a metadata parameter is defined.</td>
         <td><a href="raoul2000-workflow-base-workflowbaseobject.html">raoul2000\workflow\base\WorkflowBaseObject</a></td>
     </tr>
     </table>
@@ -239,13 +239,14 @@ an array. They can be accessed like regular class properties.</p>
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Returns the value of the metadata with namer <code>$paramName</code>.</strong></p>
 
-        
+        <p>If no <code>$paramName</code>is provided, this method returns an array containing all metadata parameters.</p>
+
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.string">string</a> <strong><a href="raoul2000-workflow-base-workflowbaseobject.html#getMetadata()-detail">getMetadata</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$paramName&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$defaultValue&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
+        <tr><td colspan="3" class="signature">mixed <strong><a href="raoul2000-workflow-base-workflowbaseobject.html#getMetadata()-detail">getMetadata</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$paramName&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$defaultValue&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$paramName</span></td>
                   <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
@@ -255,7 +256,7 @@ value of the correponding metadata.</p>
                 </tr>
                             <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$defaultValue</span></td>
-                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-type-col">mixed</td>
                   <td class="param-desc-col"></td>
                 </tr>
                                                     <tr>
@@ -284,10 +285,10 @@ value of the correponding metadata.</p>
             </div>
 
     <table class="detail-table table table-striped table-bordered table-hover">
-        <tr><td colspan="3" class="signature">\raoul2000\workflow\base\IWorkflowSource <strong><a href="raoul2000-workflow-base-workflowbaseobject.html#getSource()-detail">getSource</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;)</span></td></tr>
+        <tr><td colspan="3" class="signature"><a href="raoul2000-workflow-source-iworkflowsource.html">raoul2000\workflow\source\IWorkflowSource</a> <strong><a href="raoul2000-workflow-base-workflowbaseobject.html#getSource()-detail">getSource</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;)</span></td></tr>
                                                 <tr>
                   <th class="param-name-col">return</th>
-                  <td class="param-type-col">\raoul2000\workflow\base\IWorkflowSource</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-source-iworkflowsource.html">raoul2000\workflow\source\IWorkflowSource</a></td>
                   <td class="param-desc-col"><p>The source instance or null if no
 source was been provided</p>
 </td>
@@ -307,7 +308,7 @@ source was been provided</p>
     </div>
 
     <div class="doc-description">
-        <p><strong></strong></p>
+        <p><strong>Test if a metadata parameter is defined.</strong></p>
 
         
             </div>
@@ -316,12 +317,19 @@ source was been provided</p>
         <tr><td colspan="3" class="signature"><a href="http://www.php.net/language.types.boolean">boolean</a> <strong><a href="raoul2000-workflow-base-workflowbaseobject.html#hasMetadata()-detail">hasMetadata</a></strong><span style="color: #0000BB"></span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$paramName&nbsp;</span><span style="color: #007700">)</span></td></tr>
                                     <tr>
                   <td class="param-name-col"><span style="color: #0000BB">$paramName</span></td>
-                  <td class="param-type-col">\raoul2000\workflow\base\unknown</td>
-                  <td class="param-desc-col"></td>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.string">string</a></td>
+                  <td class="param-desc-col"><p>The metadata parameter name</p>
+</td>
                 </tr>
-                                                    <tr>
+                                        <tr>
+                  <th class="param-name-col">return</th>
+                  <td class="param-type-col"><a href="http://www.php.net/language.types.boolean">boolean</a></td>
+                  <td class="param-desc-col"><p>TRUE if the metadata parameter exists, FALSE otherwise</p>
+</td>
+                </tr>
+                                        <tr>
                   <th class="param-name-col">throws</th>
-                  <td class="param-type-col">\yii\base\InvalidCallException</td>
+                  <td class="param-type-col"><a href="raoul2000-workflow-base-workflowexception.html">raoul2000\workflow\base\WorkflowException</a></td>
                   <td class="param-desc-col"></td>
                 </tr>
                         </table>
@@ -366,7 +374,7 @@ source was been provided</p>
 </div>
 
 <footer class="footer">
-        <p class="pull-right"><small>Page generated on Mon, 26 Oct 2015 21:03:21 +0000</small></p>
+        <p class="pull-right"><small>Page generated on Sat, 31 Oct 2015 20:41:45 +0000</small></p>
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
 
 <script type="text/javascript">jQuery(document).ready(function () {
