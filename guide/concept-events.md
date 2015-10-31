@@ -1,9 +1,9 @@
 # Workflow Events
 
-*SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow customization
-of model behavior.  
+*yii2-workflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow you to customize the behavior
+of your models, while they are evolving inside workflows. 
 
-Basically when something interesting happens to a model inside a workflow, an event is fired, or more precisely a **sequence of events** is
+Basically when *something interesting happens* to a model inside a workflow, an event is fired, or more precisely a **sequence of events** is
 fired.
 
 ## Event Sequence

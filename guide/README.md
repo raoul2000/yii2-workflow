@@ -6,8 +6,6 @@ Introduction
 
 * [About Workflows](intro-workflow.md)
 * [Installing yii2-workflow](intro-installation.md)
-* [Upgrading from Version 1.x](intro-upgrade-from-v1.md)
-
 
 Key Concepts
 ------------
@@ -22,7 +20,6 @@ Workflow Components
 
 * [Behavior](workflow-behavior.md)
 * [File Source](source-file.md)
-
 
 Special topics
 -------------
