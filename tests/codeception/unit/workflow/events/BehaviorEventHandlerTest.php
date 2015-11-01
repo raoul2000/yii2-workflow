@@ -95,6 +95,24 @@ class BehaviorEventHandlerTest extends DbTestCase
     	expect_not($post->delete());
     }
         
+    public function testLeaveNewOnDelete()
+    {
+    	$post = new Item06();
+    	$post->name ='post name';
+    	$post->enterWorkflow();
+    	
+    	verify($post->save())->true();
+    	verify($post->getWorkflowStatus()->getId())->equals('Item06Workflow/new');
+    	
+    	$post->canLeaveWorkflow(true);
+    	Item06Behavior::$countBeforeLeaveNew = 0;
+    	Item06Behavior::$countAfterLeaveNew = 0;
+    	expect_that($post->delete());
+    	
+    	expect('the beforeLeaveNew has been called once',Item06Behavior::$countBeforeLeaveNew)->equals(1);
+    	expect('the afterLeaveNew has been called once',Item06Behavior::$countAfterLeaveNew)->equals(1);
+    }
+    
     public function testEnterWorkflowSuccess()
     {
     	$post = new Item06();

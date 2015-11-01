@@ -19,6 +19,9 @@ class Item06Behavior  extends Behavior
 	public static $countPostToCorrect = 0;
 	public static $countPostCorrected = 0;
 	public static $countLeaveWorkflow = 0;
+	
+	public static $countBeforeLeaveNew = 0;
+	public static $countAfterLeaveNew = 0;
 
 	public function events()
 	{
@@ -31,8 +34,20 @@ class Item06Behavior  extends Behavior
 			WorkflowEvent::beforeChangeStatus('Item06Workflow/published', 'Item06Workflow/archive') => "canBeArchived",
 			WorkflowEvent::beforeLeaveWorkflow('Item06Workflow') => 'beforeLeaveWorkflow',
 			WorkflowEvent::afterLeaveWorkflow('Item06Workflow') => 'afterLeaveWorkflow',
+			
+			WorkflowEvent::beforeLeaveStatus('Item06Workflow/new') => 'beforeLeaveNew',
+			WorkflowEvent::afterLeaveStatus('Item06Workflow/new') => 'afterLeaveNew',
 		];
 	}
+	public function beforeLeaveNew($event)
+	{
+		self::$countBeforeLeaveNew++;
+	}
+	public function afterLeaveNew($event)
+	{
+		self::$countAfterLeaveNew++;
+	}
+		
 	public function afterLeaveWorkflow($event)
 	{
 		self::$countLeaveWorkflow++;
