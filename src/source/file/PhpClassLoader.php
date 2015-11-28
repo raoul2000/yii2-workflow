@@ -54,7 +54,13 @@ class PhpClassLoader extends WorkflowDefinitionLoader {
 	 */
 	public function getClassname($workflowId)
 	{
-		return $this->getNameSpace() . '\\' . $workflowId;
+		$count = count(explode('\\', $workflowId));
+		if($count<=1)
+			$namespace = $this->getNameSpace() . '\\';
+		else
+			$namespace = '';
+
+		return $namespace . $workflowId;
 	}	
 
 	/**
