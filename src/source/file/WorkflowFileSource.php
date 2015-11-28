@@ -491,7 +491,8 @@ class WorkflowFileSource extends Object implements IWorkflowSource
 	 */
 	public function isValidWorkflowId($val)
 	{
-		return is_string($val) && preg_match(self::PATTERN_ID, $val) != 0;
+		//TODO: improve validation of workflowId to include the namespace
+		return is_string($val);// && preg_match(self::PATTERN_ID, $val) != 0;
 	}
 
 	/**
