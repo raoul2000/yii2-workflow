@@ -16,7 +16,7 @@ or add
 
 to the require section of your `composer.json` file.
 
-## Migrating From *SimpleWorkflow* 1.x
+## Upgrading From *SimpleWorkflow* 1.x
 
 If you have been using the [previous version of *SimpleWorkflow*](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=home) 
 together with Yii 1.x and now want to migrate to Yii2, this chapter is for you. We will focus on the main differences between the
@@ -35,13 +35,13 @@ all classes can be overloaded and new ones created to implements specific needs 
 
 Not that much to say here, as there is no change in the way the *SimpleWorkflowBehavior* detects status changes :
 
-- On one side an Active Record attribute which can be viewed as the future status. 
+- On one side an ActiveRecord's attribute which can be viewed as the future status. 
 - On the other side, the actual status managed internally by the behavior.
 
 A transition is a directed link between to statuses : the *start* and the *end* status.  
 
 ### Definition
-The workflow definition required by the `WorkflowFileSource` component differs from previous version : 
+The workflow definition required by the [[raoul2000\workflow\source\file\WorkflowFileSource|WorkflowFileSource]] component differs from previous version : 
 
 - key `initial` is replaced by `initialStatusId`
 - key `node` is replaced by `status`
