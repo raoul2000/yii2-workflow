@@ -3,6 +3,8 @@
 - add composer.lock
 - fix doc blocks
 
+**release 1.0.0**
+
 #version 0.0.20
 - remove unnecessary `use` statement in `SimpleWorkflowBehavior`
 - test against `StatusInterface` and not anymore `Status`
