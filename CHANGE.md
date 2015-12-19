@@ -1,4 +1,4 @@
-#version 0.0.21
+#version 1.0.0
 - fix CI failure : deep-copy 1.4.0 caused error `Maximum function nesting level of '200' reached, aborting!`. Version 1.3.1 is ok
 - add composer.lock
 - fix doc blocks
