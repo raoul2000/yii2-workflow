@@ -2,6 +2,7 @@
 - Ci : update components versions
 - Ci : remove *scrutinizer* hook
 - Ci : remove php version prior to 5.6
+- add unit tests for `WorkflowHelper::getStatusDropDownData()`
 
 #version 1.0.0
 - fix CI failure : deep-copy 1.4.0 caused error `Maximum function nesting level of '200' reached, aborting!`. Version 1.3.1 is ok
