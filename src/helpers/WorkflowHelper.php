@@ -105,4 +105,33 @@ class WorkflowHelper
 		}
 		return null;
 	}
+
+	/**
+	 * Returns the items and options for a dropDownList
+	 * All status options are in the list, but invalid transitions are disabled
+	 *
+	 * Example:
+	 * $statusDropDownData = WorkflowHelper::getStatusDropDownData($model);
+	 * echo $form->field($model, 'status')
+	 * 	->dropDownList($statusDropDownData['items'], ['options' => $statusDropDownData['options']]);
+	 *
+	 * @param BaseActiveRecord|SimpleWorkflowBehavior $model
+	 * @return array
+	 */
+	public static function getStatusDropDownData($model)
+	{
+		$transitions = array_keys($model->getWorkflowSource()->getTransitions($model->getWorkflowStatus()->getId()));
+		$items = WorkflowHelper::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
+		$options = [];
+		foreach (array_keys($items) as $status) {
+			if ($status != $model->getWorkflowStatus()->getId() && !in_array($status, $transitions)) {
+				$options[$status]['disabled'] = true;
+			}
+		}
+		return [
+			'items' => $items,
+			'options' => $options,
+		];
+	}
+
 }
