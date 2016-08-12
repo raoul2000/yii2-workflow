@@ -138,7 +138,7 @@ class ValidatorTest extends TestCase
 			verify('the model has errors',$model->hasErrors())->true();
 			verify('the model has exactly one error',count($model->getErrors()) == 1)->true();
 
-			verify('the correct error message is set', $model->getFirstError('category'))->equals('Category must be repeated exactly.');
+			verify('the correct error message is set', $model->getFirstError('category'))->equals('Category must be equal to "done".');
 			verify('the model status was not changed', $model->getWorkflowStatus()->getId())->equals('Item05Workflow/new');
 			verify('the status attribute was not changed', $model->status)->equals(null);
 		});

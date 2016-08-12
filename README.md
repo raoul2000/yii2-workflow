@@ -4,8 +4,6 @@
 [![Latest Stable Version](https://poser.pugx.org/raoul2000/yii2-workflow/v/stable)](https://packagist.org/packages/raoul2000/yii2-workflow)
 [![Total Downloads](https://poser.pugx.org/raoul2000/yii2-workflow/downloads)](https://packagist.org/packages/raoul2000/yii2-workflow)
 [![License](https://poser.pugx.org/raoul2000/yii2-workflow/license)](https://packagist.org/packages/raoul2000/yii2-workflow)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/raoul2000/yii2-workflow/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/raoul2000/yii2-workflow/?branch=master)
-
 
 ## Installation
 
@@ -25,7 +23,7 @@ or add
 
 to the require section of your `composer.json` file.
 
-# Quick Start 
+# Quick Start
 
 ## Configuration
 
@@ -33,9 +31,9 @@ For this "*Quick start Guide*" we will be using **default configuration settings
 flexible so to adapt to a lot of execution contexts... well at least that was my goal.
 
 ## Create A Workflow
- 
+
 A workflow is defined as a PHP class that implements the `\raoul2000\workflow\source\file\IWorkflowDefinitionProvider` interface. which
-declares the *getDefinition()* method. This method must return an array representing the workflow definition. 
+declares the *getDefinition()* method. This method must return an array representing the workflow definition.
 
 Let's define a very *simple workflow* that will be used to manage posts in a basic blog system.
 
@@ -47,7 +45,7 @@ Here is the PHP class that implements the definition for our workflow :
 ```php
 namespace app\models;
 
-class PostWorkflow implements \raoul2000\workflow\source\file\IWorkflowDefinitionProvider 
+class PostWorkflow implements \raoul2000\workflow\source\file\IWorkflowDefinitionProvider
 {
 	public function getDefinition() {
 		return [
@@ -70,12 +68,12 @@ class PostWorkflow implements \raoul2000\workflow\source\file\IWorkflowDefinitio
 
 ## Attach To The Model
 
-Now let's have a look to our Post model: we store the status of a post in a column named `status` of type STRING(40). 
+Now let's have a look to our Post model: we store the status of a post in a column named `status` of type STRING(40).
 
-The last step is to associate the workflow definition with posts models. To do so we must declare the *SimpleWorkflowBehavior* behavior 
+The last step is to associate the workflow definition with posts models. To do so we must declare the *SimpleWorkflowBehavior* behavior
 in the Post model class and let the default configuration settings do the rest.
- 
-`@app/models/Post.php` 
+
+`@app/models/Post.php`
 ```php
 namespace app\models;
 /**
@@ -99,7 +97,7 @@ That's it ! We are ready to play with *SimpleWorkflowBehavior*.
 
 ## Use It !
 
-Now that we are all setup, we can use the *SimpleWorkflowBehavior* methods to set/get the status of our posts : the *SimpleWorkflowBehavior* will 
+Now that we are all setup, we can use the *SimpleWorkflowBehavior* methods to set/get the status of our posts : the *SimpleWorkflowBehavior* will
 take care that the post doesn't reach a status where it is not supposed to go to, depending on the workflow definition that we have provided.
 
 ```php
@@ -111,7 +109,7 @@ echo 'post status is : '. $post->workflowStatus->label;
 This will print the following message :
 
 	post status is : Draft
-	 
+
 If you do the same thing but instead of *draft* set the status to *publish* and try to save it, the following exception is thrown :
 
 	Not an initial status : PostWorkflow/publish ("PostWorkflow/draft" expected)
@@ -119,7 +117,7 @@ If you do the same thing but instead of *draft* set the status to *publish* and 
 That's because in your workflow definition the **initial status** is  set to *draft* and not *publish*.
 
 Ok, one more example for the fun ! This time we are not going to perform the transition when the Post is saved (like we did in the previous
-example), but immediately, by invoking the `sendToStatus` method. Our Post is going to try to reach status *publish* passing through *deleted* 
+example), but immediately, by invoking the `sendToStatus` method. Our Post is going to try to reach status *publish* passing through *deleted*
 which is strictly forbidden by the workflow. Will it be successful in this risky attempt to break workflow rules ?   
 
 ```php
@@ -134,8 +132,8 @@ fearless post object.
 
 	Workflow Exception – raoul2000\workflow\base\WorkflowException
 	No transition found between status PostWorkflow/deleted and PostWorkflow/publish
-	
-Yes, that's severe, but there was many ways to avoid this exception like for instance by first validating that the transition was possible. 
+
+Yes, that's severe, but there was many ways to avoid this exception like for instance by first validating that the transition was possible.
 
 ## What's Next ?
 
@@ -144,10 +142,10 @@ in your workflow management inside your Yii2 web app.
 
 You will find a complete description there :
 
-- [yii2-workflow Usage Guide](http://raoul2000.github.io/yii2-workflow/guide-README.html) 
+- [yii2-workflow Usage Guide](http://raoul2000.github.io/yii2-workflow/guide-README.html)
 - [yii2-workflow API Documentation](http://raoul2000.github.io/yii2-workflow/index.html)
 
-You may also be intrested in the following project developped around yii2-workflow : 
+You may also be intrested in the following project developped around yii2-workflow :
 
 - [yii2-workflow-view](https://github.com/raoul2000/yii2-workflow-view) : A Widget to display workflows
 - ..and more to come
@@ -158,5 +156,3 @@ License
 **yii2-workflow** is released under the BSD 3-Clause License. See the bundled `LICENSE.md` for details.
 
 [![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](http://www.yiiframework.com/)
-
-
