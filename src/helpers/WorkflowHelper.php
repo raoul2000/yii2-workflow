@@ -112,9 +112,11 @@ class WorkflowHelper
 	 *
 	 * Example:
 	 * $statusDropDownData = WorkflowHelper::getStatusDropDownData($model);
-	 * echo $form->field($model, 'status')
-	 * 	->dropDownList($statusDropDownData['items'], ['options' => $statusDropDownData['options']]);
-	 *
+	 * // Html
+	 * echo Html::dropDownList('status', $model->status, $statusDropdown['items'], ['options' => $statusDropdown['options']]);
+	 * // ActiveForm
+	 * echo $form->field($model, 'status')->dropDownList($statusDropDownData['items'], ['options' => $statusDropDownData['options']]);
+	 * 
 	 * @param BaseActiveRecord|SimpleWorkflowBehavior $model
 	 * @return array
 	 */
