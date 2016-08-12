@@ -62,8 +62,8 @@ class WorkflowHelper
 	 * )
 	 * 
 	 * @param string $workflowId
-	 * @param Object $workflowSource
-	 * @return Array
+	 * @param IWorkflowSource $workflowSource
+	 * @return array
 	 */
 	public static function getAllStatusListData($workflowId, $workflowSource)
 	{
