@@ -79,7 +79,7 @@ Now, based on what we have just define, here is a possible workflow four our pos
 
 <img src="images/post-workflow-2.png" alt="workflow 2"/>
 
-The first version of the "Post worfklow" was very simple, and as each status could reach any other status, there was no need for 
+The first version of the "Post workflow" was very simple, and as each status could reach any other status, there was no need for 
 the developer to make any tests when a Post changed status. With this new version, that's another story ! Some logic must 
 be implemented in order to prevent *Archived* post to become *Draft*, or *Published* posts to be sent to *Correction* by a redactor. 
 
@@ -382,7 +382,7 @@ case remember that when the `status` value is set by the *SimpleWorkflowBehavior
 ## Workflow Tasks
 
 Being able to garantee that the model status will only use authorized transition is nice, but the *SimpleWorkflowBehavior*  
-provides a way to add some logic to worfklows.
+provides a way to add some logic to workflows.
 
 Let's imagine that we want to improve our Publishing System with this new business rule : 
 
@@ -594,6 +594,7 @@ Let's rewrite our validation rules using the *WorkflowScenario* helper:
 
 ```php
 use raoul2000\workflow\validation\WorkflowValidator;
+use raoul2000\workflow\validation\WorkflowScenario;
 
 class Post extends \yii\db\ActiveRecord
 {
@@ -601,10 +602,16 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
         	[['status'], WorkflowValidator::className()],
-        	['title','required',
-        		'on' => WorkflowScenario::changeStatus('Post3Workflow/correction', 'Post3Workflow/ready') ],    
-        	['tags','required',
-        		'on' => WorkflowScenario::enterStatus('Post3Workflow/ready') ],          	
+        	[
+        		'title',
+        		'required',
+        		'on' => WorkflowScenario::changeStatus('Post3Workflow/correction', 'Post3Workflow/ready')
+        	],
+        	[
+        		'tags',
+        		'required',
+        		'on' => WorkflowScenario::enterStatus('Post3Workflow/ready')
+        	],
         ];
     }	
 ```
