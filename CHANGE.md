@@ -1,6 +1,7 @@
 #version 1.0.1
 - Ci : update components versions
 - Ci : remove *scrutinizer* hook
+- Ci : remove php version prior to 5.6
 
 #version 1.0.0
 - fix CI failure : deep-copy 1.4.0 caused error `Maximum function nesting level of '200' reached, aborting!`. Version 1.3.1 is ok
