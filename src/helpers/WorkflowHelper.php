@@ -121,7 +121,7 @@ class WorkflowHelper
 	 * @param bool $beforeEvents
 	 * @return array
 	 */
-	public static function getStatusDropDownData($model, $beforeEvents = true)
+	public static function getStatusDropDownData($model, $beforeEvents = false)
 	{
 		$transitions = array_keys(static::getNextStatusListData($model, false, $beforeEvents));
 		$items = static::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
