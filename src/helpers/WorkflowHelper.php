@@ -118,11 +118,12 @@ class WorkflowHelper
 	 * echo $form->field($model, 'status')->dropDownList($statusDropDownData['items'], ['options' => $statusDropDownData['options']]);
 	 * 
 	 * @param BaseActiveRecord|SimpleWorkflowBehavior $model
+	 * @param bool $beforeEvents
 	 * @return array
 	 */
-	public static function getStatusDropDownData($model)
+	public static function getStatusDropDownData($model, $beforeEvents = true)
 	{
-		$transitions = array_keys($model->getWorkflowSource()->getTransitions($model->getWorkflowStatus()->getId()));
+		$transitions = array_keys(WorkflowHelper::getNextStatusListData($model, false, $beforeEvents));
 		$items = WorkflowHelper::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
 		$options = [];
 		foreach (array_keys($items) as $status) {
