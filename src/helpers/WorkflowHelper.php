@@ -123,8 +123,8 @@ class WorkflowHelper
 	 */
 	public static function getStatusDropDownData($model, $beforeEvents = true)
 	{
-		$transitions = array_keys(WorkflowHelper::getNextStatusListData($model, false, $beforeEvents));
-		$items = WorkflowHelper::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
+		$transitions = array_keys(static::getNextStatusListData($model, false, $beforeEvents));
+		$items = static::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
 		$options = [];
 		foreach (array_keys($items) as $status) {
 			if ($status != $model->getWorkflowStatus()->getId() && !in_array($status, $transitions)) {
