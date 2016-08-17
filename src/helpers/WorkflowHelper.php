@@ -146,11 +146,12 @@ class WorkflowHelper
 	{
 		$currentStatus = $model->getAttribute('status');
 		$statusList = $model->getWorkflowSource()->getAllStatuses($model->getWorkflow()->getId());
+		$transitions = array_keys(WorkflowHelper::getNextStatusListData($this->owner));
 		$started = false;
 		foreach ($statusList as $status) {
 			$status_id = $status->getId();
 			if ($started) {
-				if (static::isValidNextStatus($model, $status_id)) {
+				if (in_array($status_id, $transitions) && static::isValidNextStatus($model, $status_id)) {
 					return $status_id;
 				}
 			}
