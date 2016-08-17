@@ -145,9 +145,10 @@ You will find a complete description there :
 - [yii2-workflow Usage Guide](http://raoul2000.github.io/yii2-workflow/guide-README.html)
 - [yii2-workflow API Documentation](http://raoul2000.github.io/yii2-workflow/index.html)
 
-You may also be intrested in the following project developped around yii2-workflow :
+You may also be intrested in the following projects developped around yii2-workflow :
 
 - [yii2-workflow-view](https://github.com/raoul2000/yii2-workflow-view) : A Widget to display workflows
+- [yii2-workflow-manager](https://github.com/cornernote/yii2-workflow-manager) : A Module to manage workflows
 - ..and more to come
 
 License
