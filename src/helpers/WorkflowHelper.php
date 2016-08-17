@@ -136,4 +136,49 @@ class WorkflowHelper
 		];
 	}
 
+	/**
+	 * Returns the status string of the next valid status from the list of transitions
+	 *
+	 * @param BaseActiveRecord|SimpleWorkflowBehavior $model
+	 * @return string
+	 */
+	public static function getNextStatus($model)
+	{
+		$currentStatus = $model->getAttribute('status');
+		$statusList = $model->getWorkflowSource()->getAllStatuses($model->getWorkflow()->getId());
+		$started = false;
+		foreach ($statusList as $status) {
+			$status_id = $status->getId();
+			if ($started) {
+				if (static::isValidNextStatus($model, $status_id)) {
+					return $status_id;
+				}
+			}
+			if ($status_id == $currentStatus) {
+				$started = true;
+			}
+		}
+		return $currentStatus;
+	}
+
+	/**
+	 * Checks if a given status is a valid transition from the current status
+	 *
+	 * @param BaseActiveRecord|SimpleWorkflowBehavior $model
+	 * @param string $status_id
+	 * @return bool
+	 */
+	public static function isValidNextStatus($model, $status_id)
+	{
+		$eventSequence = $model->getEventSequence($status_id);
+		foreach ($eventSequence['before'] as $event) {
+			if ($model->hasEventHandlers($event->name)) {
+				$model->trigger($event->name, $event);
+				if ($event->isValid === false) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }
