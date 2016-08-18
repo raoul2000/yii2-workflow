@@ -23,3 +23,6 @@ composer.phar
 
 # phpunit itself is not needed
 phpunit.phar
+
+# doc build 
+/guide/site
