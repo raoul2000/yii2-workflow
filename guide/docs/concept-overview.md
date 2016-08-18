@@ -13,15 +13,14 @@ It includes :
 - a Workflow Source Component (*WorkflowFileSource*)
 - a Validator (*WorkflowValidator*)
 - three event sequence models
-- various helpers 
+- various helpers
 
-*SimpleWorkflow* can be configure to fit your requirements and if that's not enough, you can extend all classes so to
-implement your own features.
+*SimpleWorkflow* can be configure to fit your requirements and if that's not enough, you can extend all classes so to implement your own features.
 
 ## Identifiers
 
-The *SimpleWorkflow* refers to workflows and statuses using identifiers. The way these identifiers are formatted, depends 
-on the *WorkflowSource* components used. 
+The *SimpleWorkflow* refers to workflows and statuses using identifiers. The way these identifiers are formatted, depends
+on the *WorkflowSource* components used.
 
 ## Initial Status
 
@@ -29,7 +28,7 @@ The initial status is the first status assigned to a model, that's the *entry po
 workflow must have exactly one initial status.
 
 For example, in a workflow dedicated to manage posts, the initial status could be called 'draft' : it usually
-describes the first state of the post. 
+describes the first state of the post.
 
 
 ## Transition
@@ -52,12 +51,7 @@ ia designed to read by default, a workflow definition from a PHP array wrapped i
 ## Events
 
 The *SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow customization
-of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle 
+of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle
 inside the workflow.
 
 [Read more about events](concept-events.md)
-
-
-
-  
-
