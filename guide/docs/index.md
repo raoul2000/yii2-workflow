@@ -1,6 +1,6 @@
 # What is yii2-workflow ?
 
-**yii2-workflow** is an extension of the [Yii2 Framework](http://www.yiiframework.com/), designed to help you manage workflow in your app. It is the successor of *[simpleWorkflow](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=home)* which was developed some years ago for the 1.x version of Yii. Both extensions try to keep thing simple and easy to use. They rely as much as possible on standard Yii2 features like Events, components, behaviors, etc.
+**yii2-workflow** is an extension of the [Yii2 Framework](http://www.yiiframework.com/), designed to help you manage workflow in your app. It is the successor of *[simpleWorkflow](http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&view=home)* which was developed some years ago for the 1.x version of Yii. Both extensions try to keep thing simple and easy to use. They rely as much as possible on standard Yii2 features like [Events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html), [components](http://www.yiiframework.com/doc-2.0/guide-concept-components.html), [behaviors](http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html), etc.
 
 Before going any further in your reading it is important to understand what yii2-workflow is *not* :
 

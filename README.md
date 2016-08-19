@@ -37,7 +37,7 @@ declares the *getDefinition()* method. This method must return an array represen
 
 Let's define a very *simple workflow* that will be used to manage posts in a basic blog system.
 
-<img src="guide/images/workflow1.png"/>
+<img src="guide/docs/images/workflow1.png"/>
 
 Here is the PHP class that implements the definition for our workflow :
 

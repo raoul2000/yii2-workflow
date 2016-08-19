@@ -24,5 +24,7 @@ composer.phar
 # phpunit itself is not needed
 phpunit.phar
 
-# doc build 
+# doc build
 /guide/site
+/guide/api
+apigen.phar
