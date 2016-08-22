@@ -1,2 +1,10 @@
-site_name: My Docs
+site_name: yii2-workflow User Guide
+pages:
+    - 'Introduction': 'index.md'
+    - 'Overview': 'overview.md'
+    - Concept:
+        - 'Overview': 'concept-overview.md'
+        - 'Events': 'concept-events.md'
+        - 'Source': 'concept-source.md'
+        - 'Validation': 'concept-validation.md'
 theme: yeti
