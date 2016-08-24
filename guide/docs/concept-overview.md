@@ -1,10 +1,6 @@
-# Concepts
+## Generalities
 
-Before being able to use *SimpleWorkflow* there are some simple key concepts that you must know.
-
-## What is SimpleWorkflow
-
-*SimpleWorkflow* is a set on objects dedicated to help managing the life-cycle of an ActiveRecord
+*yii2-workflow* is a set on objects dedicated to help managing the life-cycle of an ActiveRecord
 model within a *workflow*.
 
 It includes :
@@ -15,11 +11,11 @@ It includes :
 - three event sequence models
 - various helpers
 
-*SimpleWorkflow* can be configure to fit your requirements and if that's not enough, you can extend all classes so to implement your own features.
+*yii2-workflow* can be configure to fit your requirements and if that's not enough, you can extend all classes so to implement your own features.
 
 ## Identifiers
 
-The *SimpleWorkflow* refers to workflows and statuses using identifiers. The way these identifiers are formatted, depends
+The *yii2-workflow* refers to workflows and statuses using identifiers. The way these identifiers are formatted, depends
 on the *WorkflowSource* components used.
 
 ## Initial Status

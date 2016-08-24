@@ -76,7 +76,7 @@ the work is going to be organized**, how users of our publishing system will int
 That will be enough for this example but of course we could (and probably should) add more business rules.
 Now, based on what we have just define, here is a possible workflow four our posts :
 
-<img src="images/post-workflow-2.png" alt="workflow 2"/>
+![images/post-workflow-2.png](images/post-workflow-2.png)
 
 The first version of the "Post workflow" was very simple, and as each status could reach any other status, there was no need for
 the developer to make any tests when a Post changed status. With this new version, that's another story ! Some logic must
@@ -138,8 +138,8 @@ Note that a more condensed array format is also supported, but for this example 
 ## Attaching the behavior
 
 To be able to manage our Post model inside the workflow, we must take care about following points :
-- *check that the Post inherits from* `yii\base\Model` : the *SimpleWorkflowBehavior* can only be attached to Model objects and in fact
-most of the time it will be attached to `\yii\db\ActiveRecord` Objects.
+
+- *check that the Post inherits from* `yii\base\Model` : the *SimpleWorkflowBehavior* can only be attached to Model objects and in fact most of the time it will be attached to `\yii\db\ActiveRecord` Objects.
 - ensure that the Post class include an attribute (or a property) that will be used to store the current status of a post.
 We will use attribute `status` with type VARCHAR(40) for our example, but it can be any attribute.
 
@@ -173,7 +173,7 @@ We now have a *Post* model with workflow capabilities. Let's see how we can use 
 
 ### Assignement and Initial Status
 
-The first operation you'll probably need to perform is assigning a status to your model. The natural way to do this is by simply
+The first operation you'll probably need to perform is assigning a status to our model. The natural way to do this is by simply
 assigning a value to the `status` attribute.
 
 ```php
@@ -380,10 +380,7 @@ case remember that when the `status` value is set by the *SimpleWorkflowBehavior
 
 ## Workflow Tasks
 
-Being able to garantee that the model status will only use authorized transition is nice, but the *SimpleWorkflowBehavior*  
-provides a way to add some logic to workflows.
-
-Let's imagine that we want to improve our Publishing System with this new business rule :
+Being able to guarantee that the model status will only use authorized transition is nice, but the *SimpleWorkflowBehavior* provides a way to add some logic to workflows. Let's imagine that we want to improve our Publishing System with this new business rule :
 
 >We have noticed that people in charge of correction are not so reactive, which increases the publication delay.
 They say it's because they never know when a new post is ready to be corrected and so, we decide to improve our Blog by sending an email
@@ -393,7 +390,7 @@ This can be achieved very easely by adding a **task** to our workflow, on the tr
 to the *correction* status. In the (incomplete) workflow representation below, this task is symbolized by a little green
 square attached to the transition.
 
-<img src="images/sw-3.png"/>
+![images/sw-3.png](images/sw-3.png)
 
 Let's see how to implement this *sendMail()* task and include it in our workflow :
 
@@ -430,7 +427,7 @@ the [Yii2 definitive Guide](http://www.yiiframework.com/doc-2.0/guide-concept-ev
 
 ### The Event Model
 
-The *SimpleWorkflowBehavior* is built around Yii2 events. Most of the time when something intresting happens in a workflow, an event is fired, and that's
+The *SimpleWorkflowBehavior* is built around Yii2 events. Most of the time when something interesting happens in a workflow, an event is fired, and that's
 your job to decide what to do : catch it and use it or let it go, let it free, [let it be](https://youtu.be/ajCYQL8ouqw).
 
 There are workflow events for almost everything :
@@ -615,6 +612,9 @@ class Post extends \yii\db\ActiveRecord
     }
 ```
 
+### Limitation
+
+Yii2 scenario can be used not only to control attribute validation, but also to [control massive assignment](http://www.yiiframework.com/doc-2.0/guide-structure-models.html#massive-assignment). This feature **is not** available in yii2-workflow extension.
 
 ## <a name="references"></a>References
 
@@ -622,7 +622,7 @@ The SimpleWorkflow behavior, is not dedicated to provide a complete workflow dri
 It should only be considered as a set of tools that facilitate workflow managment for simple applications.
 
 If you want to know more about the subject, and discover what a complete workflow engine looks like, here is a list of
-intresting links.
+interesting links.
 
 - [An activity based Workflow Engine for PHP](http://www.tonymarston.net/php-mysql/workflow.html)
 - [Workflow Patterns home page](http://www.workflowpatterns.com/)
