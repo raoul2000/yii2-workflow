@@ -3,8 +3,12 @@ pages:
     - 'Introduction': 'index.md'
     - 'Overview': 'overview.md'
     - Concept:
-        - 'Overview': 'concept-overview.md'
+        - 'Presentation': 'concept-overview.md'
         - 'Events': 'concept-events.md'
         - 'Source': 'concept-source.md'
         - 'Validation': 'concept-validation.md'
+    - Usage:
+        - 'The source file compoent' : source-file.md
+        - 'Creating a workflow' : workflow-creation.md
+    - Cookbook: 'special-cookbook.md'
 theme: yeti
