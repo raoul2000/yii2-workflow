@@ -29,3 +29,11 @@ or add
 ```
 
 to the require section of your `composer.json` file.
+
+# What's next ?
+
+If you have been using the previous implementation of this extension it could be a good thing to start by reading the [Upgrade From 1.x](upgrade.md) chapter.
+
+If you want to know more about workflow in general in the features provided by **yii2-workflow** in particular, check the [overview](overview.md) chapter.
+
+If you feel like an advanced Worekflow Expert (more or less), the dive into the [Concept](concept-overview.md) chapter.
