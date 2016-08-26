@@ -167,14 +167,14 @@ to the  **initialStatusId** custom property. To do so, unselect any item and pre
 In the property dialog box, select the *data* panel, and enter the value of the **initialStatusId** in the appropriate text control. Validate
 with ok.
 
-<img src="images/yed-view.png"/>
+![images/yed-view.png](images/yed-view.png)
 
 Your workflow is now ready to be used as a workflow source by *SimpleWorkflow*
 
 
-# Caching workflow definition
+# Cache
 
-The `WorkflowFileSource` is able to use a cache component to optimize the workflow definition loading task, that can be significant, in particular with workflows containing a lot of status. Another opportunity to use a cache component is if the workflow definition is provided as a Graphml file. In this such a case, if no cache is used, the `WorkflowFileSource` component needs to read and parse the Graphml file quite often (at least once per request)/
+The `WorkflowFileSource` is able to use a cache component to optimize the workflow definition loading task, that can be significant, in particular with workflows containing a lot of status. Another opportunity to use a cache component is if the workflow definition is provided as a Graphml file. In this such a case, if no cache is used, the `WorkflowFileSource` component needs to read and parse the *Graphml* file quite often (at least once per request).
 
 To configure a cache component you must use the `definitionCache` parameter. For example :
 
@@ -188,3 +188,7 @@ $config = [
           ],
         ],
 ```  
+
+The cache component must implement `yii\caching\Cache`. To learn more about Yii2 cache feature, please refer to the [Definitive Guide to Yii 2.0](http://www.yiiframework.com/doc-2.0/guide-caching-data.html).
+
+Note that the cache is not enabled by default.
