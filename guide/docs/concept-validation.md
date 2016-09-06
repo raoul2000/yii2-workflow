@@ -7,7 +7,7 @@ goes from a specific status to another one.
 ## Principles
 
 The *Workflow Driven Attribute Validation* is making use of standard Yii2 features : "[User Input Validation](http://www.yiiframework.com/doc-2.0/guide-input-validation.html)"
-and "[Scenario](http://www.yiiframework.com/doc-2.0/guide-structure-models.html#scenarios).
+and "[Scenario](http://www.yiiframework.com/doc-2.0/guide-structure-models.html#scenarios)".
 
 
 To implement *Workflow Driven Attribute Validation* you must :

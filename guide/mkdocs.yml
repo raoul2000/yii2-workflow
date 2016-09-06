@@ -3,7 +3,7 @@ pages:
     - 'Introduction': 'index.md'
     - 'Overview': 'overview.md'
     - Concept:
-        - 'Generalities': 'concept-overview.md'
+        - 'Basics': 'concept-overview.md'
         - 'Events': 'concept-events.md'
         - 'Source': 'concept-source.md'
         - 'Validation': 'concept-validation.md'

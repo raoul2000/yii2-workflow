@@ -21,7 +21,7 @@ This array can be stored as a file or provided by a PHP class.
 
 # PHP class loader
 
-**By default**, the Workflow source file component uses a `PhpClassLoader` that allows you to define your workflow as a PHP class. This class is expected to have the same name as the worekflow id, and belong to a namespace.
+**By default**, the Workflow source file component uses a `PhpClassLoader` that allows you to define your workflow as a PHP class. This class is expected to have the same name as the workflow id, and belong to a namespace.
 
 ## Namespace : workflow location
 

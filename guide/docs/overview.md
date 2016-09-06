@@ -561,9 +561,10 @@ The output :
 
 	Name cannot be blank.
 
-Based on scenario names which are meaningfull in a workflow context, we can define validation rules for any attribute model, just like you would do
+Based on scenario names which are meaningful in a workflow context, we can define validation rules for any attribute model, just like you would do
 with any other scenario.
 
+[read more](concept-validation)
 
 ### Workflow Scenario
 
@@ -614,7 +615,7 @@ class Post extends \yii\db\ActiveRecord
 
 ### Limitation
 
-Yii2 scenario can be used not only to control attribute validation, but also to [control massive assignment](http://www.yiiframework.com/doc-2.0/guide-structure-models.html#massive-assignment). This feature **is not** available in yii2-workflow extension.
+In the Yii2 Framework, scenario can be used not only to control attribute validation, but also to [control massive assignment](http://www.yiiframework.com/doc-2.0/guide-structure-models.html#massive-assignment). **This feature is not available in yii2-workflow extension** where scenario are only used to select attribute validation rules.
 
 ## <a name="references"></a>References
 
