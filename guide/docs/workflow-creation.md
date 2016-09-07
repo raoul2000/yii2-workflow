@@ -1,29 +1,23 @@
 # Workflow Creation : PHP Source
 
-The way a workflow is defined depends on the [Workflow Source](concept-source.md) component we will be using. By default
-the *SimpleWorkflowBehavior* is using an instance of the class `WorkflowFileSource` defined in the namespace `raoul2000\workflow\source\file`.
-This component is able to read a workflow definition out of an associative PHP array. In this chapter we are going to learn
-how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really....
+The way a workflow is defined depends on the [Workflow Source](concept-source.md) component we will be using. By default the *SimpleWorkflowBehavior* is using an instance of the class `WorkflowFileSource` defined in the namespace `raoul2000\workflow\source\file`. This component is able to read a workflow definition out of an associative PHP array. In this chapter we are going to learn how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really....
 
 ## Identifiers
 
-Identifiers used for both statuses and workflows are case sensitive `strings` that must start with a letter followed by
-alpha numerical characters. If you need a delimiter, you can use the minus (-) characters.
+Identifiers used for both statuses and workflows are case sensitive `strings` that must start with a letter followed by alpha numerical characters. If you need a delimiter, you can use the minus (-) characters.
 
 Example :
 
 - valid Ids : 'post', 'draft', 'PostWorkflow', 'My-workflow', 'published'
 - invalid Ids : 'my workflow', 'draft mode', '01workflow', 'post_workflow'
 
-Note that status Ids are not aimed to be displayed to the user. For this prupose, we'll see below that you can define
-a *label* property accessible through the `getLabel()` method implemented by the Status class.
+Note that status Ids are not aimed to be displayed to the user. For this purpose, we'll see below that you can define a *label* property accessible through the `getLabel()` method implemented by the Status class.
 
 #### Status Ids : absolute / relative
 
-An **absolute status Id** is a composite value that includes the id of the workflow that owns the status. The characters slash (/) is
-used to separate both ids. For example, if we have a status with "draft" that belong to the workflow 'PostWorkflow', the absolute status Id is 'PostWorkflow/draft'.
+An **absolute status Id** is a composite value that includes the id of the workflow that owns the status. The characters slash (/) is used to separate both ids. For example, if we have a status with "draft" that belong to the workflow 'PostWorkflow', the absolute status Id is 'PostWorkflow/draft'.
 
-A **relative status id** is then simply a value that identifies a status out of any workflow. Based on the previous example, the relative status id would be "draft"
+A **relative status id** is then simply a value that identifies a status out of any workflow. Based on the previous example, the relative status id would be "draft".
 
 Most of the time you will not have to deal with absolute status id simply because the *SimpleWorkflowBehavior* will try to turn it into its absolute form with the help of the current context. Let's see that on an example :
 
@@ -50,9 +44,7 @@ Actually, the only cases where you would need to use an absolute status id would
 
 ## Workflow Provider
 
-By Default the *WorkflowFileSource* component reads workflow definition from *Workflow provider* objects. This type of object  implements
-the *IWorkflowDefinitionProvider* interface which defines a single method : `getDefinition()`.
-This method must return the actual description of our workflow as a PHP array.
+By Default the *WorkflowFileSource* component reads workflow definition from *Workflow provider* objects. This type of object  implements the *IWorkflowDefinitionProvider* interface which defines a single method : `getDefinition()`. This method must return the actual description of our workflow as a PHP array.
 
 `PostWorkflow.php in @app/models`
 
@@ -88,8 +80,7 @@ The PHP array defining a workflow is an associative array that must contains 2 k
 
 ## Status List Definition
 
-The status list definition is an associative array where keys are status Ids and values are status definitions.
-If a status doesn't need any particular definition, it can be defined directly as a string value.
+The status list definition is an associative array where keys are status Ids and values are status definitions. If a status doesn't need any particular definition, it can be defined directly as a string value.
 
 In the example below, both *draft* and *pusblised* have a specific definition, but *archived* doesn't.
 
@@ -126,15 +117,13 @@ A Single Status Definition is an associative array that may contains 2 specific 
 
 ## Transition Definition
 
-A Transition Definition is an array or a string defining the list of status that can be reached from the current status.
-In the example below, we are defining a workflow with following transitions:
+A Transition Definition is an array or a string defining the list of status that can be reached from the current status. In the example below, we are defining a workflow with following transitions:
 
 - draft -> published
 - published -> draft
 - published -> archived
 
-As you can see, there is no transition that leaves the status *archived*. Once an item reaches this status it will never
-move to another status again: *archived* is called a **final status**.
+As you can see, there is no transition that leaves the status *archived*. Once an item reaches this status it will never move to another status again: *archived* is called a **final status**.
 
 ```php
 [
@@ -152,8 +141,7 @@ move to another status again: *archived* is called a **final status**.
 ]
 ```
 
-Alternatively you can also use a comma separated list of status Id to define a transition. For example, transitions for the *published* status above ,
-could also be written this way :
+Alternatively you can also use a comma separated list of status Id to define a transition. For example, transitions for the *published* status above  could also be written this way :
 
 ```php
 'published' => [

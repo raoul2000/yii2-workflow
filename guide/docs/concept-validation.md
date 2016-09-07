@@ -1,8 +1,6 @@
 # Workflow Driven Attribute Validation
 
-The *SimpleWorkflow* behavior provides a way to apply a specific set of validation rules to model attributes, depending on the
-way the model is *moving* inside a workflow. This allows you for instance to apply a set of validation rules only when the model
-goes from a specific status to another one.
+The *SimpleWorkflow* behavior provides a way to apply a specific set of validation rules to model attributes, depending on the way the model is *moving* inside a workflow. This allows you for instance to apply a set of validation rules only when the model goes from a specific status to another one.
 
 ## Principles
 
@@ -16,6 +14,7 @@ To implement *Workflow Driven Attribute Validation* you must :
 2. declare the validation rules you need and set the *workflow scenario name* for which they should be applied.
 
 The *Workflow Scenario Name* is a formatted string identitying the event that occurs on the model inside its workflow.
+
 Below is a list of currently supported scenario names :
 
 <table width="100%">
@@ -59,8 +58,7 @@ echo WorkflowScenario::leaveWorkflow('W1'); 			// "leave workflow {W1}"
 
 ## Usage example
 
-In the example below we are defining several validation rules applied to the model during its life-cycle through the workflow
-it is assigned to.
+In the example below we are defining several validation rules applied to the model during its life-cycle through the workflow it is assigned to.
 
 ```php
 use raoul2000\workflow\validation\WorkflowValidator;
@@ -116,7 +114,7 @@ In the above example we have defined a *Post* model and configured validation ru
 - **rule n°1 : a post must always have a title** : that's a standard one, no workflow magic here
 - **rule n°2 : redactors are not allowed to send a empty post to correction** : attribute `body` is required when the post enters into status *post/correction*
 - **rule n°3 : correctors are responsible for setting a category to all post before publishing it** : when a post leaves the 'post/correction* status to go to
-*post/published* it must have the `category`attribute set.
+*post/published* it must have the `category` attribute set.
 - **rule n°4 : it is forbidden to publish or archive a post with no tags or no category** : attributes `tags` and `category` cannot be empty when the post
 enter into status *post/published* or *post/archived*.
 
@@ -129,6 +127,6 @@ This validator is not actually going to validate the attribute it is configured 
 
 When a model is validated, following occurs :
 
-- `WorkflowValidator` identifies the pending transition by looking at the `status` attribute value and the current Status.
+- `WorkflowValidator` identifies the pending transition by looking at the `status` attribute value and the current Status
 - Based on the pending transition, get a *scenario sequence*
 - for each scenario in the scenario sequence, apply corresponding validating rules

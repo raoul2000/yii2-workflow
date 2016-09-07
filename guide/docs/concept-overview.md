@@ -1,7 +1,6 @@
 ## Generalities
 
-*yii2-workflow* is a set on objects dedicated to help managing the life-cycle of an ActiveRecord
-model within a *workflow*.
+*yii2-workflow* is a set on objects dedicated to help managing the life-cycle of an ActiveRecord model within a *workflow*.
 
 It includes :
 
@@ -40,7 +39,6 @@ A *Workflow Source* component can ready virtually any kind of source. The first 
 
 ## Events
 
-The *SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow customization
-of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle inside the workflow.
+The *SimpleWorkflow* is making use of [Yii2 events](http://www.yiiframework.com/doc-2.0/guide-concept-events.html) to allow customization of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle inside the workflow.
 
 [Read more about events](concept-events.md)
