@@ -1,4 +1,7 @@
 site_name: yii2-workflow User Guide
+repo_url: https://github.com/raoul2000/yii2-workflow
+site_description: A simple Yii2 extension to manage your workflows
+site_author: raoul2000
 pages:
     - 'Introduction': 'index.md'
     - 'Overview': 'overview.md'
@@ -7,9 +10,9 @@ pages:
         - 'Events': 'concept-events.md'
         - 'Source': 'concept-source.md'
         - 'Validation': 'concept-validation.md'
-    - Focus:
+    - Specials:
       - 'Defining a workflow' : workflow-creation.md
       - 'The source file compoent' : source-file.md
       - 'Upgrade from 1.x' : upgrade.md
-    - Cookbook: 'special-cookbook.md'
-theme: yeti
+      - Cookbook: 'special-cookbook.md'
+theme: spacelab

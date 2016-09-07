@@ -36,4 +36,4 @@ If you have been using the previous implementation of this extension it could be
 
 If you want to know more about workflow in general in the features provided by **yii2-workflow** in particular, check the [overview](overview.md) chapter.
 
-If you feel like an advanced Worekflow Expert (more or less), the dive into the [Concept](concept-overview.md) chapter.
+If you feel like an advanced workflow Expert (more or less), the dive into the [Concept](concept-overview.md) chapter.
