@@ -4,7 +4,7 @@ namespace raoul2000\workflow\events;
 /**
  *
  * Defines the interface that must be implemented by all Event sequence.
- * An <b>event sequence</b> is an array of workflow events that occurs on three occasions : 
+ * An <b>event sequence</b> is an array of workflow events that occurs on three occasions :
  * <ul>
  *	<li><b>createEnterWorkflowSequence</b> : when a model enters into a workflow</li>
  *	<li><b>createChangeStatusSequence</b> : when a model status change from a non empty status to another one</li>
@@ -15,9 +15,9 @@ namespace raoul2000\workflow\events;
  * key, the value is an array of `\raoul2000\workflow\events\WorkflowEvent` representing the sequence of event
  * to fire *before* or *after* the workflow event occurs.
  *
- * Two event sequences implementations are provided : 
- * 
- * - {@link \raoul2000\workflow\events\BasicEventSequence} and
+ * Two event sequences implementations are provided :
+ *
+ * - {@link \raoul2000\workflow\events\BasicEventSequence}
  * - {@link \raoul2000\workflow\events\ExtendedEventSequence}
  */
 interface IEventSequence

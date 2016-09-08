@@ -7,7 +7,7 @@ use raoul2000\workflow\events\IEventSequence;
 /**
  * This event sequence provider include additional generic events to each sequence.
  *
- * For example, when entering into a workflow, the generic event EnterWorkflow() is
+ * For example, when entering into a workflow, the generic event **EnterWorkflow()** is
  * added to the sequence allowing the developer to create a handler invoked each
  * time a model enters into a workflow.
  *
@@ -33,7 +33,7 @@ class ExtendedEventSequence extends Object implements IEventSequence
 	 * @see \raoul2000\workflow\events\IEventSequence::createEnterWorkflowSequence()
 	 */
 	public function createEnterWorkflowSequence($initalStatus, $sender)
-	{		
+	{
 		$config = [
 			'end'        => $initalStatus,
 			'sender'  	 => $sender
@@ -176,7 +176,7 @@ class ExtendedEventSequence extends Object implements IEventSequence
 			'end'  		 => $transition->getEndStatus(),
 			'transition' => $transition,
 			'sender'  	 => $sender
-		];		
+		];
 		return [
 
 			////////// BEFORE //////////////////////////////////////////////////////////////

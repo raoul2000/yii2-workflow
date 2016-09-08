@@ -5,28 +5,31 @@ use Yii;
 use yii\base\Object;
 use yii\base\InvalidConfigException;
 /**
- * 
- *
+ * The WorkflowDefinitionLoader is the base class for all implementations of workflow definition
+ * loaders.
  */
-abstract class WorkflowDefinitionLoader extends Object 
+abstract class WorkflowDefinitionLoader extends Object
 {
 	/**
 	 * The parser component.
-	 * 
+	 *
 	 * @var array|string|object| false
 	 */
 	public $parser = null;
-	
-	private $_p;
-	
 	/**
-	 * Loads the definition oa a workflow.
-	 * 
+	 *
+	 * @var [type] The parser component instance
+	 */
+	private $_p;
+
+	/**
+	 * Loads the definition of a workflow.
+	 *
 	 * @param string $workflowId
 	 * @param IWorkflowSource $source
 	 */
 	abstract public function loadDefinition($workflowId, $source);
-	
+
 	/**
 	 * Initialize the parser component to use.
 	 */
@@ -47,14 +50,14 @@ abstract class WorkflowDefinitionLoader extends Object
 		} else {
 			throw new InvalidConfigException('invalid "parser" attribute : string or array expected');
 		}
-		
+
 		if( $this->_p !== null && ! $this->_p instanceof WorkflowArrayParser ) {
 			throw new InvalidConfigException('the parser component must implement the WorkflowArrayParser interface');
 		}
-	}	
+	}
 	/**
 	 * Returns the instance of the array parser used.
-	 * 
+	 *
 	 * @returnWorkflowArrayParser the parser component used by this instance or NULL if no parser has been configured
 	 */
 	public function getParser()
@@ -62,7 +65,7 @@ abstract class WorkflowDefinitionLoader extends Object
 		return $this->_p;
 	}
 	/**
-	 * 
+	 *
 	 * @param string $workflowId
 	 * @param array $wd
 	 * @param WorkflowFileSource $source

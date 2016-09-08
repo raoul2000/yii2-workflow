@@ -2,15 +2,15 @@
 namespace raoul2000\workflow\source;
 
 /**
- * Interface that must be implemented by WorkflowSource components.
- * 
+ * Interface for WorkflowSource components.
+ *
  * This interface defines basic methods aimed to provide status, workflow and transitions
  * to the SimpleStatusBehavior.
  */
 interface IWorkflowSource
 {
 	/**
-	 * Returns the Status instance with id $id.
+	 * Returns the Status instance for a given status id.
 	 * In case of unexpected error the implementation must return a WorkflowException.
 	 *
 	 * @param mixed $id the status id
@@ -21,7 +21,7 @@ interface IWorkflowSource
 	/**
 	 * Returns an array containing all Status instances belonging to the workflow
 	 * whose id is passed as argument.
-	 * 
+	 *
 	 * @param string $id workflow Id
 	 * @return \raoul2000\workflow\base\StatusInterface[] list of status. The array key is the status ID
 	 * @throws \raoul2000\workflow\base\WorkflowException no workflow is found with this Id
@@ -30,9 +30,9 @@ interface IWorkflowSource
 	/**
 	 * Returns an array of transitions leaving the status whose id is passed as argument.
 	 *
-	 * If no start status is found a WorkflowException must be thrown.
+	 * If no status is found for this id, a WorkflowException must be thrown.
 	 * If not outgoing transition exists for the status, an empty array must be returned.
-	 * The array returned must be indexed by ....
+	 * The array returned must be indexed by status Id
 	 *
 	 * @param mixed $statusId
 	 * @return \raoul2000\workflow\base\TransitionInterface[] an array containing all out going transition from $statusId. If no such
@@ -41,10 +41,10 @@ interface IWorkflowSource
 	 */
 	public function getTransitions($statusId, $model = null);
 	/**
-	 * Returns the transitions that leaves status with id $startId and reaches status with id $endId.
-	 * 
-	 * @param string $startId
-	 * @param string $endId
+	 * Returns the transitions that leaves status $startId and reaches status  $endId.
+	 *
+	 * @param mixed $startId
+	 * @param mixed $endId
 	 * @param mixed $model
 	 *  @return \raoul2000\workflow\base\TransitionInterface the transition between start and end status
 	 */

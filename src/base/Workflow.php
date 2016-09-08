@@ -6,9 +6,9 @@ use yii\base\Object;
 use yii\base\InvalidConfigException;
 /**
  * Implements the Workflow as an object having an `$id` and an `initialStatus`.
- * The Workflow class inherits from [[WorkflowBaseObject]] that provides support for **metadata** attributes and workflow
+ * The Workflow class inherits from **WorkflowBaseObject** that provides support for **metadata** attributes and workflow
  * source access.
- * 
+ *
  * @see \raoul2000\workflow\base\WorkflowBaseObject
  */
 class Workflow extends WorkflowBaseObject implements WorkflowInterface
@@ -20,7 +20,7 @@ class Workflow extends WorkflowBaseObject implements WorkflowInterface
 
 	/**
 	 * Workflow constructor.
-	 * 
+	 *
 	 * @param array $config
 	 * @throws InvalidConfigException
 	 */
@@ -55,7 +55,7 @@ class Workflow extends WorkflowBaseObject implements WorkflowInterface
 	{
 		return $this->_initialStatusId;
 	}
-	
+
 	/**
 	 * @see \raoul2000\workflow\base\WorkflowInterface::getInitialStatus()
 	 */
@@ -63,9 +63,9 @@ class Workflow extends WorkflowBaseObject implements WorkflowInterface
 		if ( $this->getSource() === null) {
 			throw new WorkflowException('no workflow source component available');
 		}
-		return $this->getSource()->getStatus($this->getInitialStatusId());		
+		return $this->getSource()->getStatus($this->getInitialStatusId());
 	}
-	
+
 	/**
 	 * @see \raoul2000\workflow\base\WorkflowInterface::getAllStatuses()
 	 */
@@ -73,6 +73,6 @@ class Workflow extends WorkflowBaseObject implements WorkflowInterface
 		if ( $this->getSource() === null) {
 			throw new WorkflowException('no workflow source component available');
 		}
-		return $this->getSource()->getAllStatuses($this->getId());		
+		return $this->getSource()->getAllStatuses($this->getId());
 	}
 }

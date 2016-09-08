@@ -16,7 +16,6 @@ class ReducedEventSequence extends Object implements IEventSequence
 	 * Produces the following sequence when a model enters a workflow :
 	 *
 	 * - beforeEnterWorkflow(WID)
-	 *
 	 * - afterEnterWorkflow(WID)
 	 *
 	 * @see \raoul2000\workflow\events\IEventSequence::createEnterWorkflowSequence()
@@ -26,7 +25,7 @@ class ReducedEventSequence extends Object implements IEventSequence
 		$config = [
 			'end'        => $initalStatus,
 			'sender'  	 => $sender
-		];		
+		];
 		return [
 			'before' => [
 				new WorkflowEvent(
@@ -47,7 +46,6 @@ class ReducedEventSequence extends Object implements IEventSequence
 	 * Produces the following sequence when a model leaves a workflow :
 	 *
 	 * - beforeLeaveWorkflow(WID)
-	 *
 	 * - afterLeaveWorkflow(WID)
 	 *
 	 * @see \raoul2000\workflow\events\IEventSequence::createLeaveWorkflowSequence()
@@ -57,7 +55,7 @@ class ReducedEventSequence extends Object implements IEventSequence
 		$config = [
 			'start'      => $finalStatus,
 			'sender'  	 => $sender
-		];		
+		];
 		return [
 			'before' => [
 				new WorkflowEvent(
@@ -78,7 +76,6 @@ class ReducedEventSequence extends Object implements IEventSequence
 	 * Produces the following sequence when a model changes from status A to status B:
 	 *
 	 * - beforeChangeStatus(A,B)
-	 *
 	 * - afterChangeStatus(A,B)
 	 *
 	 * @see \raoul2000\workflow\events\IEventSequence::createChangeStatusSequence()
@@ -90,7 +87,7 @@ class ReducedEventSequence extends Object implements IEventSequence
 			'end'  		 => $transition->getEndStatus(),
 			'transition' => $transition,
 			'sender'  	 => $sender
-		];		
+		];
 		return [
 			'before' => [
 				new WorkflowEvent(

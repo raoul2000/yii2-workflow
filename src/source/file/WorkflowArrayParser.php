@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace raoul2000\workflow\source\file;
 
 use Yii;
@@ -7,17 +7,18 @@ use yii\helpers\VarDumper;
 use raoul2000\workflow\base\WorkflowValidationException;
 
 /**
- * A WorkflowArrayParser object converts a workflow definition PHP array, into its normalized form
- * as expected by the WorkflowFileSource class.
- * 
+ * A **WorkflowArrayParser** object converts a workflow definition PHP array, into its normalized form
+ * as expected by the **WorkflowFileSource** class.
+ *
  * The normalized form implements following rules :
- * - key 'initialStatusId' : (mandatory) must contain a status Id defined in the status Id list
- * - key 'status' : (mandatory) status definition list - its value is an array where each key is a status Id
+ *
+ * - key `initialStatusId` : (mandatory) must contain a status Id defined in the status Id list
+ * - key `status` : (mandatory) status definition list - its value is an array where each key is a status Id
  * and each value is the status configuration
  * - all status Ids are absolute
- * 
- * 
- * example : 
+ *
+ * example :
+ * <pre>
  * [
  *   'initialStatusId' => 'WID/A'
  *   'status' => [
@@ -31,30 +32,30 @@ use raoul2000\workflow\base\WorkflowValidationException;
  *       'WID/C' => null
  *   ]
  * ]
- * 
+ * </pre>
  */
 abstract class WorkflowArrayParser  extends Object {
 	/**
 	 * @var boolean when TRUE, the parse method performs some validations
 	 */
-	public $validate = true;	
+	public $validate = true;
 	/**
 	 * Parse a workflow defined as a PHP Array.
 	 *
 	 * The workflow definition passed as argument is turned into an array that can be
-	 * used by the WorkflowFileSource components. 
-	 * 
+	 * used by the WorkflowFileSource components.
+	 *
 	 * @param string $wId
 	 * @param array $definition
 	 * @param raoul2000\workflow\source\file\WorkflowFileSource $source
 	 * @return array The parse workflow array definition
 	 * @throws WorkflowValidationException
 	 */
-	abstract public function parse($wId, $definition, $source);	
+	abstract public function parse($wId, $definition, $source);
 
 	/**
 	 * Validates an array that contains a workflow definition.
-	 * 
+	 *
 	 * @param string $wId
 	 * @param IWorkflowSource $source
 	 * @param string $initialStatusId
@@ -68,9 +69,9 @@ abstract class WorkflowArrayParser  extends Object {
 			if (! \in_array($initialStatusId, $startStatusIdIndex)) {
 				throw new WorkflowValidationException("Initial status not defined : $initialStatusId");
 			}
-			
+
 			// detect not defined statuses
-			
+
 			$missingStatusIdSuspects = \array_diff($endStatusIdIndex, $startStatusIdIndex);
 			if (count($missingStatusIdSuspects) != 0) {
 				$missingStatusId = [];
@@ -85,5 +86,5 @@ abstract class WorkflowArrayParser  extends Object {
 				}
 			}
 		}
-	}	
+	}
 }

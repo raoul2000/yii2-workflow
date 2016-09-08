@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace raoul2000\workflow\source\file;
 
@@ -9,41 +9,46 @@ use raoul2000\workflow\base\WorkflowValidationException;
 use yii\helpers\VarDumper;
 /**
  * Parse a workflow definition provided as a minimal PHP array.
- * 
+ *
  * Following rules apply :
+ *
  * - the array must be associative, each key being a status Id, and each value is an array of target status id.
  * - no 'initialStatusId' is required : the first status defined is considered as the initial status
- * - no additional attribute is supported : label, metadata, transition 
+ * - no additional attribute is supported : label, metadata, transition
  *
- * For example : 
+ * For example :
+ * <pre>
  * [
  *	'draft'     => ['ready', 'delivered'],
  *	'ready'     => ['draft', 'delivered'],
  *	'delivered' => ['payed', 'archived'],
- * 	'payed'     => ['archived'],
+ *	'payed'     => ['archived'],
  *	'archived'  => []
  * ]
- * 
+ * </pre>
+ *
  * You can also use a comma separated list of status for the end status list instead of an array.
- * For example : 
+ * For example :
+ * <pre>
  * [
  *	'draft'     => 'ready, delivered',
  *	'ready'     => 'draft, delivered',
  *	'delivered' => 'payed, archived',
- * 	'payed'     => 'archived',
+ *	'payed'     => 'archived',
  *	'archived'  => []
  * ]
+ * </pre>
  */
 class MinimalArrayParser extends WorkflowArrayParser {
-	
+
 
 
 	/**
 	 * Parse a workflow defined as a PHP Array.
 	 *
 	 * The workflow definition passed as argument is turned into an array that can be
-	 * used by the WorkflowFileSource components. 
-	 * 
+	 * used by the WorkflowFileSource components.
+	 *
 	 * @param string $wId
 	 * @param array $definition
 	 * @param raoul2000\workflow\source\file\WorkflowFileSource $source
@@ -58,16 +63,16 @@ class MinimalArrayParser extends WorkflowArrayParser {
 		if ( ! \is_array($definition)) {
 			throw new WorkflowValidationException("Workflow definition must be provided as an array");
 		}
-		
+
 		if ( ! ArrayHelper::isAssociative($definition)) {
 			throw new WorkflowValidationException("Workflow definition must be provided as associative array");
 		}
-		
+
 		$initialStatusId    = null;
 		$normalized 		= [];
 		$startStatusIdIndex = [];
 		$endStatusIdIndex   = [];
-		
+
 		foreach($definition as $id => $targetStatusList) {
 			list($workflowId, $statusId) = $source->parseStatusId($id, $wId);
 			$absoluteStatusId = $workflowId . WorkflowFileSource::SEPARATOR_STATUS_NAME .$statusId;
@@ -94,7 +99,7 @@ class MinimalArrayParser extends WorkflowArrayParser {
 			}else {
 				throw new WorkflowValidationException('End status list must be an array for status  : ' . $absoluteStatusId);
 			}
-			
+
 			if ( count($endStatusIds)) {
 				$normalized[WorkflowFileSource::KEY_NODES][$absoluteStatusId] = ['transition' => array_fill_keys($endStatusIds,[])];
 				$endStatusIdIndex = \array_merge($endStatusIdIndex, $endStatusIds);
@@ -108,9 +113,9 @@ class MinimalArrayParser extends WorkflowArrayParser {
 		return $normalized;
 	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param array $ids
 	 * @param string $workflowId
 	 */
@@ -121,6 +126,6 @@ class MinimalArrayParser extends WorkflowArrayParser {
 			$pieces = $source->parseStatusId($id, $workflowId);
 			$normalizedIds[] = \implode(WorkflowFileSource::SEPARATOR_STATUS_NAME, $pieces);
 		}
-		return $normalizedIds;		
+		return $normalizedIds;
 	}
-} 
+}

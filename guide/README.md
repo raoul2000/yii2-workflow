@@ -42,7 +42,7 @@ To install *apiGen*, [download the apigen.phar](http://apigen.org/apigen.phar) f
 From the project's main folder :
 
 ```
-php apigen.phar generate -s src -d guide\api --template-theme bootstrap --no-source-code --title "yii2-worlfow class reference"
+php apigen.phar generate -s src -d guide\api --template-theme bootstrap --no-source-code --title "yii2-workflow Class Reference"
 ```
 
 The documentation is built into the folder `guide\api`.
