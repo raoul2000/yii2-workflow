@@ -24,7 +24,7 @@ mkdocs serve
 When the guide is ready to be published, build is with :
 
 ```
-mkdocs build
+mkdocs build --clean
 ```
 
 The user guide is built into the folder `guide\site`.
@@ -42,7 +42,7 @@ To install *apiGen*, [download the apigen.phar](http://apigen.org/apigen.phar) f
 From the project's main folder :
 
 ```
-php apigen.phar generate -s src -d guide\api --template-theme bootstrap --no-source-code --title "yii2-workflow Class Reference"
+php apigen.phar generate -s src -d guide\site\class-ref --template-theme bootstrap --no-source-code --title "yii2-workflow Class Reference"
 ```
 
-The documentation is built into the folder `guide\api`.
+The documentation is built into the folder `guide\site\class-ref`.

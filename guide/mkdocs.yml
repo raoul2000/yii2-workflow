@@ -15,4 +15,5 @@ pages:
       - 'The source file compoent' : source-file.md
       - 'Upgrade from 1.x' : upgrade.md
       - Cookbook: 'special-cookbook.md'
-theme: spacelab
+    - 'Class Reference': 'class-ref.md'
+theme: readthedocs
