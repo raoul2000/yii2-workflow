@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="raoul2000">
+  
+  <title>Validation - yii2-workflow User Guide</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Validation";
+    var mkdocs_page_input_path = "concept-validation.md";
+    var mkdocs_page_url = "/concept-validation/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yii2-workflow User Guide</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Concept</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-overview/">Basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-events/">Events</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-source/">Source</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Validation</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#workflow-driven-attribute-validation">Workflow Driven Attribute Validation</a></li>
+                
+                    <li><a class="toctree-l4" href="#principles">Principles</a></li>
+                
+                    <li><a class="toctree-l4" href="#usage-example">Usage example</a></li>
+                
+                    <li><a class="toctree-l4" href="#implementation">Implementation</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Specials</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../workflow-creation/">Defining a workflow</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../source-file/">The source file compoent</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../upgrade/">Upgrade from 1.x</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../special-cookbook/">Cookbook</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../class-ref/">Class Reference</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yii2-workflow User Guide</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Concept &raquo;</li>
+        
+      
+    
+    <li>Validation</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="workflow-driven-attribute-validation">Workflow Driven Attribute Validation</h1>
+<p>The <em>SimpleWorkflow</em> behavior provides a way to apply a specific set of validation rules to model attributes, depending on the way the model is <em>moving</em> inside a workflow. This allows you for instance to apply a set of validation rules only when the model goes from a specific status to another one.</p>
+<h2 id="principles">Principles</h2>
+<p>The <em>Workflow Driven Attribute Validation</em> is making use of standard Yii2 features : "<a href="http://www.yiiframework.com/doc-2.0/guide-input-validation.html">User Input Validation</a>"
+and "<a href="http://www.yiiframework.com/doc-2.0/guide-structure-models.html#scenarios">Scenario</a>".</p>
+<p>To implement <em>Workflow Driven Attribute Validation</em> you must :</p>
+<ol>
+<li>declare the <code>WorkflowValidator</code> validation rule for the attribute used to store the status (by default <em>status</em>)</li>
+<li>declare the validation rules you need and set the <em>workflow scenario name</em> for which they should be applied.</li>
+</ol>
+<p>The <em>Workflow Scenario Name</em> is a formatted string identitying the event that occurs on the model inside its workflow.</p>
+<p>Below is a list of currently supported scenario names :</p>
+<table width="100%">
+    <tr>
+        <td><b>Scenario name template</b></td>
+        <td><b>Description</b></td>
+    </tr>
+    <tr>
+        <td>`from {W1/S1} to {W1/S2}`</td>
+        <td>the model goes from status S1 to status S2 in workflow W1</td>
+    </tr>
+    <tr>
+        <td>`leave status {W1/S1}`</td>
+        <td>the model leaves the status S1 in workflow W1</td>
+    </tr>
+    <tr>
+        <td>`enter status {W1/S1}`</td>
+        <td>the model enters into the status S1 in workflow W1</td>
+    </tr>
+    <tr>
+        <td>`enter workflow {W1}`</td>
+        <td>the model enters into workflow W1</td>
+    </tr>
+    <tr>
+        <td>`leave workflow {W1}`</td>
+        <td>the model leaves workflow W1</td>
+    </tr>
+</table>
+
+<p>As you can see, scenario names are quite self explanatory ! To assist you in using workflow scenario names, you can use the class <code>raoul2000\workflow\validation\WorkflowScenario</code>.</p>
+<p>For instance :</p>
+<pre><code class="php">echo WorkflowScenario::changeStatus('W1/S1','W1/S2');   // &quot;from {W1/S1} to {W1/S2}&quot;
+echo WorkflowScenario::leaveStatus('W1/S1');            // &quot;leave status {W1/S1}&quot;
+echo WorkflowScenario::enterStatus('W1/S1');            // &quot;enter status {W1/S1}&quot;
+echo WorkflowScenario::enterWorkflow('W1');             // &quot;enter workflow {W1}&quot;
+echo WorkflowScenario::leaveWorkflow('W1');             // &quot;leave workflow {W1}&quot;
+</code></pre>
+
+<h2 id="usage-example">Usage example</h2>
+<p>In the example below we are defining several validation rules applied to the model during its life-cycle through the workflow it is assigned to.</p>
+<pre><code class="php">use raoul2000\workflow\validation\WorkflowValidator;
+/**
+ * @property integer $id
+ * @property string $col_status
+ * @property string $title
+ * @property string $body
+ * @property string $category
+ * @property string $tags
+ */
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+        // declare the SimpleWorkflowBehavior.
+        return [
+            'workflow' =&gt; [
+                'class' =&gt; \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+                'defaultWorkflowId'      =&gt; 'post',
+                'statusAttribute'        =&gt; 'col_status',
+                'propagateErrorsToModel' =&gt; true
+            ]
+        ];
+    }
+
+    public function rules()
+    {
+        return [
+            [['col_status'],raoul2000\workflow\validation\WorkflowValidator::className()],
+
+            // rule 1 :  the 'title' is always required
+            ['title','required'],
+
+            // rule 2 : the 'body' is required when the post is about to enter to 'post/correction'
+            [['body'],'required',
+                'on' =&gt; 'enter status {post/correction}'],
+
+            // rule 3 : 'category' is set during correction and before publication
+            ['category', 'required',
+                'on' =&gt; 'from {post/correction} to {post/published}'
+
+            // rule 4 : 'tags' and 'category' are required before being published or archived.
+            [['tags', 'category'], 'required',
+                'on' =&gt; ['enter status {post/published}', 'enter status {post/archived}']
+            ],          
+        ];
+    }
+</code></pre>
+
+<p>In the above example we have defined a <em>Post</em> model and configured validation rules to implement the following (imaginary) business rules :</p>
+<ul>
+<li><strong>rule n°1 : a post must always have a title</strong> : that's a standard one, no workflow magic here</li>
+<li><strong>rule n°2 : redactors are not allowed to send a empty post to correction</strong> : attribute <code>body</code> is required when the post enters into status <em>post/correction</em></li>
+<li><strong>rule n°3 : correctors are responsible for setting a category to all post before publishing it</strong> : when a post leaves the 'post/correction<em> status to go to
+</em>post/published* it must have the <code>category</code> attribute set.</li>
+<li><strong>rule n°4 : it is forbidden to publish or archive a post with no tags or no category</strong> : attributes <code>tags</code> and <code>category</code> cannot be empty when the post
+enter into status <em>post/published</em> or <em>post/archived</em>.</li>
+</ul>
+<h2 id="implementation">Implementation</h2>
+<p>So how does this works ? As you may have guessed, the entry point is the <code>WorkflowValidator</code> validator configured for the <code>status</code> attribute.
+This validator is not actually going to validate the attribute it is configured for ! Yes, believe it or not, this validator doesn't care about the current status value or if the model is about to perform a transition that is not permitted : validating transitions is done by the <code>SimpleWorkflowBehavior</code> itself, when the model is saved (or when you explicitly invoke <code>sendToStatus()</code> on the model) and not by the <code>WorkflowValidator</code> validator.</p>
+<p>When a model is validated, following occurs :</p>
+<ul>
+<li><code>WorkflowValidator</code> identifies the pending transition by looking at the <code>status</code> attribute value and the current Status</li>
+<li>Based on the pending transition, get a <em>scenario sequence</em></li>
+<li>for each scenario in the scenario sequence, apply corresponding validating rules</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../workflow-creation/" class="btn btn-neutral float-right" title="Defining a workflow">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../concept-source/" class="btn btn-neutral" title="Source"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../concept-source/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../workflow-creation/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

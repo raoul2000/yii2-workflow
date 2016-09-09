@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="raoul2000">
+  
+  <title>Cookbook - yii2-workflow User Guide</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Cookbook";
+    var mkdocs_page_input_path = "special-cookbook.md";
+    var mkdocs_page_url = "/special-cookbook/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yii2-workflow User Guide</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Concept</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-overview/">Basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-events/">Events</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-source/">Source</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-validation/">Validation</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Specials</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../workflow-creation/">Defining a workflow</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../source-file/">The source file compoent</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../upgrade/">Upgrade from 1.x</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Cookbook</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#initializing-the-simpleworkflowbehavior-behavior">Initializing The SimpleWorkflowBehavior behavior</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#initializing-the-workflowsource-component">Initializing The WorkflowSource Component</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#insert-a-model-in-a-workflow">Insert a Model in A Workflow</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#getting-the-current-status-of-a-model">Getting The Current Status Of a Model</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#changing-status">Changing Status</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#leaving-a-workflow">Leaving A Workflow</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#comparing-two-statuses">Comparing Two Statuses</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#getting-the-workflowsource-used-by-a-model">Getting The WorkflowSource Used By A Model</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#looping-on-all-next-statuses">Looping on all Next Statuses</a></li>
+                
+                    <li><a class="toctree-l4" href="#ask-the-status-object">ask the Status Object</a></li>
+                
+                    <li><a class="toctree-l4" href="#through-the-workflow-source">Through the Workflow Source</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../class-ref/">Class Reference</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yii2-workflow User Guide</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Specials &raquo;</li>
+        
+      
+    
+    <li>Cookbook</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>This page contains a set of <em>SimpleWorkflow</em> snippets that you may have to deal with someday.</p>
+<h2 id="initializing-the-simpleworkflowbehavior-behavior">Initializing The <em>SimpleWorkflowBehavior</em> behavior</h2>
+<p>Don't be scared ! most of the time you will not have to use <strong>all</strong> the configuration settings like on the following example.</p>
+<p><code>@app/models/Post.php</code></p>
+<pre><code class="php">class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+        return [
+            [
+                'class'                    =&gt; '\raoul2000\workflow\base\SimpleWorkflowBehavior',
+
+                // model attribute to store status
+                'statusAttribute'          =&gt; 'col_status',
+
+                // workflow source component name
+                'source'                   =&gt; 'my_workflow_source',
+
+                'defaultWorkflowId'        =&gt; 'MyWorkflow',
+                'statusConverter'          =&gt; null,
+                'statusAccessor'           =&gt; null,
+
+                // Event Sequence Component Name
+                'eventSequence'            =&gt; 'eventSequence',
+
+                'propagateErrorsToModel'   =&gt; false,
+                'stopOnFirstInvalidEvent'  =&gt; true,
+            ]
+        ];
+    }
+}
+</code></pre>
+
+<h2 id="initializing-the-workflowsource-component">Initializing The <em>WorkflowSource</em> Component</h2>
+<p>Again, no worries ! Usually the default Workflow Source component will be just fine to use and you'll probably never have to create such a component.</p>
+<p><code>@app/config/web.php</code></p>
+<pre><code class="php">$config = [
+    'components' =&gt; [
+        'my_workflow_source' =&gt; [
+          'class'            =&gt; 'raoul2000\workflow\source\file\WorkflowFileSource',
+
+          // Cache component name
+          'definitionCache'  =&gt; 'cache',
+
+          // load workflow as PHP class from the @app/models/workflows namespace
+          'definitionLoader' =&gt; [
+              'class'      =&gt; 'raoul2000\workflow\source\file\PhpClassLoader',
+              'namespace'  =&gt; '@app/models/workflows'
+           ],
+
+          // workflow provided by PHP class will be defined as a minimal array
+          'parser'           =&gt; 'raoul2000\workflow\source\file\MinimalArrayParser',          
+
+           // we provide our own implementation for simple workflow base objects
+           'classMap'        =&gt; [
+                self::TYPE_WORKFLOW   =&gt; 'my\custom\implementation\Workflow',
+                self::TYPE_STATUS     =&gt; 'my\custom\implementation\Status',
+                self::TYPE_TRANSITION =&gt; 'my\custom\implementation\Transition'
+            ]
+        ],
+        // .. other app components here ..
+    ]
+];
+</code></pre>
+
+<h2 id="insert-a-model-in-a-workflow">Insert a Model in A Workflow</h2>
+<pre><code class="php">$post1 = new Post();
+// the safe way : insert into default workflow (defaultWorkflowId)
+$post1-&gt;enterWorkflow();                // the status change is done here
+$post1-&gt;save();
+
+$post2 = new Post();
+// the safe way : insert into specific workflow
+$post2-&gt;enterWorkflow('myWorkflow');    // the status change is done here
+$post2-&gt;save();
+
+// the not-so-safe way
+$post3 = new Post();
+$post3-&gt;status = 'Post/draft';          // must be initial status Id
+$post3-&gt;save();                         // the status change is done here
+
+</code></pre>
+
+<h2 id="getting-the-current-status-of-a-model">Getting The Current Status Of a Model</h2>
+<pre><code class="php">$post = Post::findOne(['id' =&gt; 42]);
+
+if( $post-&gt;hasWorkflowStatus()) {
+
+    // the safe way
+    echo 'status id    = ' . $post-&gt;getWorkflowStatus()-&gt;getId();
+    echo 'status label = ' . $post-&gt;getWorkflowStatus()-&gt;getLabel();
+    echo 'status color = ' . $post-&gt;getWorkflowStatus()-&gt;getMetadata('color');
+
+    // the not so safe way
+    echo 'status = ' . $post-&gt;status;
+}
+</code></pre>
+
+<h2 id="changing-status">Changing Status</h2>
+<pre><code class="php">$post1 = Post::find(['id'=&gt;42]);
+
+// Two steps : assignment + call to save()
+$post1-&gt;status = 'Post/published';
+$post1-&gt;save();                         // the status change is done here
+
+$post2 = Post::find(['id'=&gt;42]);
+
+// One step : call to sendToStatus()
+$post2-&gt;sendToStatus('Post/published');     // the status change is done here
+$post-&gt;save();
+</code></pre>
+
+<h2 id="leaving-a-workflow">Leaving A Workflow</h2>
+<pre><code class="php">$post1 = Post::find(['id'=&gt;42]);
+
+// Two steps : assignment + call to save()
+$post1-&gt;status = null;
+$post1-&gt;save();                         // the status change is done here
+
+$post2 = Post::find(['id'=&gt;42]);
+
+// One step : call to sendToStatus()
+$post2-&gt;sendToStatus(null);             // the status change is done here
+$post-&gt;save();
+</code></pre>
+
+<h2 id="comparing-two-statuses">Comparing Two Statuses</h2>
+<pre><code class="php">// the usual way : compare status ids
+$post-&gt;getWorkflowStatus()-&gt;getId() == $otherPost-&gt;getWorkflowStatus()-&gt;getId();
+
+// the lazy way
+$post-&gt;statusEquals($otherPost-&gt;getWorkflowStatus());
+</code></pre>
+
+<h2 id="getting-the-workflowsource-used-by-a-model">Getting The WorkflowSource Used By A Model</h2>
+<pre><code class="php">$workflowSource = $post-&gt;getWorkflowSource();
+</code></pre>
+
+<p>Use a reference to the Workflow Source to access the workflow directly (not through the model).</p>
+<h2 id="looping-on-all-next-statuses">Looping on all Next Statuses</h2>
+<h3 id="ask-the-status-object">ask the Status Object</h3>
+<pre><code class="php">$post = Post::find(['id'=&gt;42]);
+
+if( $post-&gt;hasWorkflowStatus()) {
+
+    // let's ask the Status object then
+    $transitions = $post
+        -&gt;getWorkflowStatus()
+        -&gt;getTransitions();
+
+    foreach( $transitions as $transition ) {
+        echo $transition-&gt;getEndStatus()-&gt;getId();
+    }
+}
+</code></pre>
+
+<h3 id="through-the-workflow-source">Through the Workflow Source</h3>
+<pre><code class="php">$post = Post::find(['id'=&gt;42]);
+
+if( $post-&gt;hasWorkflowStatus()) {
+
+    // ask the WorkflowSource
+    $transitions = $post
+        -&gt;getWorkflowSource()
+        -&gt;getTransitions($post-&gt;getWorkflowStatus()-&gt;getId());
+
+    foreach( $transitions as $transition ) {
+        echo $transition-&gt;getEndStatus()-&gt;getId();
+    }
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../class-ref/" class="btn btn-neutral float-right" title="Class Reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../upgrade/" class="btn btn-neutral" title="Upgrade from 1.x"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../upgrade/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../class-ref/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

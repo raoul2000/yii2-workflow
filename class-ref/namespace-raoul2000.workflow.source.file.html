@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Namespace raoul2000\workflow\source\file | yii2-workflow Class Reference</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">yii2-workflow Class Reference</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li class="active">
+<span>Namespace</span>					</li>
+					<li>
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.html">
+							raoul2000<span></span>
+						</a>
+							<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.html">
+							workflow<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-raoul2000.workflow.base.html">
+							base						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.events.html">
+							events						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.helpers.html">
+							helpers						</a>
+							</li>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.source.html">
+							source<span></span>
+						</a>
+							<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.source.file.html">
+							file						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-raoul2000.workflow.validation.html">
+							validation						</a>
+							</li>
+								</ul></li></ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-raoul2000.workflow.source.file.DefaultArrayParser.html">DefaultArrayParser</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.GraphmlLoader.html">GraphmlLoader</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.MinimalArrayParser.html">MinimalArrayParser</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.PhpArrayLoader.html">PhpArrayLoader</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.PhpClassLoader.html">PhpClassLoader</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.WorkflowArrayParser.html">WorkflowArrayParser</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.WorkflowDefinitionLoader.html">WorkflowDefinitionLoader</a></li>
+				<li><a href="class-raoul2000.workflow.source.file.WorkflowFileSource.html">WorkflowFileSource</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-raoul2000.workflow.source.file.IWorkflowDefinitionProvider.html">IWorkflowDefinitionProvider</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="namespace">
+	<h1>Namespace <a href="namespace-raoul2000.html">raoul2000</a>\<a href="namespace-raoul2000.workflow.html">workflow</a>\<a href="namespace-raoul2000.workflow.source.html">source</a>\file</h1>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h2>Classes summary</h2></div>
+	<table class="summary table table-bordered table-striped" id="classes">
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.DefaultArrayParser.html">DefaultArrayParser</a></td>
+	<td>Implements a parser for default PHP array formatted workflow.</td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.GraphmlLoader.html">GraphmlLoader</a></td>
+	<td><p>Parser for workflow definition stored as graphml file.
+<em>graphml</em> format is an XML language designed to describe an oriented graph structure. Before using
+this format to define a workflow, make sure you comply with requirements. (refer to the user guide)</p></td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.MinimalArrayParser.html">MinimalArrayParser</a></td>
+	<td>Parse a workflow definition provided as a minimal PHP array.</td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.PhpArrayLoader.html">PhpArrayLoader</a></td>
+	<td><p>Loads a workflow definition from a PHP file.
+The PHP filename is built by concatenating the $path and the $workflowId values,
+adding the '.php' extension.</p></td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.PhpClassLoader.html">PhpClassLoader</a></td>
+	<td><p>This class is responsible for locating and loading a workflow definition stored as a PHP class.
+The PHP class is expected to implement the <strong>IWorkflowDefinitionProvider</strong> interface.</p></td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.WorkflowArrayParser.html">WorkflowArrayParser</a></td>
+	<td><p>A <strong>WorkflowArrayParser</strong> object converts a workflow definition PHP array, into its normalized form
+as expected by the <strong>WorkflowFileSource</strong> class.</p></td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.WorkflowDefinitionLoader.html">WorkflowDefinitionLoader</a></td>
+	<td><p>The WorkflowDefinitionLoader is the base class for all implementations of workflow definition
+loaders.</p></td>
+</tr>
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.WorkflowFileSource.html">WorkflowFileSource</a></td>
+	<td><p>This class provides workflow objects (Workflow, Status, Transitions) to the <em>SimpleWorkflowBehavior</em> behavior.
+The task of loading the workflow definition file, and turns it content into a normalized array, is delegated
+to a [[WorkflowDefinitionLoader]] instance. The definition loader can be initialized through the [[definitionLoader]]
+attribute.</p></td>
+</tr>
+	</table>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h2>Interfaces summary</h2></div>
+	<table class="summary table table-bordered table-striped" id="interfaces">
+<tr>
+	<td class="name"><a href="class-raoul2000.workflow.source.file.IWorkflowDefinitionProvider.html">IWorkflowDefinitionProvider</a></td>
+	<td><p>This interface must be implemented by any PHP class that
+is able to provide a workflow definition.</p></td>
+</tr>
+	</table>
+</div>
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		yii2-workflow Class Reference API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js?ed28ceca1e83e2b703dee37cd3cbcc4da9bb1f26"></script>
+<script src="elementlist.js?2e84a551d0f331b7ae9787b67e431c7959ef41ae"></script>
+</body>
+</html>

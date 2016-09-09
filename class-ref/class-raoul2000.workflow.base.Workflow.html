@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class raoul2000\workflow\base\Workflow | yii2-workflow Class Reference</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">yii2-workflow Class Reference</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-raoul2000.workflow.base.html" title="Summary of raoul2000\workflow\base"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.html">
+							raoul2000<span></span>
+						</a>
+							<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.html">
+							workflow<span></span>
+						</a>
+							<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.base.html">
+							base						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.events.html">
+							events						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.helpers.html">
+							helpers						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.source.html">
+							source<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-raoul2000.workflow.source.file.html">
+							file						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-raoul2000.workflow.validation.html">
+							validation						</a>
+							</li>
+								</ul></li></ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-raoul2000.workflow.base.SimpleWorkflowBehavior.html">SimpleWorkflowBehavior</a></li>
+				<li><a href="class-raoul2000.workflow.base.Status.html">Status</a></li>
+				<li><a href="class-raoul2000.workflow.base.StatusIdConverter.html">StatusIdConverter</a></li>
+				<li><a href="class-raoul2000.workflow.base.Transition.html">Transition</a></li>
+				<li class="active"><a href="class-raoul2000.workflow.base.Workflow.html">Workflow</a></li>
+				<li><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html">WorkflowBaseObject</a></li>
+				<li><a href="class-raoul2000.workflow.base.WorkflowException.html">WorkflowException</a></li>
+				<li><a href="class-raoul2000.workflow.base.WorkflowValidationException.html">WorkflowValidationException</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-raoul2000.workflow.base.IStatusAccessor.html">IStatusAccessor</a></li>
+				<li><a href="class-raoul2000.workflow.base.IStatusIdConverter.html">IStatusIdConverter</a></li>
+				<li><a href="class-raoul2000.workflow.base.StatusInterface.html">StatusInterface</a></li>
+				<li><a href="class-raoul2000.workflow.base.TransitionInterface.html">TransitionInterface</a></li>
+				<li><a href="class-raoul2000.workflow.base.WorkflowInterface.html">WorkflowInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class Workflow</h1>
+
+
+	<div class="description">
+	<p>Implements the Workflow as an object having an <code>$id</code> and an <code>initialStatus</code>.
+The Workflow class inherits from <strong>WorkflowBaseObject</strong> that provides support for <strong>metadata</strong> attributes and workflow
+source access.</p>
+	</div>
+
+	<dl class="tree well">
+		<dd style="padding-left:0px">
+yii\base\Object
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+			<a href="class-raoul2000.workflow.base.WorkflowBaseObject.html"><span>raoul2000\workflow\base\WorkflowBaseObject</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>raoul2000\workflow\base\Workflow</span></b>			
+			 implements 
+				<a href="class-raoul2000.workflow.base.WorkflowInterface.html"><span>raoul2000\workflow\base\WorkflowInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-raoul2000.html">raoul2000</a>\<a href="namespace-raoul2000.workflow.html">workflow</a>\<a href="namespace-raoul2000.workflow.base.html">base</a><br>
+		
+
+				<b>See:</b>
+				<code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html">raoul2000\workflow\base\WorkflowBaseObject</a></code><br>
+			<b>Located at</b> base/Workflow.php		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code>__construct( <span>array <var>$config</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Workflow constructor.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Workflow constructor.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$config</var></dt>
+						<dd></dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						yii\base\InvalidConfigException
+					</div>
+
+
+					<h4>Overrides</h4>
+					<div class="list"><code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#___construct">raoul2000\workflow\base\WorkflowBaseObject::__construct</a></code></div>
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getId" id="_getId">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getId">#</a>
+			<code>getId( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>the object identifier
+					</div>
+
+
+					<h4>See</h4>
+					<div class="list">
+							<code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#_getId">raoul2000\workflow\base\WorkflowBaseObject::getId()</a></code><br>
+					</div>
+
+
+					<h4>Implementation of</h4>
+					<div class="list"><code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getId">raoul2000\workflow\base\WorkflowInterface::getId()</a></code></div>
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getInitialStatusId" id="_getInitialStatusId">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getInitialStatusId">#</a>
+			<code>getInitialStatusId( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>status id
+					</div>
+
+
+					<h4>See</h4>
+					<div class="list">
+							<code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getInitialStatusId">raoul2000\workflow\base\WorkflowInterface::getInitialStatusId()</a></code><br>
+					</div>
+
+
+					<h4>Implementation of</h4>
+					<div class="list"><code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getInitialStatusId">raoul2000\workflow\base\WorkflowInterface::getInitialStatusId()</a></code></div>
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getInitialStatus" id="_getInitialStatus">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getInitialStatus">#</a>
+			<code>getInitialStatus( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a></code><br>the initial status instance
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.WorkflowException.html">raoul2000\workflow\base\WorkflowException</a></code><br>when no source component is available
+					</div>
+
+					<h4>See</h4>
+					<div class="list">
+							<code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getInitialStatus">raoul2000\workflow\base\WorkflowInterface::getInitialStatus()</a></code><br>
+					</div>
+
+
+					<h4>Implementation of</h4>
+					<div class="list"><code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getInitialStatus">raoul2000\workflow\base\WorkflowInterface::getInitialStatus()</a></code></div>
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getAllStatuses" id="_getAllStatuses">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a>[]</code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAllStatuses">#</a>
+			<code>getAllStatuses( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a>[]</code><br>status list belonging to this workflow
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.WorkflowException.html">raoul2000\workflow\base\WorkflowException</a></code><br>when no source component is available
+					</div>
+
+					<h4>See</h4>
+					<div class="list">
+							<code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getAllStatuses">raoul2000\workflow\base\WorkflowInterface::getAllStatuses()</a></code><br>
+					</div>
+
+
+					<h4>Implementation of</h4>
+					<div class="list"><code><a href="class-raoul2000.workflow.base.WorkflowInterface.html#_getAllStatuses">raoul2000\workflow\base\WorkflowInterface::getAllStatuses()</a></code></div>
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#methods">raoul2000\workflow\base\WorkflowBaseObject</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#___get">__get()</a></code>, 
+				<code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#_getMetadata">getMetadata()</a></code>, 
+				<code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#_getSource">getSource()</a></code>, 
+				<code><a href="class-raoul2000.workflow.base.WorkflowBaseObject.html#_hasMetadata">hasMetadata()</a></code>
+			</p>
+		</div>
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Constants summary</h2></div>
+			<table class="summary table table-bordered table-striped constants" id="constants">
+			<tr data-order="PARAM_INITIAL_STATUS_ID" id="PARAM_INITIAL_STATUS_ID">
+
+				<td class="attributes"><code>string</code></td>
+				<td class="name">
+					<code>
+<b>PARAM_INITIAL_STATUS_ID</b>					</code>
+
+					<div class="description short">
+						
+					</div>
+
+					<div class="description detailed hidden">
+						
+
+					</div>
+				</td>
+				<td class="value">
+					<div>
+						<a href="#PARAM_INITIAL_STATUS_ID" class="anchor">#</a>
+						<code><span class="php-quote">'initialStatusId'</span></code>
+					</div>
+				</td>
+			</tr>
+			</table>
+		</div>
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		yii2-workflow Class Reference API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

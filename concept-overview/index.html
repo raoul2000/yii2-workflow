@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="raoul2000">
+  
+  <title>Basics - yii2-workflow User Guide</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Basics";
+    var mkdocs_page_input_path = "concept-overview.md";
+    var mkdocs_page_url = "/concept-overview/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yii2-workflow User Guide</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Concept</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Basics</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#generalities">Generalities</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#identifiers">Identifiers</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#initial-status">Initial Status</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#transition">Transition</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#workflow-source">Workflow Source</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#events">Events</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-events/">Events</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-source/">Source</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-validation/">Validation</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Specials</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../workflow-creation/">Defining a workflow</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../source-file/">The source file compoent</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../upgrade/">Upgrade from 1.x</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../special-cookbook/">Cookbook</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../class-ref/">Class Reference</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yii2-workflow User Guide</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Concept &raquo;</li>
+        
+      
+    
+    <li>Basics</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="generalities">Generalities</h2>
+<p><em>yii2-workflow</em> is a set on objects dedicated to help managing the life-cycle of an ActiveRecord model within a <em>workflow</em>.</p>
+<p>It includes :</p>
+<ul>
+<li>a behavior (<em>SimpleWorkflowBehavior</em>)</li>
+<li>a Workflow Source Component (<em>WorkflowFileSource</em>)</li>
+<li>a Validator (<em>WorkflowValidator</em>)</li>
+<li>three event sequence models</li>
+<li>various helpers</li>
+<li>a set of interfaces</li>
+</ul>
+<p><em>yii2-workflow</em> can be configure to fit your requirements and if that's not enough, you can extend all classes so to implement your own features.</p>
+<h2 id="identifiers">Identifiers</h2>
+<p>The <em>yii2-workflow</em> refers to workflows and statuses using identifiers. The way these identifiers are formatted, depends on the <em>WorkflowSource</em> components used. For instance if you're working with the default source component (the <em>workflowFileSource</em> ), status identifiers will look like this : <code>workflowId/StatusId</code> (<a href="../workflow-creation/#identifiers">read more</a>)</p>
+<h2 id="initial-status">Initial Status</h2>
+<p>The initial status is the first status assigned to a model, that's the <em>one and only entry point</em> into a workflow. Each workflow must have exactly one initial status.</p>
+<p>For example, in a workflow dedicated to manage posts, the initial status could be called 'draft' : it usually describes the first state of the post.</p>
+<h2 id="transition">Transition</h2>
+<p>A transition is a <em>directed</em> link between two statuses : the <em>start</em> status and the <em>end</em> status (the words 'source' and 'target' may also be used).</p>
+<p>For example, if we define a transition between the status 'draft' and 'published', a post with status 'draft' (the start status) is able to reach status 'published' (the end status), but not the opposite.</p>
+<h2 id="workflow-source">Workflow Source</h2>
+<p>The <em>Workflow Source</em> is a component responsible for providing workflow, status and transitions objects based on a formatted workflow definition.</p>
+<p>A <em>Workflow Source</em> component can ready virtually any kind of source. The first release includes the <code>WorkflowFileSource</code> component : by default this source reads a workflow definition from a PHP array wrapped in a class.</p>
+<p><a href="../concept-source/">Read more about Workflow Source</a></p>
+<h2 id="events">Events</h2>
+<p>The <em>SimpleWorkflow</em> is making use of <a href="http://www.yiiframework.com/doc-2.0/guide-concept-events.html">Yii2 events</a> to allow customization of model behavior. You can attach handlers to these events in order to implement a specific behavior to your model during its life cycle inside the workflow.</p>
+<p><a href="../concept-events/">Read more about events</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../concept-events/" class="btn btn-neutral float-right" title="Events">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../overview/" class="btn btn-neutral" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../overview/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../concept-events/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

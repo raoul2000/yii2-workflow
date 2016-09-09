@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="raoul2000">
+  
+  <title>Defining a workflow - yii2-workflow User Guide</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Defining a workflow";
+    var mkdocs_page_input_path = "workflow-creation.md";
+    var mkdocs_page_url = "/workflow-creation/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yii2-workflow User Guide</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Concept</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-overview/">Basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-events/">Events</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-source/">Source</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-validation/">Validation</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Specials</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Defining a workflow</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#workflow-creation-php-source">Workflow Creation : PHP Source</a></li>
+                
+                    <li><a class="toctree-l4" href="#identifiers">Identifiers</a></li>
+                
+                    <li><a class="toctree-l4" href="#workflow-provider">Workflow Provider</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-workflow">The Workflow</a></li>
+                
+                    <li><a class="toctree-l4" href="#status-list-definition">Status List Definition</a></li>
+                
+                    <li><a class="toctree-l4" href="#single-status-definition">Single Status Definition</a></li>
+                
+                    <li><a class="toctree-l4" href="#transition-definition">Transition Definition</a></li>
+                
+                    <li><a class="toctree-l4" href="#metadata">Metadata</a></li>
+                
+                    <li><a class="toctree-l4" href="#example">Example</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../source-file/">The source file compoent</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../upgrade/">Upgrade from 1.x</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../special-cookbook/">Cookbook</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../class-ref/">Class Reference</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yii2-workflow User Guide</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Specials &raquo;</li>
+        
+      
+    
+    <li>Defining a workflow</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="workflow-creation-php-source">Workflow Creation : PHP Source</h1>
+<p>The way a workflow is defined depends on the <a href="../concept-source/">Workflow Source</a> component we will be using. By default the <em>SimpleWorkflowBehavior</em> is using an instance of the class <code>WorkflowFileSource</code> defined in the namespace <code>raoul2000\workflow\source\file</code>. This component is able to read a workflow definition out of an associative PHP array. In this chapter we are going to learn how to create this array and thus define the craziest workflow ever !! ... humm ok, maybe not really....</p>
+<h2 id="identifiers">Identifiers</h2>
+<p>Identifiers used for both statuses and workflows are case sensitive <code>strings</code> that must start with a letter followed by alpha numerical characters. If you need a delimiter, you can use the minus (-) characters.</p>
+<p>Example :</p>
+<ul>
+<li>valid Ids : 'post', 'draft', 'PostWorkflow', 'My-workflow', 'published'</li>
+<li>invalid Ids : 'my workflow', 'draft mode', '01workflow', 'post_workflow'</li>
+</ul>
+<p>Note that status Ids are not aimed to be displayed to the user. For this purpose, we'll see below that you can define a <em>label</em> property accessible through the <code>getLabel()</code> method implemented by the Status class.</p>
+<h4 id="status-ids-absolute-relative">Status Ids : absolute / relative</h4>
+<p>An <strong>absolute status Id</strong> is a composite value that includes the id of the workflow that owns the status. The characters slash (/) is used to separate both ids. For example, if we have a status with "draft" that belong to the workflow 'PostWorkflow', the absolute status Id is 'PostWorkflow/draft'.</p>
+<p>A <strong>relative status id</strong> is then simply a value that identifies a status out of any workflow. Based on the previous example, the relative status id would be "draft".</p>
+<p>Most of the time you will not have to deal with absolute status id simply because the <em>SimpleWorkflowBehavior</em> will try to turn it into its absolute form with the help of the current context. Let's see that on an example :</p>
+<pre><code class="php">$post = new Post();
+$post-&gt;status = 'published';
+$post-&gt;save();
+echo $post-&gt;status;
+</code></pre>
+
+<p>The output is :</p>
+<pre><code>PostWorkflow/published
+</code></pre>
+
+<p>In this case, the absolute status id has been set to <em>PostWorkflow/published</em> because the default workflow Id for the Post model is <em>PostWorkflow</em> and this workflow contains a status 'published' (and this 'published' status is also configured as a <em>initial status</em> for the workflow <em>PostWorkflow</em>).</p>
+<p>Actually, the only cases where you would need to use an absolute status id would be :</p>
+<ul>
+<li>when you want your model to leave a workflow and go into another workflow (inter-workflow transition)</li>
+<li>configure a default status that doesn't belong to the default workflow</li>
+</ul>
+<h2 id="workflow-provider">Workflow Provider</h2>
+<p>By Default the <em>WorkflowFileSource</em> component reads workflow definition from <em>Workflow provider</em> objects. This type of object  implements the <em>IWorkflowDefinitionProvider</em> interface which defines a single method : <code>getDefinition()</code>. This method must return the actual description of our workflow as a PHP array.</p>
+<p><code>PostWorkflow.php in @app/models</code></p>
+<pre><code class="php">namespace app\models;
+class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider
+{
+    public function getDefinition() {
+        return [
+            // the workflow definition
+        ];
+    }
+}
+</code></pre>
+
+<p>Let's see how this workflow definition array must be structured.</p>
+<h2 id="the-workflow">The Workflow</h2>
+<p>The PHP array defining a workflow is an associative array that must contains 2 keys : <strong>initialStatusId</strong> and <strong>status</strong>.</p>
+<ul>
+<li><em>initialStatusId</em> : <code>string</code> that represents the ID of the initial status</li>
+<li><em>status</em> : <code>array</code> associative array defining each status that belong to the workflow.</li>
+</ul>
+<pre><code class="php">[
+    'initialStatusId' =&gt; 'draft',
+    'status' =&gt; [
+        // definition of statuses
+    ]
+]
+</code></pre>
+
+<h2 id="status-list-definition">Status List Definition</h2>
+<p>The status list definition is an associative array where keys are status Ids and values are status definitions. If a status doesn't need any particular definition, it can be defined directly as a string value.</p>
+<p>In the example below, both <em>draft</em> and <em>pusblised</em> have a specific definition, but <em>archived</em> doesn't.</p>
+<pre><code class="php">[
+    'initialStatusId' =&gt; 'draft',
+    'status' =&gt; [
+        'draft'     =&gt; [ // single status definition ]
+        'published' =&gt; [ // single status definition ]
+        'archived'
+    ]
+]
+</code></pre>
+
+<h2 id="single-status-definition">Single Status Definition</h2>
+<p>A Single Status Definition is an associative array that may contains 2 specific keys : <strong>transition</strong> and <strong>label</strong></p>
+<ul>
+<li><em>transition</em> : <code>array|string</code> list of ids for all statuses that can be reached</li>
+<li><em>label</em> : <code>string</code> user friendly name. If not set, the label is automatically created from the status Id.</li>
+</ul>
+<pre><code class="php">[
+    'initialStatusId' =&gt; 'draft',
+    'status' =&gt; [
+        'draft'     =&gt; [
+            'label'      =&gt; 'Draft State'
+            'transition' =&gt; // transitions definition
+        ]
+    ]
+]
+</code></pre>
+
+<h2 id="transition-definition">Transition Definition</h2>
+<p>A Transition Definition is an array or a string defining the list of status that can be reached from the current status. In the example below, we are defining a workflow with following transitions:</p>
+<ul>
+<li>draft -&gt; published</li>
+<li>published -&gt; draft</li>
+<li>published -&gt; archived</li>
+</ul>
+<p>As you can see, there is no transition that leaves the status <em>archived</em>. Once an item reaches this status it will never move to another status again: <em>archived</em> is called a <strong>final status</strong>.</p>
+<pre><code class="php">[
+    'initialStatusId' =&gt; 'draft',
+    'status' =&gt; [
+        'draft'     =&gt; [
+            'label'      =&gt; 'Draft State'
+            'transition' =&gt; 'published'
+        ],
+        'published' =&gt; [
+            'transition' =&gt; ['draft','published']
+        ],
+        'archived'
+    ]
+]
+</code></pre>
+
+<p>Alternatively you can also use a comma separated list of status Id to define a transition. For example, transitions for the <em>published</em> status above  could also be written this way :</p>
+<pre><code class="php">'published' =&gt; [
+    'transition' =&gt; 'draft, published'
+]
+</code></pre>
+
+<p>In the case you need to configured a transition that targets another workflow, you must use a status id in its  <strong>absolute</strong> form. For example :</p>
+<pre><code class="php">'published' =&gt; [
+    'transition' =&gt; 'draft, anotherWorkflow/toPrint'
+]
+</code></pre>
+
+<h2 id="metadata">Metadata</h2>
+<p>Ok, we are now able to create workflows and we can define statuses and transitions between those statuses. As you  can see, the minimum attributes for a status is its <em>id</em> and optionally we can set a <em>label</em>, but that's all. Well, that's not a lot. What if I need to add more properties to my statuses ? Like for instance it could be nice to associate a color with each status, and display this color to the user (users like colors). The solution is <em>metadata</em>.</p>
+<p>The <em>metadata</em> allows you to add almost any attribute not only to statuses, but also to workflow and transition. Let's see that on an example where we are going to add a <em>color</em> and an <em>icon</em> metadata to the <em>published</em> status.</p>
+<pre><code class="php">'published' =&gt; [
+    'metadata' =&gt; [
+        'color' =&gt; 'green',
+        'icon'  =&gt; 'glyphicon glyphicon-pencil'
+    ]
+]
+</code></pre>
+
+<p>Later on we will be able to retrieve these value of course, and use them the way we want (for instance with a nice and colorful display).</p>
+<h2 id="example">Example</h2>
+<p>As an example we will use our Post workflow designed earlier to manage our publishing platform web app.</p>
+<p><img alt="images/post-workflow-2.png" src="../images/post-workflow-2.png" /></p>
+<p>Below is the definition of this workflow ready to be used by the <em>SimpleWorkflow</em> behavior.</p>
+<pre><code class="php">namespace app\models;
+
+class PostWorkflow implements raoul2000\workflow\base\IWorkflowDefinitionProvider
+{
+    public function getDefinition() {
+        return [
+            'initialStatusId' =&gt; 'draft',
+            'status' =&gt; [
+                'draft' =&gt; [
+                    'label'      =&gt; 'Draft Document',
+                    'transition' =&gt; ['correction']
+                    'metadata'   =&gt; [
+                        'color' =&gt; 'yellow'
+                    ]
+                ],
+                'correction' =&gt; [
+                    'transition' =&gt; ['draft', 'ready'],
+                    'metadata'   =&gt; [
+                        'color' =&gt; 'grey'
+                    ]
+                ],
+                'ready' =&gt; [
+                    'transition' =&gt; ['draft', 'correction', 'published'],
+                    'metadata'   =&gt; [
+                        'color' =&gt; 'blue'
+                    ]
+                ],
+                'published' =&gt; [
+                    'transition' =&gt; ['ready', 'archived'],
+                    'metadata'   =&gt; [
+                        'color' =&gt; 'green'
+                    ]                   
+                ],
+                'archived' =&gt; [
+                    'transition' =&gt; ['ready'],
+                    'metadata'   =&gt; [
+                        'color' =&gt; 'black'
+                    ]                       
+                ]
+            ]
+        ];
+    }
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../source-file/" class="btn btn-neutral float-right" title="The source file compoent">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../concept-validation/" class="btn btn-neutral" title="Validation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../concept-validation/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../source-file/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

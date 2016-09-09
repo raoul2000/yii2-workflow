@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="raoul2000">
+  
+  <title>The source file compoent - yii2-workflow User Guide</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "The source file compoent";
+    var mkdocs_page_input_path = "source-file.md";
+    var mkdocs_page_url = "/source-file/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yii2-workflow User Guide</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Concept</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-overview/">Basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-events/">Events</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-source/">Source</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-validation/">Validation</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Specials</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../workflow-creation/">Defining a workflow</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">The source file compoent</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#introduction">Introduction</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#workflow-definition-as-php-array">Workflow definition as PHP Array</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#php-class-loader">PHP class loader</a></li>
+                
+                    <li><a class="toctree-l4" href="#namespace-workflow-location">Namespace : workflow location</a></li>
+                
+                    <li><a class="toctree-l4" href="#changing-the-workflow-definition-class-namespace">Changing the workflow definition class namespace</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#php-array-loader">PHP array Loader</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#workflow-definition-as-graphml-file">Workflow definition as Graphml file</a></li>
+                
+                    <li><a class="toctree-l4" href="#using-yed">Using yEd</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#cache">Cache</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../upgrade/">Upgrade from 1.x</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../special-cookbook/">Cookbook</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../class-ref/">Class Reference</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yii2-workflow User Guide</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Specials &raquo;</li>
+        
+      
+    
+    <li>The source file compoent</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="introduction">Introduction</h1>
+<p>The workflow file source component reads workflow definitions from files, and provide <em>Status</em>, <em>Workflow</em> and <em>Transition</em> objects. It is not usually accessed directly but though the <em>SimpleWorkflowBehavior</em> who loads it by default.</p>
+<p>To be able to handle various file formats, the <em>WorkflowFileSource</em> component relies on a module architecture where the task of <strong>locating and loading a file</strong> is delegated to a class implementing the <code>WorkflowDefinitionLoader</code> interface. There are currently 3 types of workflow definition loader available with yii2-workflow:</p>
+<ul>
+<li><code>PhpClassLoader</code> : loads the workflow definition from a class that implements the <code>IWorkflowDefinitionProvider</code> interface. This is<strong>the default loader</strong> used by the file source component.</li>
+<li><code>PhpArrayLoader</code> : loads the workflow definition from a PHP file that must returns a PHP array representing the workflow definition.</li>
+<li><code>GraphmlLoader</code> : loads the workflow definition from a <em>Graphml</em> file.</li>
+</ul>
+<p>The two first loader are somewhat equivalent in the way they expect to read workflow definition: they both expected to get a PHP array with the same structure. On the other side, the <em>GraphmlLoader</em> expects to read an XML file.</p>
+<h1 id="workflow-definition-as-php-array">Workflow definition as PHP Array</h1>
+<p>Both <code>PhpClassLoader</code> (default loader) and <code>PhpArrayLoader</code> expect to read workflow definition from a PHP array. For a complete description of the expected array format, please refer to the chapter <a href="../workflow-creation/">Defining a Workflow</a>.</p>
+<p>This array can be stored as a file or provided by a PHP class.</p>
+<h1 id="php-class-loader">PHP class loader</h1>
+<p><strong>By default</strong>, the Workflow source file component uses a <code>PhpClassLoader</code> that allows you to define your workflow as a PHP class. This class is expected to have the same name as the workflow id, and belong to a namespace.</p>
+<h2 id="namespace-workflow-location">Namespace : workflow location</h2>
+<p>By default the <code>PhpClassLoader</code> component loads workflows from the <code>app\models</code> namespace. So for example in the following declaration, the default workflow associated with the <em>Post</em> model will be loaded from the class <code>app\models\MyWorkflow</code> :</p>
+<pre><code class="php">namespace app\models;
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+        return [
+            [
+                'class' =&gt; '\raoul2000\workflow\base\SimpleWorkflowBehavior',
+                'defaultWorkflowId' =&gt; 'MyWorkflow'
+            ]
+        ];
+    }
+}
+</code></pre>
+
+<h2 id="changing-the-workflow-definition-class-namespace">Changing the workflow definition class namespace</h2>
+<p>If you need to change the default namespace value you have two options : the fast one and the not so fast one.</p>
+<h3 id="standard">Standard</h3>
+<p>In general if you need to change any configuration setting, you must explicitly declare it as a Yii2 application component and not rely on <em>SimpleworkflowBehavior</em> to do it for you. In the example below, we are defining the source component using the default Id (<em>workflowSource</em>)
+and set the namespace used by <code>PhpClassLoader</code> to the location where workflow definitions are supposed to be located (here <em>@app/models/workflows</em>).</p>
+<pre><code class="php">$config = [
+    'components' =&gt; [
+        'workflowSource' =&gt; [
+          'class' =&gt; 'raoul2000\workflow\source\file\WorkflowFileSource',
+          'definitionLoader' =&gt; [
+              'class' =&gt; 'raoul2000\workflow\source\file\PhpClassLoader',
+              'namespace'  =&gt; '@app/models/workflows'
+           ]
+        ],
+</code></pre>
+
+<p>As you may have guessed, <strong>there is only one namespace per workflow source</strong> component so you are encouraged to locate all your workflows in the same namespace. In the case you must load workflows from various location, you should declare another workflow source component (one per namespace) but remember that each workflow source component serves workflows from only one namespace (folder).</p>
+<h3 id="the-magic-alias">The magic alias</h3>
+<p>As the <em>PhpClassLoader</em> is the default loader used with the default source component, it is a common task to change the namespace value used to load PHP classes. Consequently having to explicitly declare component just to change one configuration setting is too much work (and we know good developers are lazy). For this purpose the alias <code>@workflowDefinitionNamespace</code> is available to define globally the namespace value.</p>
+<p>For instance, in you <code>index.php</code> file, declare this alias :</p>
+<pre><code class="php">Yii::setAlias('@workflowDefinitionNamespace','app\\models\\workflows');
+</code></pre>
+
+<p>By doing so, <strong>all workflow definition classes</strong> will be loaded from the <code>app\models\workflows</code> namespace. Note that this alias overrides any specific namespace configuration that you may have defined the <em>standard ways</em>.</p>
+<h1 id="php-array-loader">PHP array Loader</h1>
+<p>The <code>PhpArrayLoader</code> loads the workflow definitions from a PHP array stored in a file. As it is not the default loader, you must do some configuration to be able to use it. As you don't want to rely on the default behavior, you must explicitly configure the workflow file source component so to use the <code>PHPArrayLoader</code> class. In the example below, the workflow definition files are assumed to be located in <code>@app/models/workflows</code>.</p>
+<pre><code class="php">$config = [
+    'components' =&gt; [
+        'workflowSource' =&gt; [
+          'class' =&gt; 'raoul2000\workflow\source\file\WorkflowFileSource',
+          'definitionLoader' =&gt; [
+              'class' =&gt; 'raoul2000\workflow\source\file\PhpArrayLoader',
+              'path'  =&gt; '@app/models/workflows'
+           ]
+        ],
+</code></pre>
+
+<p>Now if we want to create the definition for the workflow <em>post</em>, we just create the file <em>post.php</em> in the folder <code>@app/models/workflows</code>.</p>
+<pre><code class="php">return [
+    'initialStatusId' =&gt; 'draft',
+    'status' =&gt; [
+        'draft' =&gt; [
+            'transition' =&gt; ['publish','deleted']
+        ],
+        'publish' =&gt; [
+            'transition' =&gt; ['draft','deleted']
+        ],
+        'deleted' =&gt; [
+            'transition' =&gt; ['draft']
+        ]
+    ]
+];
+</code></pre>
+
+<h1 id="workflow-definition-as-graphml-file">Workflow definition as Graphml file</h1>
+<p><em>Loading workflow definition from  </em>graphml<em> files.</em></p>
+<p>From the <a href="http://graphml.graphdrawing.org/">The GraphML File Format</a> web site :</p>
+<blockquote>
+<p>GraphML is a comprehensive and easy-to-use file format for graphs. It consists of a language core to describe the structural properties of a graph and a flexible extension mechanism to add application-specific data.</p>
+</blockquote>
+<p>Graphml file can be generated by various graph design applications like <a href="https://www.yworks.com/en/products_yed_download.html">yEd</a> (that I use).</p>
+<p>Before being able to load a <em>Graphml</em> file, you must ensure that following requirements are met :</p>
+<ul>
+<li>nodes labels are assigned to status Id and all nodes must have a label (i.e. all status must have an id)</li>
+<li>a custom property called <em>initialStatusId</em> must be added to the workflow and assigned with a valid status Id</li>
+</ul>
+<pre><code class="php">$config = [
+    'components' =&gt; [
+        'workflowSource' =&gt; [
+          'class' =&gt; 'raoul2000\workflow\source\file\WorkflowFileSource',
+          'definitionLoader' =&gt; [
+              'class' =&gt; 'raoul2000\workflow\source\file\GraphmlLoader',
+              'path'  =&gt; '@app/models/workflows'
+           ]
+        ],
+</code></pre>
+
+<h2 id="using-yed">Using yEd</h2>
+<blockquote>
+<p>yEd is a powerful desktop application that can be used to quickly and effectively generate high-quality diagrams.</p>
+</blockquote>
+<p>With this (free) application you can create a workflow and save it as a <em>graphml</em> file that can be used as a source for <em>SimpleWorkflow</em>. This is interesting in particular if you have to deal with big workflows made of more than 10 status, with plenty of transitions that make it
+look like a plate of spaghetti.</p>
+<p>The only tricky thing is that you must define the <em>custom</em> property initialStatusId that is required by <em>SimpleWorkflow</em>. This can be done easily :</p>
+<ul>
+<li>create a new empty document</li>
+<li>click <code>Edit &gt; Manage Custom Properties ...</code></li>
+<li>in the "Graph Properties" table, click on the "Add a New property" button (green plus sign)</li>
+<li>set <strong>initialStatusId</strong> as name and leave type as default (text)</li>
+<li>close the dialog box</li>
+</ul>
+<p>You're ready to go ! Once your workflow is ready to be used with <em>SimpleWorkflow</em> make sure that you have assigned the correct value to the  <strong>initialStatusId</strong> custom property. To do so, unselect any item and press <em>F6</em> key (or select <code>Edit &gt; Property...</code> from the menu).
+In the property dialog box, select the <em>data</em> panel, and enter the value of the <strong>initialStatusId</strong> in the appropriate text control. Validate with ok.</p>
+<p><img alt="images/yed-view.png" src="../images/yed-view.png" /></p>
+<p>Your workflow is now ready to be used as a workflow source by <em>SimpleWorkflow</em></p>
+<h1 id="cache">Cache</h1>
+<p>The <code>WorkflowFileSource</code> is able to use a cache component to optimize the workflow definition loading task, that can be significant, in particular with workflows containing a lot of status. Another opportunity to use a cache component is if the workflow definition is provided as a Graphml file. In this such a case, if no cache is used, the <code>WorkflowFileSource</code> component needs to read and parse the <em>Graphml</em> file quite often (at least once per request).</p>
+<p>To configure a cache component you must use the <code>definitionCache</code> parameter. For example :</p>
+<pre><code class="php">$config = [
+    'components' =&gt; [
+        'workflowSource' =&gt; [
+          'class' =&gt; 'raoul2000\workflow\source\file\WorkflowFileSource',
+          'definitionCache' =&gt; [
+                'class' =&gt; 'yii\caching\FileCache',
+          ],
+        ],
+</code></pre>
+
+<p>The cache component must implement <code>yii\caching\Cache</code>. To learn more about Yii2 cache feature, please refer to the <a href="http://www.yiiframework.com/doc-2.0/guide-caching-data.html">Definitive Guide to Yii 2.0</a>.</p>
+<p>Note that the cache is not enabled by default.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../upgrade/" class="btn btn-neutral float-right" title="Upgrade from 1.x">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../workflow-creation/" class="btn btn-neutral" title="Defining a workflow"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../workflow-creation/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../upgrade/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

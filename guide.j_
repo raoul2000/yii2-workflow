@@ -1,0 +1,7 @@
+$(function() {
+    $('a[href="class-ref/"]').on('click',function(ev){
+      ev.stopPropagation();
+      ev.preventDefault();
+      document.location = "class-ref/index.html";
+    });
+});

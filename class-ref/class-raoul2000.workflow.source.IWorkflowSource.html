@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Interface raoul2000\workflow\source\IWorkflowSource | yii2-workflow Class Reference</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">yii2-workflow Class Reference</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-raoul2000.workflow.source.html" title="Summary of raoul2000\workflow\source"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.html">
+							raoul2000<span></span>
+						</a>
+							<ul>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.html">
+							workflow<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-raoul2000.workflow.base.html">
+							base						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.events.html">
+							events						</a>
+							</li>
+					<li>
+						<a href="namespace-raoul2000.workflow.helpers.html">
+							helpers						</a>
+							</li>
+					<li class="active">
+						<a href="namespace-raoul2000.workflow.source.html">
+							source<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-raoul2000.workflow.source.file.html">
+							file						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-raoul2000.workflow.validation.html">
+							validation						</a>
+							</li>
+								</ul></li></ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li class="active"><a href="class-raoul2000.workflow.source.IWorkflowSource.html">IWorkflowSource</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Interface IWorkflowSource</h1>
+
+
+	<div class="description">
+	<p>Interface for WorkflowSource components.</p>
+
+<p>This interface defines basic methods aimed to provide status, workflow and transitions
+to the SimpleStatusBehavior.</p>
+	</div>
+
+
+
+
+
+	<div>
+		<h3>Direct known implementers</h3>
+		<p class="elementList">
+			<code><a href="class-raoul2000.workflow.source.file.WorkflowFileSource.html">raoul2000\workflow\source\file\WorkflowFileSource</a></code>
+		</p>
+	</div>
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-raoul2000.html">raoul2000</a>\<a href="namespace-raoul2000.workflow.html">workflow</a>\<a href="namespace-raoul2000.workflow.source.html">source</a><br>
+		
+
+			<b>Located at</b> source/IWorkflowSource.php		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="getStatus" id="_getStatus">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getStatus">#</a>
+			<code>getStatus( <span>mixed <var>$id</var></span>, <span> <var>$model</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Returns the Status instance for a given status id.
+In case of unexpected error the implementation must return a WorkflowException.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns the Status instance for a given status id.
+In case of unexpected error the implementation must return a WorkflowException.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$id</var></dt>
+						<dd>the status id</dd>
+						<dt><var>$model</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a></code><br>the status instance or NULL if no status could be found for this id.
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.WorkflowException.html">raoul2000\workflow\base\WorkflowException</a></code><br>unexpected error
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getAllStatuses" id="_getAllStatuses">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a>[]</code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAllStatuses">#</a>
+			<code>getAllStatuses( <span>string <var>$id</var></span> )</code>
+
+			<div class="description short">
+				<p>Returns an array containing all Status instances belonging to the workflow
+whose id is passed as argument.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns an array containing all Status instances belonging to the workflow
+whose id is passed as argument.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$id</var></dt>
+						<dd>workflow Id</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.StatusInterface.html">raoul2000\workflow\base\StatusInterface</a>[]</code><br>list of status. The array key is the status ID
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.WorkflowException.html">raoul2000\workflow\base\WorkflowException</a></code><br>no workflow is found with this Id
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getTransitions" id="_getTransitions">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.TransitionInterface.html">raoul2000\workflow\base\TransitionInterface</a>[]</code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getTransitions">#</a>
+			<code>getTransitions( <span>mixed <var>$statusId</var></span>, <span> <var>$model</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Returns an array of transitions leaving the status whose id is passed as argument.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns an array of transitions leaving the status whose id is passed as argument.</p>
+
+<p>If no status is found for this id, a WorkflowException must be thrown.
+If not outgoing transition exists for the status, an empty array must be returned.
+The array returned must be indexed by status Id</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$statusId</var></dt>
+						<dd></dd>
+						<dt><var>$model</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.TransitionInterface.html">raoul2000\workflow\base\TransitionInterface</a>[]</code><br><p>an array containing all out going transition from $statusId. If no such
+transition exist, this method returns an empty array.</p>
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.WorkflowException.html">raoul2000\workflow\base\WorkflowException</a></code><br>unexpected error
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getTransition" id="_getTransition">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.TransitionInterface.html">raoul2000\workflow\base\TransitionInterface</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getTransition">#</a>
+			<code>getTransition( <span>mixed <var>$startId</var></span>, <span>mixed <var>$endId</var></span>, <span>mixed <var>$model</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Returns the transitions that leaves status $startId and reaches status  $endId.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns the transitions that leaves status $startId and reaches status  $endId.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$startId</var></dt>
+						<dd></dd>
+						<dt><var>$endId</var></dt>
+						<dd></dd>
+						<dt><var>$model</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.TransitionInterface.html">raoul2000\workflow\base\TransitionInterface</a></code><br>the transition between start and end status
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getWorkflow" id="_getWorkflow">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-raoul2000.workflow.base.WorkflowInterface.html">raoul2000\workflow\base\WorkflowInterface</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getWorkflow">#</a>
+			<code>getWorkflow( <span>mixed <var>$id</var></span> )</code>
+
+			<div class="description short">
+				<p>Returns the workflow instance whose id is passed as argument.
+In case of unexpected error the implementation must return a WorkflowException.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns the workflow instance whose id is passed as argument.
+In case of unexpected error the implementation must return a WorkflowException.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$id</var></dt>
+						<dd>the workflow id</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-raoul2000.workflow.base.WorkflowInterface.html">raoul2000\workflow\base\WorkflowInterface</a></code><br>the workflow instance or NULL if no workflow could be found.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		yii2-workflow Class Reference API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

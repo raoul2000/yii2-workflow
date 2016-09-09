@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="raoul2000">
+  
+  <title>Events - yii2-workflow User Guide</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Events";
+    var mkdocs_page_input_path = "concept-events.md";
+    var mkdocs_page_url = "/concept-events/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yii2-workflow User Guide</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Concept</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-overview/">Basics</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Events</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#workflow-events">Workflow Events</a></li>
+                
+                    <li><a class="toctree-l4" href="#event-sequence">Event Sequence</a></li>
+                
+                    <li><a class="toctree-l4" href="#configuration">Configuration</a></li>
+                
+                    <li><a class="toctree-l4" href="#event-object">Event Object</a></li>
+                
+                    <li><a class="toctree-l4" href="#event-handler">Event Handler</a></li>
+                
+                    <li><a class="toctree-l4" href="#before-vs-after">before vs after</a></li>
+                
+                    <li><a class="toctree-l4" href="#getting-the-event-sequence">Getting The Event Sequence</a></li>
+                
+                    <li><a class="toctree-l4" href="#event-name-helper">Event Name Helper</a></li>
+                
+                    <li><a class="toctree-l4" href="#creating-an-event-sequence">Creating An Event Sequence</a></li>
+                
+                    <li><a class="toctree-l4" href="#generic-events">Generic Events</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-source/">Source</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../concept-validation/">Validation</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Specials</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../workflow-creation/">Defining a workflow</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../source-file/">The source file compoent</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../upgrade/">Upgrade from 1.x</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../special-cookbook/">Cookbook</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../class-ref/">Class Reference</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yii2-workflow User Guide</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Concept &raquo;</li>
+        
+      
+    
+    <li>Events</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="workflow-events">Workflow Events</h1>
+<p><em>yii2-workflow</em> is making use of <a href="http://www.yiiframework.com/doc-2.0/guide-concept-events.html">Yii2 events</a> to allow you to customize the behavior of your models while they are evolving inside workflows.</p>
+<p>Basically when <em>something interesting happens</em> to a model inside a workflow, an event is fired, or more precisely a <strong>sequence of events</strong> is fired.</p>
+<h2 id="event-sequence">Event Sequence</h2>
+<p>The default event sequence used by the <em>SimpleWorkflow</em> behavior is the <em>BasicEventSequence</em> available in the namespace <code>\raoul2000\workflow\events</code>. Below is a list of events fired by this sequence :</p>
+<table width="100%">
+    <tr>
+        <td><b>workflow event</b></td>
+        <td><b>Basic Event Sequence</b></td>
+    </tr>
+    <tr>
+        <td>the model enters in workflow W1</td>
+        <td>
+            <ul>
+                <li><b>beforeEnterWorkflow{W1}</b></li>
+                <li><b>beforeEnterStatus{W1/init}</b> where 'init' is the initial status Id for the workflow W1</li>
+                <li><b>afterEnterWorkflow{W1}</b></li>
+                <li><b>afterEnterStatus{W1/init}</b> where 'init' is the initial status Id for the workflow W1</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>the model goes from status W1/A to W1/B</td>
+        <td>
+            <ul>
+                <li><b>beforeLeaveStatus{W1/A}</b></li>
+                <li><b>beforeChangeStatusFrom{W1/A}to{W1/B}</b></li>
+                <li><b>beforeEnterStatus{W1/B}</b></li>
+                <li><b>afterLeaveStatus{W1/A}</b></li>
+                <li><b>afterChangeStatusFrom{W1/A}to{W1/B}</b></li>
+                <li><b>afterEnterStatus{W1/B}</b></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>the model leaves the workflow W1</td>
+        <td>
+            <ul>
+                <li><b>beforeLeaveStatus{W1/B}</b> where W1/B is the last status Id of the model before it leaves the workflow</li>
+                <li><b>beforeLeaveWorkflow{W1}</b></li>
+                <li><b>afterLeaveStatus{W1/B}</b> where W1/B is the last status Id of the model before it leaves the workflow</li>
+                <li><b>afterLeaveWorkflow{W1}</b></li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<p>Two other event sequences are also available in the same namespace :</p>
+<ul>
+<li>ReducedEventSequence</li>
+<li>ExtendedEventSequence</li>
+</ul>
+<p>Of course you can create your own event sequence if the ones provided don't meet your needs. To do so, simply create a class that implements the <code>raoul2000\workflow\events\IEventSequence</code> interface (see below).</p>
+<h2 id="configuration">Configuration</h2>
+<p>When the <em>SimpleWorkflowBehavior</em> is initialized, it tries to get a reference to the <strong>Event Sequence Component</strong> to use. By default this component is assumed to have the id <em>eventSequence</em>. If no such component is available, <em>it will create one</em> using the <em>BasicEventSequence</em> class and register it in the Yii2 application so to make it available to other <em>SimpleWorkflowBehavior</em>.</p>
+<p>To summarize :</p>
+<ul>
+<li><strong>eventSequence</strong> : default Id of the event sequence component used by the <em>SimpleWorkflowBehavior</em></li>
+<li><strong>BasicEventSequence</strong> : default event sequence type</li>
+</ul>
+<p>If for instance you want to use the <em>ReducedEventSequence</em> instead of the default one, you must configure it like you would do for any other Yii2 component.</p>
+<pre><code class="php">$config = [
+    // ....
+    'components' =&gt; [
+        // the default event sequence component is configured as a ReducedEventSequence
+        // and not a BasicEventSequence anymore
+        'eventSequence' =&gt; [
+          'class' =&gt; '\raoul2000\workflow\events\ReducedEventSequence',
+        ]
+   // ...
+</code></pre>
+
+<p>The <em>SimpleWorkflowBehavior</em> will then use the configured <em>eventSequence</em> component.</p>
+<p>You may also want to use a reduced event sequence for one particular workflow, and the basic event sequence with another ones.
+This can be easily achieved by configuring the ID of the event sequence component that a <em>SimpleWorkflowBehavior</em> should use.</p>
+<p>In the example below we are first configuring a new component with the ID <em>myReducedEventSequence</em> and with type <em>ReducedEventSequence</em>.</p>
+<pre><code class="php">$config = [
+    // ....
+    'components' =&gt; [
+        'myReducedEventSequence' =&gt; [
+          'class' =&gt; '\raoul2000\workflow\events\ReducedEventSequence',
+        ]
+   // ...
+</code></pre>
+
+<p>Now let's tell to the behavior of the Post model that it must use the <em>myReducedEventSequence</em> event sequence component configured above
+instead of the default one.</p>
+<pre><code class="php">namespace app\models;
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+        return [
+            [
+                'class' =&gt; \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+                'eventSequence' =&gt; 'myReducedEventSequence'
+            ]
+        ];
+    }
+}
+</code></pre>
+
+<p>Any other model with a <em>SimpleWorkflowBehavior</em> will keep using the default Event sequence (<em>BasicEventSequence</em>) but the Post model will use a specific one (<em>ReducedEventSequence</em>).</p>
+<p><em>SimpleWorkflow</em> events are enabled by default but can be disabled by setting the <em>eventSequence</em> configuration parameter to NULL when attaching the behavior to the model. In this case as you may expect, no event is fired for this model.</p>
+<pre><code class="php">namespace app\models;
+class Post extends \yii\db\ActiveRecord
+{
+    public function behaviors()
+    {
+        return [
+            [
+                'class' =&gt; \raoul2000\workflow\base\SimpleWorkflowBehavior::className(),
+                'eventSequence' =&gt; null // disable all SimpleWorkflow Events for Post instances
+            ]
+        ];
+    }
+}
+</code></pre>
+
+<h2 id="event-object">Event Object</h2>
+<p>All events fired are instances of the <code>raoul2000\workflow\events\WorkflowEvent</code> class which provides all the method needed to get informations on the event that just occured.</p>
+<ul>
+<li><code>getStartStatus()</code> : returns the Status instance that the model is leaving. If the WorkflowEvent is fired because the model <em>enters</em> into a workflow, this method returns <code>null</code>.</li>
+<li><code>getEndStatus()</code> : returns the Status instance that the model is reaching. If the WorkflowEvent is fired because the model <em>leaves</em> a workflow, this method returns <code>null</code>.</li>
+<li><code>getTransition()</code> : returns the Transition instance that the model is performing. Note that if the WorkflowEvent is fired because the model <em>enters</em> or <em>leaves</em> the workflow, this method returns <code>null</code>.</li>
+</ul>
+<p>Remember that a <code>WorkflowEvent</code> object is passed to all attached handlers(see next chapter).</p>
+<h2 id="event-handler">Event Handler</h2>
+<p>A event handler is used to implement a specific process on any of the events in the event sequence. Installing an event handler is a standard operation described in the <a href="http://www.yiiframework.com/doc-2.0/guide-concept-events.html#attaching-event-handlers">Yii2 Definitive Guide</a>.</p>
+<p>In the example below, we are attaching an handler for the event that is fired when a Post instance goes from the status <em>draft</em> to the status <em>correction</em>. When this happens, we have decided to send a mail.</p>
+<pre><code class="php">use raoul2000\workflow\events\WorkflowEvent;
+
+class Post extends \yii\db\ActiveRecord
+{
+    public function init()
+    {
+        $this-&gt;on(
+            'afterChangeStatusFrom{PostWorkflow/draft}to{PostWorkflow/correction}',
+            [$this, 'sendMail']
+        );
+    }
+    // $event is an instance of raoul2000\workflow\events\WorkflowEvent
+    public function sendMail($event)
+    {
+        MailingService::sendMailToCorrector(
+            'A Post is ready for correction',
+            'The post [' . $event-&gt;sender-&gt;owner-&gt;title . '] is ready to be corrected.'
+        );      
+    }
+</code></pre>
+
+<h2 id="before-vs-after">before vs after</h2>
+<p>Each event fired by the <em>SimpleWorkflowBehavior</em> can be of 2 types : <strong>before</strong> or <strong>after</strong>. The difference between these types is that a handler attached to a <em>before</em> event is able to block the transition in progress by <em>invalidating</em> the event. This is not possible for a handler attached to a "after* event. Using this feature it becomes possible to block a transition based on the result of a complex processing.</p>
+<p>In the following example, an event handler is attached to be invoked <em>before</em> a Post instance enters into the status 'Post/published'. This handler checks that the user who is performing the action has the appropriate permission and if not it <em>invalidates</em> the event : the Post instance will not be able to reach the status 'W1/A', the transition is blocked.</p>
+<pre><code class="php">use raoul2000\workflow\events\WorkflowEvent;
+
+class Post extends \yii\db\ActiveRecord
+{
+    public function init()
+    {
+        $this-&gt;on(
+            'beforeEnterStatus{Post/published}',
+            function ($event) {
+                // if the user doesn't have the current authorization, the transition to 'Post/published' is blocked
+
+                if( \Yii::$app-&gt;user-&gt;can('publish.post') == false) {
+                    $event-&gt;invalidate(&quot;you don't have permission to publish this post&quot;);
+                }
+            }
+        );
+    }
+    // .....
+</code></pre>
+
+<p>Event handlers attached to <em>before</em> events allow you to authorize or forbid a transition based on the result of a custom code execution.</p>
+<h3 id="status-constraint">Status Constraint</h3>
+<p>If you have been using the previous version of <em>SimpleWorkflow</em> (only compatible with Yii 1.x) you may be familiar with <em>Status Constraint</em>.
+A <em>Status Constraint</em> is a piece of PHP code associated with a status and evaluated as a logical expression <strong>before a model enters into this status</strong> : if the evaluation succeeds, the model can enter the status otherwise the transition is blocked and the model remains in its current status (<a href="http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&amp;view=doc#constraint">read more</a>).</p>
+<p><em>Status Constraint</em> are <strong>not declared anymore as PHP code inside the workflow definition</strong> like in version 1.x but as event handlers attached to the <em>before</em> event type, just like in the previous example where in fact, we have defined a constraint on the status <em>W1/A</em>.</p>
+<p>Remember that an event handler attached to a <em>before</em> event type is able to block the transition by invalidating the event object, and that's exactly what a <em>Status Constraint</em> does !</p>
+<h3 id="workflow-tasks">Workflow Tasks</h3>
+<p>Just like <em>Status Constraint</em> above, <em>Workflow Task</em> is a feature available with the previous version of <em>SimpleWorkflow</em>.
+To summarize, a workflow task is a piece of PHP code attached to a transition and executed when the transition is performed by the model ( <a href="http://s172418307.onlinehome.fr/project/sandbox/www/index.php?r=simpleWorkflow/page&amp;view=doc#tasks">read more</a>).</p>
+<p>Such feature must now be implemented as an event handler attached to an <em>after</em> event and not anymore as PHP code defined in the workflow definition (like it used to be in version 1.x). In a <a href="#event-handler">previous chapter</a> we have already created a workflow task by
+attaching a handler to the event <em>afterChangeStatusFrom{PostWorkflow/draft}to{PostWorkflow/correction}</em> : a mail is sent when the model goes from <code>draft</code> to <code>correction</code>.</p>
+<h2 id="getting-the-event-sequence">Getting The Event Sequence</h2>
+<p>Once <em>SimpleWorkflowBehavior</em> is attached to model, it injects several method that you can use directly from a model instance (this is <a href="http://www.yiiframework.com/doc-2.0/guide-concept-behaviors.html#using-behaviors">standard Yii2 feature</a>). Among these methods, <code>getEventSequence()</code> is particularly useful when working with events. This method returns an array describing all the events that will be fired if the model is sent to the status passed as argument. This array has 2 keys : <em>before</em> and <em>after</em>. The value of each key is an array of <code>raoul2000\workflow\events\WorkflowEvent</code> objects representing the event that will be fired before and after the transition.</p>
+<p>Let's see that on the example below where we assume that the <code>$post</code> instance in currently in status <em>ready</em>. This snippet is displaying the ordered list of event that will be fired when <code>$post</code> is sent to status <em>published</em>.</p>
+<pre><code class="php">// $post is assumed to be in status 'ready'
+foreach ($post-&gt;getEventSequence('published') as $type =&gt; $events) {
+    foreach($events as $event) {
+        echo 'type = '.$type. ' event name = '.$event-&gt;name.'&lt;br/&gt;';
+    }
+}
+</code></pre>
+
+<p>The transition we are working on is from <em>ready</em> to <em>published</em>. The event sequence used is the default one and here is the output which matches the <em>BasicEventSequence</em> specifications.</p>
+<pre><code>type = before event name = beforeLeaveStatus{PostWorkflow/ready}
+type = before event name = beforeChangeStatusFrom{PostWorkflow/ready}to{PostWorkflow/published}
+type = before event name = beforeEnterStatus{PostWorkflow/published}
+type = after event name = afterLeaveStatus{PostWorkflow/ready}
+type = after event name = afterChangeStatusFrom{PostWorkflow/ready}to{PostWorkflow/published}
+type = after event name = afterEnterStatus{PostWorkflow/published}
+</code></pre>
+<p>Remember that events will be fired in this exact order until the last event or until the event is invalidated by a handler attached to the <em>before</em> events.</p>
+<h2 id="event-name-helper">Event Name Helper</h2>
+<p>The class <code>\raoul2000\workflow\events\WorkflowEvent</code> includes a set of static method that you can use to easely create workflow event names.
+It's even more useful if your favorite IDE supports auto-completion ! The example below is equivalent to the previous one except that the event name is created at runtime by a call to <code>WorkflowEvent::beforeEnterStatus('W1/A')</code>.</p>
+<pre><code class="php">$this-&gt;on(
+    // use the event helper to generate the event name
+    WorkflowEvent::beforeEnterStatus('W1/A'),
+    function ($event) {
+        // ...
+    }
+);
+</code></pre>
+
+<h2 id="creating-an-event-sequence">Creating An Event Sequence</h2>
+<p>We already know that <em>SimpleWorkflow</em> includes 3 event sequences, from the most simple to the most <em>verbose</em> one (the default is the <code>BasicEventSequence</code>). However, you may want to create your own event sequence if for instance you want to optimize the amount of events
+fired and actually handled by your implementation.</p>
+<p>To define your own event sequence you must create a class that implements the <code>\raoul2000\workflow\events\IEventSequence</code> interface. There are three methods declared in this interface, each one being invoked at runtime, when a specific event occurs in the workflow :</p>
+<ul>
+<li><em>createEnterWorkflowSequence</em> : invoked when a model enters into a workflow</li>
+<li><em>createLeaveWorkflowSequence</em> : invoked when a model leaves a workflow</li>
+<li><em>createChangeStatusSequence</em> : invoked when a model changes status</li>
+</ul>
+<p>Each method must return an array representing the corresponding sequence of events, grouped in 2 possibles types : <em>before</em> and <em>after</em> events. These types are used as keys in the returned array, and values is an array of <code>WorkflowEvent</code> objects representing
+the sequence of events.</p>
+<p>For example :</p>
+<pre><code class="php">public function createEnterWorkflowSequence($initalStatus, $sender)
+{
+    return [
+        'before' =&gt; [
+            new WorkflowEvent(WorkflowEvent::beforeEnterWorkflow($initalStatus-&gt;getWorkflowId()),
+                ['end' =&gt; $initalStatus,'sender'=&gt; $sender]
+            ),
+            new WorkflowEvent(WorkflowEvent::beforeEnterStatus($initalStatus-&gt;getId()),
+                ['end' =&gt; $initalStatus,'sender'=&gt; $sender]
+            )
+        ],
+        'after' =&gt; [
+            new WorkflowEvent(WorkflowEvent::afterEnterWorkflow($initalStatus-&gt;getWorkflowId()),
+                ['end' =&gt; $initalStatus,'sender' =&gt; $sender]
+            ),
+            new WorkflowEvent(WorkflowEvent::afterEnterStatus($initalStatus-&gt;getId()),
+                ['end' =&gt; $initalStatus,'sender' =&gt; $sender]
+            )
+        ]
+    ];
+}
+</code></pre>
+
+<h2 id="generic-events">Generic Events</h2>
+<p>We have seen in the previous chapters that using an <em>Event Sequence</em> you can easely implement a custom behavior for your model evolving into a workflow, by installing
+the appropriate event handlers: an <em>Event Sequence</em> allows you to react to the exact event you need with a thin control. However, if you don't need such precision, you can
+also use so called <em>generic events</em>.</p>
+<p>Two <em>Generic Events</em> are always fired by the <em>SimpleWorkflowBehavior</em> as soon as a model changes status, and this, no matter what <em>Event Sequence</em> is configured. In fact
+even if you choose to not use <em>Event Sequence</em>, the <em>Generic Events</em> are fired, because they are fired by the <em>SimpleWorkflowBehavior</em> itself, and not by another component (like
+the event sequence component).</p>
+<p>The names of the 2 <em>Generic Events</em> are :</p>
+<ul>
+<li>EVENT_BEFORE_CHANGE_STATUS : fired each time <strong>before</strong> a model changes status</li>
+<li>EVENT_AFTER_CHANGE_STATUS : fired each time <strong>after</strong> a model changes status</li>
+</ul>
+<p>The <em>before</em> and <em>after</em> event type follow the same rules as with <em>Event Sequence</em> and in particular you can block a transition by invalidating the <em>before</em> event.</p>
+<p>In order to identify exactly what just happened to your model inside the workflow, you must test what are the values of the <em>startStatus</em> and <em>endStatus</em> by calling the
+corresponding <code>WorkflowEvent</code> methods.</p>
+<ul>
+<li><code>getStartStatus() == null &amp;&amp; getEndStatus() != null</code> : the model is <strong>entering</strong> into the workflow</li>
+<li><code>getStartStatus() =! null &amp;&amp; getEndStatus() != null</code> : the model is <strong>changing</strong> status</li>
+<li><code>getStartStatus() == null &amp;&amp; getEndStatus() == null</code> : the model is <strong>leaving</strong> into the workflow</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../concept-source/" class="btn btn-neutral float-right" title="Source">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../concept-overview/" class="btn btn-neutral" title="Basics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/raoul2000/yii2-workflow" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../concept-overview/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../concept-source/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
