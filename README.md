@@ -149,6 +149,7 @@ You may also be interested in the following projects developed around yii2-workf
 
 - [yii2-workflow-view](https://github.com/raoul2000/yii2-workflow-view) : A Widget to display workflows
 - [yii2-workflow-manager](https://github.com/cornernote/yii2-workflow-manager) : A Module to manage workflows
+- [yii2-wizflow](https://github.com/raoul2000/yii2-wizflow) : a proof of concept that mixes the Wizard UI pattern with workflow
 - ..and more to come
 
 License
