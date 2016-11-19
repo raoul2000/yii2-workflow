@@ -121,6 +121,6 @@ class StatusIdConverter extends Object implements IStatusIdConverter
 			throw new Exception('Conversion from SimpleWorkflow failed : no key found for id = '.$id);
 		}
 		$value = $this->_map[$id];
-		return ($value == self::VALUE_NULL ? null : $value);
+		return ($value === self::VALUE_NULL ? null : $value);
 	}
 }
