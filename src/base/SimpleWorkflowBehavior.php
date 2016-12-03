@@ -385,7 +385,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public function beforeSaveStatus($event)
 	{
-		$event->isValid = $this->sendToStatusInternal($this->getOwnerStatus(), true);
+		$event->isValid &= $this->sendToStatusInternal($this->getOwnerStatus(), true);
 	}
 
 	/**
@@ -395,7 +395,7 @@ class SimpleWorkflowBehavior extends Behavior
 	 */
 	public function beforeDelete($event)
 	{
-		$event->isValid = $this->sendToStatusInternal(null, true);
+		$event->isValid &= $this->sendToStatusInternal(null, true);
 	}
 	
 	/**
