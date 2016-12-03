@@ -121,12 +121,13 @@ class WorkflowHelper
 	 * </pre>
 	 *
 	 * @param BaseActiveRecord|SimpleWorkflowBehavior $model
+	 * @param bool $beforeEvents
 	 * @return array
 	 */
-	public static function getStatusDropDownData($model)
+	public static function getStatusDropDownData($model, $beforeEvents = false)
 	{
-		$transitions = array_keys($model->getWorkflowSource()->getTransitions($model->getWorkflowStatus()->getId()));
-		$items = WorkflowHelper::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
+		$transitions = array_keys(static::getNextStatusListData($model, false, $beforeEvents));
+		$items = static::getAllStatusListData($model->getWorkflow()->getId(), $model->getWorkflowSource());
 		$options = [];
 		foreach (array_keys($items) as $status) {
 			if ($status != $model->getWorkflowStatus()->getId() && !in_array($status, $transitions)) {
