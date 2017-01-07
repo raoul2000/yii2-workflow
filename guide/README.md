@@ -21,13 +21,11 @@ cd guide
 mkdocs serve
 ```
 
-When the guide is ready to be published, build is with :
+When the guide is ready to be published, build it into the folder `guide/site` with :
 
 ```
 mkdocs build --clean
 ```
-
-The user guide is built into the folder `guide\site`.
 
 # Class Reference
 
@@ -35,14 +33,26 @@ The user guide is built into the folder `guide\site`.
 
 The class reference documentation is built using [apiGen](http://www.apigen.org/) using the *bootstrap* built-in theme.
 
-To install *apiGen*, [download the apigen.phar](http://apigen.org/apigen.phar) file into the project folder.
+To install *apiGen*, [download the apigen.phar](http://apigen.org/apigen.phar) file into the `guide` folder.
 
 ## Building The Class Reference Doc
 
-From the project's main folder :
+From the `guide` folder :
 
 ```
-php apigen.phar generate -s src -d guide\site\class-ref --template-theme bootstrap --no-source-code --title "yii2-workflow Class Reference"
+php apigen.phar generate -s ..\src -d site\class-ref\api --template-theme bootstrap --no-source-code --title "yii2-workflow Class Reference"
 ```
 
-The documentation is built into the folder `guide\site\class-ref`.
+The documentation is built into the folder `guide/site/class-ref/api`.
+
+
+# Github Pages
+
+To push it to the **gh-pages** branch :
+
+```
+cd guide
+mkdocs gh-deploy
+```
+
+[read more](http://www.mkdocs.org/user-guide/deploying-your-docs/)

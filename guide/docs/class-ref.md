@@ -1,4 +1,4 @@
-Visit the [Class Reference Documentation](class-ref/index.html) for a complete description of the **yii2-workflow** implementation.
+Visit the [Class Reference Documentation](class-ref/api/index.html) for a complete description of the **yii2-workflow** implementation.
 
 ## UML Diagram
 
