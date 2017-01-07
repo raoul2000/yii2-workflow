@@ -497,8 +497,13 @@
         }, 
         {
             "location": "/class-ref/", 
-            "text": "Visit the \nClass Reference Documentation\n for a complete description of the \nyii2-workflow\n implementation.", 
+            "text": "Visit the \nClass Reference Documentation\n for a complete description of the \nyii2-workflow\n implementation.\n\n\nUML Diagram\n\n\nview fullscreen", 
             "title": "Class Reference"
+        }, 
+        {
+            "location": "/class-ref/#uml-diagram", 
+            "text": "view fullscreen", 
+            "title": "UML Diagram"
         }
     ]
 }
