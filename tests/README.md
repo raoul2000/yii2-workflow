@@ -28,3 +28,22 @@ To produce the code coverage report, run :
 ```
 ../vendor/bin/codecept run unit --coverage-html
 ```
+
+To run a single test :
+```
+../vendor/bin/codecept run codeception/unit/workflow/helpers/WorkflowHelperTest.php:testGetNextStatus
+../vendor/bin/codecept run codeception/unit/workflow/helpers/WorkflowHelperTest.php
+```
+
+
+## Memento
+
+To output to console from a codeception test use :
+```
+\Codeception\Util\Debug::debug($someVariable);
+```
+
+With debug mode enabled :
+```
+../vendor/bin/codecept run --debug codeception/unit/workflow/helpers/WorkflowHelperTest.php
+```

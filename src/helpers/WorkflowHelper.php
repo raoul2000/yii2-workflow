@@ -150,7 +150,7 @@ class WorkflowHelper
 	{
 		$currentStatus = $model->getAttribute('status');
 		$statusList = $model->getWorkflowSource()->getAllStatuses($model->getWorkflow()->getId());
-		$transitions = array_keys(WorkflowHelper::getNextStatusListData($this->owner));
+		$transitions = array_keys(WorkflowHelper::getNextStatusListData($model));
 		$started = false;
 		foreach ($statusList as $status) {
 			$status_id = $status->getId();

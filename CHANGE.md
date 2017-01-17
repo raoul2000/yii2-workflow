@@ -1,3 +1,6 @@
+#version 1.0.2
+- fix https://github.com/raoul2000/yii2-workflow/issues/42
+
 #version 1.0.1
 - Ci : update components versions
 - Ci : remove *scrutinizer* hook

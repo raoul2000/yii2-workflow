@@ -33,6 +33,16 @@ class WorkflowHelperTest extends TestCase
 		parent::tearDown();
 	}
 
+	public function testGetNextStatus()
+	{
+		$model = new Item04();
+		$model->enterWorkflow();
+
+		$ar = WorkflowHelper::getNextStatus($model);
+		$this->assertEquals( 'Item04Workflow/B', $ar);
+		
+	}
+
 	public function testGetAllStatusListData()
 	{
 		$ar = WorkflowHelper::getAllStatusListData('Item04Workflow', Yii::$app->workflowSource);
