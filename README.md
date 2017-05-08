@@ -137,19 +137,19 @@ Yes, that's severe, but there was many ways to avoid this exception like for ins
 
 ## What's Next ?
 
-This is just one way of using the *SimpleWorkflowBehavior* but there's much more and hopefully enough to assist you
-in your workflow management inside your Yii2 web app.
+This is just one way of using the *SimpleWorkflowBehavior* but there's much more and hopefully enough to assist you in workflow management inside your Yii2 web app.
 
-You will find a complete description there :
+You will find additional information there :
 
 - [yii2-workflow Usage Guide](http://raoul2000.github.io/yii2-workflow/)
 - [yii2-workflow Class Reference](http://raoul2000.github.io/yii2-workflow/class-ref/)
+- [Demo](http://raoul2000.good-gamer.net/index.php?r=workflow/status-history/update) : a simple example based on the *Post* use case.
 
 You may also be interested in the following projects developed around yii2-workflow :
 
-- [yii2-workflow-view](https://github.com/raoul2000/yii2-workflow-view) : A Widget to display workflows
+- [yii2-workflow-view](https://github.com/raoul2000/yii2-workflow-view) : A Widget to display workflows ([demo](http://raoul2000.good-gamer.net/index.php?r=workflow/view))
 - [yii2-workflow-manager](https://github.com/cornernote/yii2-workflow-manager) : A Module to manage workflows
-- [yii2-wizflow](https://github.com/raoul2000/yii2-wizflow) : a proof of concept that mixes the Wizard UI pattern with workflow
+- [yii2-wizflow](https://github.com/raoul2000/yii2-wizflow) : a proof of concept that mixes the Wizard UI pattern with workflow ([Demo](http://raoul2000.good-gamer.net/index.php?r=workflow/wizflow/init))
 - ..and more to come
 
 License
