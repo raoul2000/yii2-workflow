@@ -167,6 +167,9 @@
                     <li><a class="toctree-l4" href="#through-the-workflow-source">Through the Workflow Source</a></li>
                 
             
+                <li class="toctree-l3"><a href="#use-the-changestatusaction">Use the ChangeStatusAction</a></li>
+                
+            
             </ul>
         
     </li>
@@ -391,6 +394,49 @@ if( $post-&gt;hasWorkflowStatus()) {
     foreach( $transitions as $transition ) {
         echo $transition-&gt;getEndStatus()-&gt;getId();
     }
+}
+</code></pre>
+
+<h2 id="use-the-changestatusaction">Use the ChangeStatusAction</h2>
+<p>Since version 1.1.0 it is possible to change the workflow of a model using a <a href="http://www.yiiframework.com/doc-2.0/guide-structure-controllers.html#standalone-actions">Standalone Action</a> ready to use in your controller. To do so you must declare the action and provide 2 callable variables :</p>
+<ul>
+<li><code>findModel</code> : return the model from its id</li>
+<li><code>response</code> : customize the response</li>
+</ul>
+<p>Here is an example of a controller class using the <strong>ChangeStatus</strong> action :</p>
+<pre><code class="php">namespace app\controllers\workflow;
+
+use Yii;
+use yii\web\Controller;
+use app\models\Post;
+use yii\web\NotFoundHttpException;
+
+
+class WorkflowController extends Controller
+{
+    public function actions()
+    {
+            return [
+                    'change' =&gt; [
+                        'class' =&gt; 'app\actions\workflow\ChangeStatusAction',
+                        'findModel' =&gt; [$this, 'findModel'],
+                        'response'  =&gt; [$this, 'response']
+                    ]
+            ];
+    }
+
+    public function response($changedStatus, $model) {
+        return $changeStatus;
+    }
+
+  public function findModel($id)
+  {
+    if (($model = Post::findOne($id)) !== null) {
+        return $model;
+    } else {
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+  }
 }
 </code></pre>
               
