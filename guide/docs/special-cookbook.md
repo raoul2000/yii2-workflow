@@ -198,3 +198,49 @@ if( $post->hasWorkflowStatus()) {
 	}
 }
 ```
+
+## Use the ChangeStatusAction
+
+Since version 1.1.0 it is possible to change the workflow of a model using a [Standalone Action](http://www.yiiframework.com/doc-2.0/guide-structure-controllers.html#standalone-actions) ready to use in your controller. To do so you must declare the action and provide 2 callable variables :
+
+- `findModel` : return the model from its id
+-  `response` : customize the response
+
+Here is an example of a controller class using the **ChangeStatus** action :
+
+```php
+namespace app\controllers\workflow;
+
+use Yii;
+use yii\web\Controller;
+use app\models\Post;
+use yii\web\NotFoundHttpException;
+
+
+class WorkflowController extends Controller
+{
+	public function actions()
+	{
+			return [
+					'change' => [
+						'class' => 'app\actions\workflow\ChangeStatusAction',
+						'findModel' => [$this, 'findModel'],
+						'response'  => [$this, 'response']
+					]
+			];
+	}
+
+	public function response($changedStatus, $model) {
+		return $changeStatus;
+	}
+
+  public function findModel($id)
+  {
+  	if (($model = Post::findOne($id)) !== null) {
+  		return $model;
+  	} else {
+  		throw new NotFoundHttpException('The requested page does not exist.');
+  	}
+  }
+}
+```

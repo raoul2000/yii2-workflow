@@ -1,21 +1,24 @@
-#version 1.0.2
+# version 1.1.0
+- Add `ChangeStatusAction` (from https://github.com/raoul2000/yii2-workflow/pull/24)
+
+# version 1.0.2
 - fix https://github.com/raoul2000/yii2-workflow/issues/42
 
-#version 1.0.1
+# version 1.0.1
 - Ci : update components versions
 - Ci : remove *scrutinizer* hook
 - Ci : remove php version prior to 5.6
 - add unit tests for `WorkflowHelper::getStatusDropDownData()`
 - refactor User guide and Class Reference documentation
 
-#version 1.0.0
+# version 1.0.0
 - fix CI failure : deep-copy 1.4.0 caused error `Maximum function nesting level of '200' reached, aborting!`. Version 1.3.1 is ok
 - add composer.lock
 - fix doc blocks
 
 **release 1.0.0**
 
-#version 0.0.20
+# version 0.0.20
 - remove unnecessary `use` statement in `SimpleWorkflowBehavior`
 - test against `StatusInterface` and not anymore `Status`
 - update doc
@@ -39,10 +42,10 @@ Note that calling `initStatus()` is usually never done by the developer but by t
 - when a model changes status, all `WorkflowEvent` events fired now include the **start** status, the **end** status and the **transitions**. This change has been applied
 to all Event sequences in `raoul2000\workflow\events`.
 
-#version 0.0.19
+# version 0.0.19
 - fix GraphmlLoader to not only process ShapeNode elements, and use node label in yEd as Status Id.
 
-#version 0.0.18
+# version 0.0.18
 - add method `WorkflowInterface->getAllStatuses()` allowing to get a list of all statuses belonging to a workflow,
 using the workflow instance.
 
@@ -54,20 +57,20 @@ $allStatuses = $post->getWorkflow()->getAllStatuses();
 ```
 *This feature extends the one implemented in version 0.0.11*
 
-#version 0.0.17
+# version 0.0.17
 - add method `StatusInterface->isInitialStatus()` to test if a status instance is the initial status of the workflow it belongs to.
 - add argument `$includeCurrent` in `WorkflowHelper::getNextStatusListData(...)`. When TRUE the current model status is added to the returned array.
 When FALSE (default) only next statuses are included.
 - rollback previous change : `$emptyStringAsNull` is removed. The behavior now applies *empty()* to detect unset status
 
-#version 0.0.16
+# version 0.0.16
 - add the configuration setting `$emptyStringAsNull` to *SimpleWorkflowBehavior*.
 
 When TRUE, the status attribute is considered as null if it contains an empty string
 If set to FALSE this is developer responsability to nullify the status attribute value,
 because an empty string is considered as an invalid status id.
 
-#version 0.0.15
+# version 0.0.15
 - add *default Event*
 
 The Default event **is not related to the configured event sequence**, it's a built-in event, fired by the *SimpleWorkflowBehavior*,
@@ -84,21 +87,21 @@ performed by the model :
 
 In both cases, a call to *getTransition()* returns NULL : entering or leaving a workflow is not considered as a transition.
 
-#version 0.0.14
+# version 0.0.14
 - improve leave workflow management
 
 The action to **delete** the owner model is now considered as *leaving the workflow* : the *leave workflow* event
 sequence is fired. Previously, the only way for a model to leave a workflow was by assigning NULL to the status attribute and saving
 the model (or by calling `sendToStatus(null)`);
 
-#version 0.0.13
+# version 0.0.13
 - the *SimpleWorkflowBehavior* can now be safely attached to any object that inherits from \yii\base\Object.
 
 **warning** : The *SimpleWorkflowBehavior* has been first designed to be attached to an `ActiveRecord` instance and thus integrates in the life cycle
 of such objects. By installing event handlers on various `ActiveRecord` events, it automatically handles status persistence. If the behavior
 is attached to another type of object, the developer must understand and (possibly) implement all the features that otherwise would be available by default.
 
-#version 0.0.12
+# version 0.0.12
 - **add status conversion map setter** to the class `raoul2000\workflow\base\StatusIdConverter`. The map is still required by the constructor
 but it can be updated at runtime using the `setMap()` method. (see [dynamic maps for status conversion issue](https://github.com/raoul2000/yii2-workflow/issues/9))
 - Both status converter and status accessor components can now be configured as an object instance.
@@ -141,7 +144,7 @@ $config = [
           ],
         ],
 ```
-#version 0.0.11
+# version 0.0.11
 - update unit tests
 - check interface implemented instead of class
 - remove *StatusInterface.addTransition()* method
@@ -164,7 +167,7 @@ $status->getWorkflow();
 $status->getWorkflow()->getInitialStatus();
 ```
 
-#version 0.0.10
+# version 0.0.10
 **Massive refactoring of the workflow source component architecture** to allow loading workflow definition from virtually
 *any* file (and not only PHP class).
 
@@ -207,7 +210,7 @@ $config = [
 
 
 
-#version 0.0.9
+# version 0.0.9
 - add *propagateErrorsToModel* configuration setting to the *SimpleWorkflowBehavior*
 
 If TRUE, all errors that may be registred on an invalidated 'before' event, are assigned to
@@ -261,7 +264,7 @@ if( $post->save() == false ) {
 if TRUE, all "before" events are fired event if one of them is invalidated by an attached handler.
 When FALSE, the first invalidated event interrupts the event sequence.
 
-#version 0.0.8
+# version 0.0.8
 - **WARNING** : relocate WorkflowHelper, now in namespace `raoul2000\workflow\helpers`
 - add helper function getAllStatusListData()
 
@@ -282,7 +285,7 @@ echo Html::dropDownList(
 )
 ```
 
-#version 0.0.7
+# version 0.0.7
 - update doc
 - rename `SimpleWorkflowBehavior::_createTransitionItems` to `SimpleWorkflowBehavior::createTransitionItems`
 - add *autoInsert* feature.
@@ -316,7 +319,7 @@ Note that no event is fired when a model is auto-inserted into a workflow.
 If *autoInsert* is a string, it must be the ID of the workflow where the model will be automatically inserted to.
 If *autoInsert* is a TRUE boolean, the model is inserted into its default workflow.
 
-#version 0.0.6
+# version 0.0.6
 - add support for multi workflow : more than one workflow can be attached to a model.
 
 The first declared *SimpleWorkflow* behavior handles the **main workflow** and all other *SimpleWorkflow* behavior handle **secondary** workflows.
@@ -373,7 +376,7 @@ $p->getBehavior('w1')->enterWorkflow();
 
 See unit test `tests\unit\workflow\behavior\MultiWorkflowTest` for more example.
 
-#version 0.0.5
+# version 0.0.5
 - add MinimalArrayParser for workflow definition PHP arrays provided as for instance :
 
 ```php
@@ -387,14 +390,14 @@ See unit test `tests\unit\workflow\behavior\MultiWorkflowTest` for more example.
 ```
 The *initialStatusId* is the first status defined (here *draft*)
 
-#version 0.0.4
+# version 0.0.4
 - add tests for raoul2000\workflow\source\php\DefaultArrayParser
 - minor fix in DefaultArrayParser
 
-#version 0.0.3
+# version 0.0.3
 - externalize array parser to normalize workflow php array definition
 
-#version 0.0.2
+# version 0.0.2
 - change regex for status and workflow ID pattern: now `/^[a-zA-Z]+[[:alnum:]-]*$/`
 - Improve WorkflowPhpSource parsing of a workflow defined as a PHP array.
 
