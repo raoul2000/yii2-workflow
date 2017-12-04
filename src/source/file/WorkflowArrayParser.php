@@ -1,8 +1,7 @@
 <?php
 namespace raoul2000\workflow\source\file;
 
-use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\helpers\VarDumper;
 use raoul2000\workflow\base\WorkflowValidationException;
 
@@ -34,7 +33,7 @@ use raoul2000\workflow\base\WorkflowValidationException;
  * ]
  * </pre>
  */
-abstract class WorkflowArrayParser  extends Object {
+abstract class WorkflowArrayParser  extends BaseObject {
 	/**
 	 * @var boolean when TRUE, the parse method performs some validations
 	 */

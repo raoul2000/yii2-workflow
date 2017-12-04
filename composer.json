@@ -16,7 +16,7 @@
 	"minimum-stability" : "stable",
 	"require" : {
 		"php" : ">=5.4.0",
-		"yiisoft/yii2" : ">= 2.0.3"
+		"yiisoft/yii2" : "~2.0.13"
 	},
 	"require-dev" : {
 		"codeception/codeception" : ">= 2.0.9",
