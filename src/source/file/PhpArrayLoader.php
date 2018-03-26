@@ -3,7 +3,6 @@
 namespace raoul2000\workflow\source\file;
 
 use Yii;
-use yii\base\Object;
 use yii\base\InvalidConfigException;
 
 /**
