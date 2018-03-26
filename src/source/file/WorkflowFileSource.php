@@ -2,7 +2,7 @@
 namespace raoul2000\workflow\source\file;
 
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use yii\helpers\VarDumper;
@@ -22,7 +22,7 @@ use raoul2000\workflow\base\WorkflowValidationException;
  * attribute.
  *
  */
-class WorkflowFileSource extends Object implements IWorkflowSource
+class WorkflowFileSource extends BaseObject implements IWorkflowSource
 {
 	/**
 	 *	The regular expression used to validate status and workflow Ids.
