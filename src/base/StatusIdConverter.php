@@ -3,7 +3,7 @@ namespace raoul2000\workflow\base;
 
 use Yii;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 use yii\base\Exception;
 use yii\base\InvalidCallException;
@@ -45,7 +45,7 @@ use yii\base\InvalidCallException;
  *
  * @see IStatusIdConverter
  */
-class StatusIdConverter extends Object implements IStatusIdConverter
+class StatusIdConverter extends BaseObject implements IStatusIdConverter
 {
 	const VALUE_NULL = 'null';
 	private $_map = [];
