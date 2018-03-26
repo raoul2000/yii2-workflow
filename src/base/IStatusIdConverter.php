@@ -1,8 +1,6 @@
 <?php
 namespace raoul2000\workflow\base;
 
-use yii\base\Object;
-
 /**
  * The interface for status ID converters.
  *
