@@ -1,8 +1,6 @@
 <?php
 namespace raoul2000\workflow\base;
 
-use Yii;
-use yii\base\Object;
 use yii\base\InvalidConfigException;
 /**
  * Implements the Workflow as an object having an `$id` and an `initialStatus`.

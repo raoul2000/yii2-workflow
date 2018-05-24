@@ -3,9 +3,7 @@
 namespace raoul2000\workflow\source\file;
 
 use Yii;
-use yii\base\Object;
 use raoul2000\workflow\base\WorkflowException;
-use yii\base\InvalidConfigException;
 
 /**
  * This class is responsible for locating and loading a workflow definition stored as a PHP class.

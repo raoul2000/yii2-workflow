@@ -1,7 +1,7 @@
 <?php
 namespace raoul2000\workflow\events;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use raoul2000\workflow\events\IEventSequence;
 
 /**
@@ -13,7 +13,7 @@ use raoul2000\workflow\events\IEventSequence;
  *
  * @see \raoul2000\workflow\events\IEventSequence
  */
-class ExtendedEventSequence extends Object implements IEventSequence
+class ExtendedEventSequence extends BaseObject implements IEventSequence
 {
 	/**
 	 * Produces the following event sequence when a model enters a workflow.

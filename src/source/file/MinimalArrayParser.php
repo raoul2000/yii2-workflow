@@ -2,11 +2,8 @@
 
 namespace raoul2000\workflow\source\file;
 
-use Yii;
-use yii\base\Object;
 use yii\helpers\ArrayHelper;
 use raoul2000\workflow\base\WorkflowValidationException;
-use yii\helpers\VarDumper;
 /**
  * Parse a workflow definition provided as a minimal PHP array.
  *

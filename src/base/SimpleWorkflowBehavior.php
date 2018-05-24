@@ -257,7 +257,7 @@ class SimpleWorkflowBehavior extends Behavior
 			if( ! $this->owner->hasAttribute($this->statusAttribute) &&  ! $this->owner->hasProperty($this->statusAttribute) ) {
 				throw new InvalidConfigException('Attribute or property not found for owner model : \''.$this->statusAttribute.'\'');
 			}
-		}elseif($this->owner instanceof \yii\base\Object) {
+		}elseif($this->owner instanceof \yii\base\BaseObject) {
 			if(   ! $this->owner->hasProperty($this->statusAttribute) ) {
 				throw new InvalidConfigException('Property not found for owner model : \''.$this->statusAttribute.'\'');
 			}			
