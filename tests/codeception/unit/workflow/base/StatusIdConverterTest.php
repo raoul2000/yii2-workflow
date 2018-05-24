@@ -12,21 +12,29 @@ use raoul2000\workflow\base\StatusIdConverter;
 
 class StatusIdConverterTest extends TestCase
 {
-	use\Codeception\Specify;
+	use \Codeception\Specify;
+	use \Codeception\AssertThrows;
 
 	public function testCreateFails()
 	{
+
 		$this->specify('a map parameter must be provided', function(){
-			Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter']);
-		},['throws' => 'yii\base\InvalidConfigException']);
+			$this->assertThrowsWithMessage( 'yii\base\InvalidConfigException' ,'missing map', function() {
+				Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter']);
+			});
+		});
 
 		$this->specify(' the map parameter must be an array', function() {
-			Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter', 'map' => 'string']);
-		},['throws' => 'yii\base\InvalidConfigException']);
-		
+			$this->assertThrowsWithMessage( 'yii\base\InvalidConfigException',  'The map must be an array', function() {
+				Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter', 'map' => 'string']);
+			});
+		});
+
 		$this->specify(' the map parameter must be a non empty array', function() {
-			Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter', 'map' => [] ]);
-		},['throws' => 'yii\base\InvalidConfigException']);		
+			$this->assertThrowsWithMessage('yii\base\InvalidConfigException',  'missing map', function() {
+				Yii::createObject(['class'=> 'raoul2000\workflow\base\StatusIdConverter', 'map' => [] ]);
+			});
+		});
 	}
 
 	public function testCreateSuccess()
@@ -41,7 +49,7 @@ class StatusIdConverterTest extends TestCase
 					StatusIdConverter::VALUE_NULL => '0'
 				]
 			]);
-		});	
+		});
 	}
 
 	public function testConvertionSuccess()
@@ -82,28 +90,29 @@ class StatusIdConverterTest extends TestCase
 				'Post/new' => StatusIdConverter::VALUE_NULL
 			]
 		]);
-	
+
 		$this->assertEquals('1', $c->toModelAttribute('Post/ready'));
 		$this->assertEquals('2', $c->toModelAttribute('Post/draft'));
 		$this->assertEquals('3', $c->toModelAttribute('Post/deleted'));
-		
+
 		$c->setMap([
 			'Post/ready' => '11',
 			'Post/draft' => '22',
-			'Post/deleted' => '33',			
+			'Post/deleted' => '33',
 			StatusIdConverter::VALUE_NULL => '0',
-			'Post/new' => StatusIdConverter::VALUE_NULL			
+			'Post/new' => StatusIdConverter::VALUE_NULL
 		]);
 		$this->assertEquals('11', $c->toModelAttribute('Post/ready'));
 		$this->assertEquals('22', $c->toModelAttribute('Post/draft'));
-		$this->assertEquals('33', $c->toModelAttribute('Post/deleted'));		
+		$this->assertEquals('33', $c->toModelAttribute('Post/deleted'));
 		$this->assertEquals(null, $c->toSimpleWorkflow(0));
-		$this->assertEquals('Post/new', $c->toSimpleWorkflow(null));	
+		$this->assertEquals('Post/new', $c->toSimpleWorkflow(null));
 
-	}	
-	
+	}
+
 	public function testConvertionFails()
 	{
+
 		$c = Yii::createObject([
 			'class'=> 'raoul2000\workflow\base\StatusIdConverter',
 			'map' => [
@@ -111,12 +120,26 @@ class StatusIdConverterTest extends TestCase
 			]
 		]);
 
-		$this->specify(' an exception is thrown if value is not found', function() use ($c) {
-			$c->toSimpleWorkflow('not found');
-		},['throws' => 'yii\base\Exception']);
 
 		$this->specify(' an exception is thrown if value is not found', function() use ($c) {
-			$c->toModelAttribute('not found');
-		},['throws' => 'yii\base\Exception']);
+			$this->assertThrowsWithMessage(
+				'yii\base\Exception' ,
+				'Conversion to SimpleWorkflow failed : no value found for id = not found',
+				function() use ($c) {
+					$c->toSimpleWorkflow('not found');
+				}
+			);
+		});
+
+
+		$this->specify(' an exception is thrown if value is not found', function() use ($c) {
+			$this->assertThrowsWithMessage(
+				'yii\base\Exception' ,
+				'Conversion from SimpleWorkflow failed : no key found for id = not found',
+				function() use ($c) {
+					$c->toModelAttribute('not found');
+				}
+			);
+		});
 	}
 }

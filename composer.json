@@ -23,7 +23,8 @@
 		"myclabs/deep-copy" : ">= 1.3.1",
 		"codeception/specify" : "*",
 		"codeception/verify" : "*",
-		"yiisoft/yii2-codeception" : "*"
+		"yiisoft/yii2-codeception" : "*",
+		"codeception/assert-throws": "^1.0"
 	},
 	"config" : {
 		"process-timeout" : 1800
