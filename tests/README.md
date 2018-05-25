@@ -38,6 +38,8 @@ To run a single test :
 
 ## Memento
 
+### Output to Console during Tests
+
 To output to console from a codeception test use :
 ```
 \Codeception\Util\Debug::debug($someVariable);
@@ -47,3 +49,10 @@ With debug mode enabled :
 ```
 ../vendor/bin/codecept run --debug codeception/unit/workflow/helpers/WorkflowHelperTest.php
 ```
+
+### Enable XDebug With Codeception
+
+Check XDebug is installed :
+- run `php -i > info.txt`
+- copy/paste `info.txt` into [this form](https://xdebug.org/wizard.php) and check the result
+- if needed, follow *Installation instructions*.

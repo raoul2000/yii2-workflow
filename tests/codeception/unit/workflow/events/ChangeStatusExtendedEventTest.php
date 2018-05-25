@@ -32,7 +32,7 @@ class ChangeStatusExtendedEventTest extends DbTestCase
 					'namespace' => 'tests\codeception\unit\models'
 				]
 		]);
-		
+
 		Yii::$app->set('eventSequence',[
 			'class'=> 'raoul2000\workflow\events\ExtendedEventSequence',
 		]);
@@ -54,6 +54,7 @@ class ChangeStatusExtendedEventTest extends DbTestCase
     	$this->model->on(
     		WorkflowEvent::beforeEnterStatus(),
     		function($event) {
+					codecept_debug("beforeEnterStatus");
     			$this->eventsBefore[] = $event;
     		}
     	);
@@ -63,10 +64,12 @@ class ChangeStatusExtendedEventTest extends DbTestCase
     			$this->eventsAfter[] = $event;
     		}
     	);
+			codecept_debug(count($this->eventsBefore));
     	verify('event handler handlers have been called', count($this->eventsBefore) == 0 &&   count($this->eventsAfter) == 0)->true();
 
     	$this->model->enterWorkflow();
     	verify('current status is set',$this->model->hasWorkflowStatus())->true();
+			codecept_debug(count($this->eventsBefore));
     	expect('event handler handlers have been called', count($this->eventsBefore) == 1 &&   count($this->eventsAfter) == 1)->true();
 
     	$this->model->status = 'Item04Workflow/B';
