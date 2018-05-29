@@ -1,3 +1,13 @@
+# version 1.2.0_WIP
+- upgrade to Yii 2.0.13 dependency
+- **about Events** : Since Yii v2.0.14 it is possible to *specify event name as a wildcard pattern*
+```PHP
+$component->on('event.group.*', function ($event) {
+    Yii::trace($event->name . ' is triggered.');
+});
+```
+This may cause a problem if you are using the `ExtendedEventSequence` model because it is making use of the wildcard characters to name events (for example : beforeEnterWorkflow(\*)). Consequently if you set an event handler for *beforeEnterWorkflow(MY_WORKFLOW)* event, the handler will be invoked twice : once for event \ `beforeEnterWorkflow(MY_WORKFLOW)` and once for event `beforeEnterWorkflow(*)`
+
 # version 1.1.0
 - Add `ChangeStatusAction` (from https://github.com/raoul2000/yii2-workflow/pull/24)
 

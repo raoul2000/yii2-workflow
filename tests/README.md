@@ -56,3 +56,10 @@ Check XDebug is installed :
 - run `php -i > info.txt`
 - copy/paste `info.txt` into [this form](https://xdebug.org/wizard.php) and check the result
 - if needed, follow *Installation instructions*.
+
+### More ...
+
+Change PATH to use PHP v7.2.5 :
+```
+PATH=$(echo $PATH | sed 's/php7.0.10/php7.2.5/g')
+```

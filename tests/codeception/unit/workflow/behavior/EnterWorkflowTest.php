@@ -28,7 +28,7 @@ class EnterWorkflowTest extends DbTestCase
 			'definitionLoader' => [
 				'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
 				'namespace' => 'tests\codeception\unit\models'
-			]			
+			]
 		]);
 	}
 
@@ -68,7 +68,8 @@ class EnterWorkflowTest extends DbTestCase
     		verify('current status is not set',$item->hasWorkflowStatus())->false();
     		$item->sendToStatus('Item04Workflow/A');
     		verify('current status is set',$item->hasWorkflowStatus())->true();
-			$this->setExpectedException('raoul2000\workflow\base\WorkflowException', 'Model already in a workflow');
+			$this->expectException('raoul2000\workflow\base\WorkflowException');
+			$this->expectExceptionMessage('Model already in a workflow');
 			$item->enterWorkflow();
 		});
 	}
