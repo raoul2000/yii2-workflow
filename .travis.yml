@@ -1,9 +1,8 @@
 language: php
 php:
-  - 5.6
+  - 7.2.5
 install:
   - composer self-update
-  - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - composer install --prefer-dist --no-interaction
   - composer info --installed
 before_script:
