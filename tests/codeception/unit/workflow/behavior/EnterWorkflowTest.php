@@ -79,8 +79,10 @@ class EnterWorkflowTest extends DbTestCase
 		$item = new Item04();
 		$this->specify('enterWorkflow fails if workflow not found for ID',function() use($item) {
 
-    		$this->setExpectedException(
-    			'raoul2000\workflow\base\WorkflowException',
+    		$this->expectException(
+    			'raoul2000\workflow\base\WorkflowException'
+			);
+    		$this->expectExceptionMessage(
     			'failed to load workflow definition : Class tests\codeception\unit\models\INVALIDID does not exist'
 			);
 

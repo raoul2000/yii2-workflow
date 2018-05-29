@@ -1,6 +1,7 @@
-# version 1.2.0_WIP
-- upgrade to Yii 2.0.13 dependency
-- **about Events** : Since Yii v2.0.14 it is possible to *specify event name as a wildcard pattern*
+# version 1.2.0
+- upgrade to Yii 2.0.13 dependency : if you are using a version of Yii 2.0.13 or greater you must use this version (or greater).
+
+**about Events** : Since Yii v2.0.14 it is possible to *specify event name as a wildcard pattern*
 ```PHP
 $component->on('event.group.*', function ($event) {
     Yii::trace($event->name . ' is triggered.');

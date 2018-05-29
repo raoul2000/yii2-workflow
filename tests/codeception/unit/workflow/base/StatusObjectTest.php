@@ -105,8 +105,10 @@ class StatusObjectTest extends TestCase
 	{
 		$this->specify('status creation fails when empty id is provided', function ()
 		{
-			$this->setExpectedException(
-				'yii\base\InvalidConfigException',
+			$this->expectException(
+				'yii\base\InvalidConfigException'
+			);
+			$this->expectExceptionMessage(
 				'missing status id'
 			);
 
@@ -121,8 +123,10 @@ class StatusObjectTest extends TestCase
 	{
 		$this->specify('create a status instance with no workflow id', function ()
 		{
-			$this->setExpectedException(
-				'yii\base\InvalidConfigException',
+			$this->expectException(
+				'yii\base\InvalidConfigException'
+			);
+			$this->expectExceptionMessage(
 				'missing workflow id'
 			);
 			new Status([
@@ -134,8 +138,10 @@ class StatusObjectTest extends TestCase
 	{
 		$this->specify('create a status instance with empty workflow id', function ()
 		{
-			$this->setExpectedException(
-				'yii\base\InvalidConfigException',
+			$this->expectException(
+				'yii\base\InvalidConfigException'
+			);
+			$this->expectExceptionMessage(
 				'missing workflow id'
 			);
 			new Status([

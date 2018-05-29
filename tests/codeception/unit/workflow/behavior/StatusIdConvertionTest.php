@@ -25,7 +25,7 @@ class StatusIdConvertionTest extends TestCase
 			'definitionLoader' => [
 				'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
 				'namespace' => 'tests\codeception\unit\models'
-			]			
+			]
 		]);
 
 		Yii::$app->set('converter',[
@@ -52,7 +52,7 @@ class StatusIdConvertionTest extends TestCase
 			$this->assertEquals(null, $item->status);
 		});
 	}
-	
+
 	public function testConvertionOnAttachSuccess2()
 	{
 		$converter = new StatusIdConverter([
@@ -63,7 +63,7 @@ class StatusIdConvertionTest extends TestCase
 				'Item04Workflow/B' => StatusIdConverter::VALUE_NULL
 			]
 		]);
-		
+
 		$item = new Item04();
 		$item->attachBehavior('workflow',[
 			'class' => SimpleWorkflowBehavior::className(),
@@ -74,12 +74,17 @@ class StatusIdConvertionTest extends TestCase
 			$this->assertTrue($item->getWorkflow()->getId() == 'Item04Workflow');
 			$this->assertEquals(null, $item->status);
 		});
-	}	
-	
+	}
+
 	public function testConvertionOnAttachFails()
 	{
 		$item = new Item04();
-		$this->setExpectedException('yii\base\InvalidConfigException', 'Unknown component ID: not_found_component');
+		$this->expectException(
+			'yii\base\InvalidConfigException'
+		);
+		$this->expectExceptionMessage(
+			'Unknown component ID: not_found_component'
+		);
 		$item->attachBehavior('workflow',[
 			'class' => SimpleWorkflowBehavior::className(),
 			'statusConverter' => 'not_found_component'

@@ -29,7 +29,7 @@ class GetNextStatusTest extends DbTestCase
 			'definitionLoader' => [
 				'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
 				'namespace' => 'tests\codeception\unit\models'
-			]			
+			]
 		]);
 	}
 
@@ -89,10 +89,12 @@ class GetNextStatusTest extends DbTestCase
     	]);
 
     	$this->specify('getNextStatus throws exception if default workflow Id is invalid',function() use ($item) {
-			$this->setExpectedException(
-				'raoul2000\workflow\base\WorkflowException',
-				"Invalid workflow Id : 'INVALID_ID'"
-    		);
+				$this->expectException(
+					'raoul2000\workflow\base\WorkflowException'
+	    		);
+				$this->expectExceptionMessage(
+					"Invalid workflow Id : 'INVALID_ID'"
+	    	);
     		$item->getNextStatuses();
     	});
     }
@@ -120,7 +122,7 @@ class GetNextStatusTest extends DbTestCase
     			0 => [
     				'name' => SimpleWorkflowBehavior::EVENT_BEFORE_CHANGE_STATUS,
     				'success' => null
-    			],    				
+    			],
 	            1 => [
 	                'name' => 'beforeEnterWorkflow{Item04Workflow}',
 	                'success' => null

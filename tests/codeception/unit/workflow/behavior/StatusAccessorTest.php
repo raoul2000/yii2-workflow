@@ -26,7 +26,7 @@ class StatusAccessorTest extends TestCase
 			'definitionLoader' => [
 				'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
 				'namespace' => 'tests\codeception\unit\models'
-			]			
+			]
 		]);
 
 
@@ -55,7 +55,12 @@ class StatusAccessorTest extends TestCase
 	public function testOnConstructFails()
 	{
 		$this->statusAccessor->statusToReturnOnGet = 'NOT FOUND';
-		$this->setExpectedException('raoul2000\workflow\base\WorkflowException',"Not a valid status id format: failed to get workflow id - status = 'NOT FOUND'");
+		$this->expectException(
+			'raoul2000\workflow\base\WorkflowException'
+		);
+		$this->expectExceptionMessage(
+			"Not a valid status id format: failed to get workflow id - status = 'NOT FOUND'"
+		);
 		new Item07();
 	}
 	public function testOnEnterWorkflowByMethodSuccess()
@@ -109,7 +114,12 @@ class StatusAccessorTest extends TestCase
 		verify('item status is Item07Workflow/B', $item->getworkflowStatus()->getId())->equals('Item07Workflow/B');
 		verify('getStatus has been called ',$this->statusAccessor->callGetStatusCount)->equals(1);
 
-		$this->setExpectedException('raoul2000\workflow\base\WorkflowException',"Model already in a workflow");
+		$this->expectException(
+			'raoul2000\workflow\base\WorkflowException'
+		);
+		$this->expectExceptionMessage(
+			"Model already in a workflow"
+		);
 
  		$item->enterWorkflow();
 	}

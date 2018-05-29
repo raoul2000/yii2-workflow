@@ -27,7 +27,7 @@ class ChangeStatusTest extends DbTestCase
 			'definitionLoader' => [
 				'class' => 'raoul2000\workflow\source\file\PhpClassLoader',
 				'namespace' => 'tests\codeception\unit\models'
-			]			
+			]
 		]);
 	}
 
@@ -41,8 +41,10 @@ class ChangeStatusTest extends DbTestCase
     	$item = $this->items('item1');
     	$this->assertTrue($item->workflowStatus->getId() == 'Item04Workflow/B');
 
-    	$this->setExpectedException(
-    		'raoul2000\workflow\base\WorkflowException', 
+    	$this->expectException(
+    		'raoul2000\workflow\base\WorkflowException'
+    	);
+    	$this->expectExceptionMessage(
     		'No status found with id Item04Workflow/Z'
     	);
 
@@ -55,8 +57,10 @@ class ChangeStatusTest extends DbTestCase
     	$item = $this->items('item1');
     	$this->assertTrue($item->workflowStatus->getId() == 'Item04Workflow/B');
 
-    	$this->setExpectedException(
-    		'raoul2000\workflow\base\WorkflowException', 
+    	$this->expectException(
+    		'raoul2000\workflow\base\WorkflowException'
+    	);
+    	$this->expectExceptionMessage(
     		'No status found with id Item04Workflow/Z'
     	);
 
