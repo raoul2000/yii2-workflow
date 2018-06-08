@@ -1,10 +1,11 @@
 language: php
 php:
   - 7.2.5
+  - 5.4.0
 install:
   - composer self-update
   - composer install --prefer-dist --no-interaction
-  - composer info --installed
+  - composer info --all
 before_script:
   - mysql -e 'create database yii2_workflow_test;'
   - cd tests
