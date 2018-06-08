@@ -5,7 +5,7 @@ php:
 install:
   - composer self-update
   - composer install --prefer-dist --no-interaction
-  - composer info --all
+  - composer info
 before_script:
   - mysql -e 'create database yii2_workflow_test;'
   - cd tests
